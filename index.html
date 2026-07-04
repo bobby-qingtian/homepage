@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('title="{{ row.name }}" style=', 'title="{{ row.name }}" data-paper-path="{{ row.paperPath }}" style=')
         .replace(
           'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }}',
-          'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }};zoom:.72'
+          'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }};transform-origin:50% 0;scale:1.333 1;zoom:.72'
         )
         .replace('&quot;default&quot;:26', '&quot;default&quot;:28')
         .replace('const spacing = this.props.rowSpacing ?? 23;', 'const spacing = this.props.rowSpacing ?? 28;')

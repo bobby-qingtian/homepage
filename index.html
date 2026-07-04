@@ -197,28 +197,38 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('title="{{ row.name }}" style=', 'title="{{ row.name }}" data-paper-path="{{ row.paperPath }}" style=')
         .replace(
           'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }}',
-          'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }};zoom:.9'
+          'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }};zoom:.72'
         )
         .replace('&quot;default&quot;:26', '&quot;default&quot;:28')
         .replace('const spacing = this.props.rowSpacing ?? 23;', 'const spacing = this.props.rowSpacing ?? 28;')
         .replace(
           'const top = 70, yt = 6, yb = 46, r = 10, cr = 13, slant = 22, tw = 210;',
-          'const top = 127, yt = 6, yb = 46, r = 10, cr = 12, slant = 20, tw = 190;'
+          'const top = 127, yt = 6, yb = 46, r = 14, cr = 12, slant = 20, tw = 190;'
         )
         .replace(
           'const L0 = 180, L1 = 126, R0 = 902, R1 = 956;',
-          'const L0 = 178, L1 = 121, R0 = 902, R1 = 961;'
+          'const L0 = 178, L1 = 70, R0 = 902, R1 = 1010;'
+        )
+        // Side edges steeper than the stack silhouette: each lower card's
+        // rounded shoulder protrudes past the card above -> stacked 3D steps.
+        .replace(
+          'const xL = (yy) => L - kSlope * (yy - yb);',
+          'const kSide = kSlope * 0.3;\n      const xL = (yy) => L - kSide * (yy - yb);'
+        )
+        .replace(
+          'const xR = (yy) => R + kSlope * (yy - yb);',
+          'const xR = (yy) => R + kSide * (yy - yb);'
         )
         .replace(
           /const plainH = yb \+ spacing \* 1\.7;[\s\S]*?const dividerPath =/,
           'const paperH = (n - i) * spacing + 39;\n' +
           '      const plainPath =\n' +
-          '        `M ${xL(paperH)} ${paperH} L ${xL(H) + 6} ${H} L ${L - 6} ${yb + 12} Q ${L} ${yb} ${L + r} ${yb} ` +\n' +
-          '        `L ${R - r} ${yb} Q ${R} ${yb} ${R + 6} ${yb + 12} L ${xR(H) - 6} ${H} L ${xR(paperH)} ${paperH} Z`;\n' +
+          '        `M ${xL(paperH)} ${paperH} L ${xL(yb + r)} ${yb + r} Q ${L} ${yb} ${L + r} ${yb} ` +\n' +
+          '        `L ${R - r} ${yb} Q ${R} ${yb} ${xR(yb + r)} ${yb + r} L ${xR(paperH)} ${paperH} Z`;\n' +
           '      const path =\n' +
-          '        `M ${xL(paperH)} ${paperH} L ${xL(H) + 6} ${H} L ${L - 6} ${yb + 12} Q ${L} ${yb} ${L + r} ${yb} ` +\n' +
+          '        `M ${xL(paperH)} ${paperH} L ${xL(yb + r)} ${yb + r} Q ${L} ${yb} ${L + r} ${yb} ` +\n' +
           '        tabEdge +\n' +
-          '        ` L ${R - r} ${yb} Q ${R} ${yb} ${R + 6} ${yb + 12} L ${xR(H) - 6} ${H} L ${xR(paperH)} ${paperH} Z`;\n' +
+          '        ` L ${R - r} ${yb} Q ${R} ${yb} ${xR(yb + r)} ${yb + r} L ${xR(paperH)} ${paperH} Z`;\n' +
           '      const paperTop = d.plain ? `L ${R - r} ${yb}` : tabEdge + ` L ${R - r} ${yb}`;\n' +
           '      const paperPath =\n' +
           '        `M ${xL(paperH)} ${paperH - r} L ${L - 6} ${yb + 12} Q ${L} ${yb} ${L + r} ${yb} ` +\n' +
@@ -233,26 +243,40 @@ document.addEventListener('DOMContentLoaded', async function() {
           "paperPath,\n        tabPath: d.d ? dividerPath : 'M 0 0',"
         )
         .replace('const wallBot = drawerY + 12;', 'const wallBot = drawerY + 9;')
+        // Drawer walls follow the card stack and disappear behind the front lip.
         .replace('const wxL = 180 - kS * (wallBot - wallTop);', 'const wxL = L0 - kS * (wallBot - wallTop);')
         .replace('const wxR = 902 + kS * (wallBot - wallTop);', 'const wxR = R0 + kS * (wallBot - wallTop);')
         .replace(
           'wallPath: `M 181 ${wallTop} L ${wxL} ${wallBot} M 901 ${wallTop} L ${wxR} ${wallBot}`',
-          'wallPath: `M ${L0 - 6} ${wallTop} L ${wxL - 6} ${wallBot} M ${R0 + 6} ${wallTop} L ${wxR + 6} ${wallBot}`'
+          'wallPath: `M ${L0} ${wallTop} L ${wxL} ${wallBot} M ${R0} ${wallTop} L ${wxR} ${wallBot}`'
         )
-        .replace('const drawerY = top + n * spacing + 30;', 'const drawerY = top + n * spacing + 30;')
+        // Two empty cards at the back of the drawer, like the reference.
+        .replace(
+          "const data = [",
+          "const data = [\n      { plain: 1, num: '', name: '', u: 0 },\n      { plain: 1, num: '', name: '', u: 0 },"
+        )
+        // Air gap between the last card and the drawer rim: only the
+        // converging walls show there, like the reference.
+        .replace('const drawerY = top + n * spacing + 30;', 'const drawerY = top + n * spacing + 62;')
+        // Drawer rim: thin front lip with subtle beveled ends.
         .replace(
           'M 24 10 Q 20 10 20 14 L 20 26 Q 20 30 24 30 L 1056 30 Q 1060 30 1060 26 L 1060 14 Q 1060 10 1056 10 Z',
-          'M 50 10 Q 46 10 46 14 L 46 26 Q 46 30 50 30 L 1030 30 Q 1034 30 1034 26 L 1034 14 Q 1034 10 1030 10 Z'
+          'M -60 10 L 1140 10 L 1146 26 L 1140 30 L -60 30 L -66 26 Z'
         )
+        // Front panel sides taper inward beneath the lip.
         .replace(
           'M 20 30 L 62 200 M 1060 30 L 1018 200',
-          'M 46 30 L 78 115 M 1034 30 L 1004 115'
+          'M -66 30 L 12 240 M 1146 30 L 1068 240'
+        )
+        .replace(
+          '<path d="M -66 30 L 12 240 M 1146 30 L 1068 240" fill="none" stroke="#161616" stroke-width="1.6" stroke-linecap="round"></path>',
+          '<path d="M -66 30 L 1146 30 L 1068 240 L 12 240 Z" fill="#dedede" stroke="none"></path>\n      <path d="M -66 30 L 12 240 M 1146 30 L 1068 240" fill="none" stroke="#161616" stroke-width="1.6" stroke-linecap="round"></path>'
         )
         .replace(
           'M 470 92 Q 471 88 475 88 L 603 88 Q 607 88 608 92 L 620 126 Q 621 130 617 130 L 461 130 Q 457 130 458 126 Z',
-          'M 446 68 Q 447 64 451 64 L 629 64 Q 633 64 634 68 L 638 96 Q 639 100 635 100 L 445 100 Q 441 100 442 96 Z'
+          'M 446 168 Q 447 164 451 164 L 629 164 Q 633 164 634 168 L 638 196 Q 639 200 635 200 L 445 200 Q 441 200 442 196 Z'
         )
-        .replace('labelY: drawerY + 108,', 'labelY: drawerY + 83,')
+        .replace('labelY: drawerY + 108,', 'labelY: drawerY + 183,')
         .replace('font-size:19px;font-weight:500', 'font-size:18px;font-weight:500');
 
       source.textContent = JSON.stringify(template);

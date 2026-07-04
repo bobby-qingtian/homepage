@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       const style = document.createElement('style');
       style.textContent = `
         .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(222,222,222,.42); opacity:0; }
-        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:transparent; border:0; border-radius:0; box-shadow:none; will-change:transform,clip-path; }
+        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#dedede; border:1.6px solid #161616; border-radius:10px; box-shadow:0 18px 48px rgba(0,0,0,.08); will-change:transform,clip-path; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
         .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; padding:clamp(24px,4vw,56px); color:#161616; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const path = source.querySelector('svg path');
         const pathRect = path ? path.getBoundingClientRect() : rect;
         const visibleHeight = Math.min(rect.height, 92);
-        const paperHeight = Math.max(pathRect.bottom - rect.top, visibleHeight + 180);
+        const paperHeight = Math.max(innerHeight * .72, pathRect.bottom - rect.top, visibleHeight + 360);
 
         const card = document.createElement('article');
         card.className = 'drawer-motion-card';
@@ -352,19 +352,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         const content = document.createElement('div');
         content.className = 'drawer-motion-content';
         content.style.top = `${Math.max(92, 118 * startScale)}px`;
-        const heading = document.createElement('div');
-        const kicker = document.createElement('div');
-        kicker.className = 'drawer-motion-kicker';
-        kicker.textContent = 'Selected file';
-        const title = document.createElement('div');
-        title.className = 'drawer-motion-title';
-        title.textContent = source.title || 'Untitled';
-        heading.append(kicker, title);
         const close = document.createElement('button');
         close.type = 'button';
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
-        content.append(heading, close);
+        content.append(close);
         card.append(row, content);
         document.body.append(overlay, card);
         document.body.classList.add('drawer-motion-lock');

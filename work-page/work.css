@@ -1,0 +1,338 @@
+:root {
+  color-scheme: light;
+  --page-bg: #242424;
+  --canvas: #e9e9e8;
+  --band: #dbdbda;
+  --line: #8f8f8f;
+  --ink: #202020;
+  --muted: #777;
+  --blue-gray: #8792a5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.work-page {
+  position: relative;
+  display: grid;
+  grid-template-rows: 7vh 43vh 4vh 36vh 10vh;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--canvas);
+  border: 1px solid #2b2b2b;
+}
+
+.work-page::before {
+  position: absolute;
+  top: 16vh;
+  left: -6.8vw;
+  width: 17vw;
+  height: 17vw;
+  min-width: 210px;
+  min-height: 210px;
+  content: "";
+  border-radius: 50%;
+  background: #d6d6d5;
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5vh 3.2vw 1vh;
+  background: var(--band);
+}
+
+.nav-box,
+.logo-box,
+.section-label,
+.experience-card,
+.case-study,
+.project-box,
+.competition-row,
+.footer-button,
+.footer-logo {
+  border: 1px solid var(--line);
+  background: #efefee;
+}
+
+.nav-box {
+  display: flex;
+  align-items: center;
+  width: min(62vw, 760px);
+  height: 3.4vh;
+  min-height: 28px;
+  padding: 0 1.4vw;
+  gap: 0.35vw;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(16px, 1.15vw, 26px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.logo-box {
+  display: grid;
+  width: clamp(108px, 10vw, 210px);
+  height: 3.4vh;
+  min-height: 28px;
+  place-items: center;
+  font-size: clamp(14px, 1vw, 22px);
+}
+
+.nav-box a:hover,
+.logo-box:hover,
+.footer-button:hover,
+.footer-logo:hover,
+.download-bar:hover {
+  background: #f7f7f6;
+}
+
+.experience-section {
+  position: relative;
+  z-index: 1;
+  padding: 2.3vh 3vw 2vh;
+}
+
+.section-label {
+  display: grid;
+  width: clamp(166px, 17vw, 340px);
+  height: 2.6vh;
+  min-height: 22px;
+  margin: 0;
+  padding-left: 0.8vw;
+  align-items: center;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(13px, 0.9vw, 20px);
+  font-weight: 400;
+}
+
+.timeline-button {
+  position: absolute;
+  top: 18.6vh;
+  left: 1.35vw;
+  z-index: 1;
+  display: grid;
+  width: clamp(92px, 6vw, 150px);
+  height: clamp(92px, 6vw, 150px);
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: #333;
+  font-size: clamp(16px, 1.15vw, 24px);
+  line-height: 1.05;
+  text-align: center;
+}
+
+.experience-list {
+  position: absolute;
+  inset: 7vh 8vw 2vh 15vw;
+}
+
+.experience-card {
+  position: absolute;
+  display: grid;
+  align-content: center;
+  height: 7vh;
+  min-height: 58px;
+  text-align: center;
+}
+
+.experience-card h2 {
+  margin: 0 0 0.8vh;
+  font-size: clamp(16px, 1.25vw, 28px);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.experience-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(12px, 0.85vw, 18px);
+  line-height: 1;
+}
+
+.card-one {
+  top: 0;
+  left: 0;
+  width: 44vw;
+}
+
+.card-two {
+  top: 10vh;
+  left: 5vw;
+  width: 54vw;
+}
+
+.card-three {
+  top: 22vh;
+  left: 0;
+  width: 44vw;
+}
+
+.download-bar {
+  display: grid;
+  place-items: center;
+  background: var(--blue-gray);
+  border-top: 1px solid #555;
+  border-bottom: 1px solid #555;
+  font-size: clamp(14px, 1vw, 22px);
+}
+
+.projects-section {
+  position: relative;
+  padding: 3vh 3.2vw 1.8vh;
+}
+
+.projects-label {
+  width: clamp(168px, 17vw, 340px);
+  margin-bottom: 1vh;
+}
+
+.case-study {
+  display: grid;
+  grid-template-columns: minmax(180px, 16vw) 1fr;
+  gap: 2.2vw;
+  align-items: center;
+  height: 13vh;
+  min-height: 106px;
+  padding: 1.5vh 1.4vw;
+}
+
+.ppt-box {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 9.5vh;
+  min-height: 82px;
+  place-items: center;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  font-size: clamp(16px, 1.15vw, 24px);
+}
+
+.ppt-box::before,
+.ppt-box::after {
+  position: absolute;
+  width: 120%;
+  height: 1px;
+  content: "";
+  background: var(--line);
+  transform-origin: center;
+}
+
+.ppt-box::before {
+  transform: rotate(27deg);
+}
+
+.ppt-box::after {
+  transform: rotate(-27deg);
+}
+
+.ppt-box span {
+  position: relative;
+  z-index: 1;
+}
+
+.case-copy h3 {
+  margin: 0 0 1vh;
+  font-size: clamp(17px, 1.3vw, 28px);
+  font-weight: 400;
+}
+
+.case-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(12px, 0.9vw, 18px);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2vw;
+  margin-top: 1.6vh;
+}
+
+.project-box {
+  display: grid;
+  height: 8vh;
+  min-height: 66px;
+  place-items: center;
+  font-size: clamp(14px, 1vw, 22px);
+  text-align: center;
+}
+
+.competition-row {
+  display: grid;
+  height: 4.2vh;
+  min-height: 35px;
+  margin-top: 1.6vh;
+  place-items: center;
+  font-size: clamp(14px, 1vw, 22px);
+}
+
+.work-footer {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(140px, 12vw) minmax(130px, 13vw) minmax(130px, 13vw) 1fr minmax(110px, 13vw);
+  align-items: start;
+  gap: 1.6vw;
+  padding: 1.6vh 3.2vw;
+  background: var(--band);
+}
+
+.footer-title {
+  margin: 0.3vh 0 0 0.5vw;
+  font-size: clamp(18px, 1.4vw, 30px);
+}
+
+.footer-button,
+.footer-logo {
+  display: grid;
+  height: 4vh;
+  min-height: 33px;
+  place-items: center;
+  font-size: clamp(14px, 1vw, 22px);
+}
+
+.copyright {
+  position: absolute;
+  right: 3.2vw;
+  bottom: 1.4vh;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(12px, 0.85vw, 18px);
+}
+
+@media (max-aspect-ratio: 4 / 3) {
+  body {
+    overflow: auto;
+  }
+
+  .work-page {
+    min-width: 1180px;
+  }
+}

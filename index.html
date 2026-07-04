@@ -194,6 +194,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       template = template
         .replaceAll('#e5e4e1', '#dedede')
         .replaceAll(' href="Profile.dc.html"', '')
+        .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'INTERESTS', u: 0.95 }")
+        .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'WORK', u: 0.03 }")
+        .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'ABOUT', u: 0.95 }")
+        .replace('transform:{{ nameTransform }}', 'transform:{{ row.nameTransform }}')
+        .replace('left:{{ row.nameX }}px;top:12px;', 'left:{{ row.nameX }}px;top:{{ row.nameTop }}px;')
+        .replace(
+          'nameX: xt2 - 14,',
+          "nameX: d.full ? (xt1 + xt2) / 2 : xt2 - 14,\n        nameTop: d.full ? 16 : 12,\n        nameTransform: d.full ? 'translateX(-50%)' : (flipped ? 'translateX(-100%) scaleY(-1)' : 'translateX(-100%)'),"
+        )
         .replace('title="{{ row.name }}" style=', 'title="{{ row.name }}" data-paper-path="{{ row.paperPath }}" style=')
         .replace(
           'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }}',
@@ -295,11 +304,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(222,222,222,.42); opacity:0; }
         .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#dedede; border:1.6px solid #161616; border-radius:10px; box-shadow:0 18px 48px rgba(0,0,0,.08); will-change:transform,clip-path; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
-        .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; padding:clamp(24px,4vw,56px); color:#161616; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
+        .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#161616; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
+        .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #161616; border-radius:10px; background:#e9e9e8; }
+        .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#e9e9e8; }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
         .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #161616; background:#f7ee52; color:#161616; border-radius:999px; padding:10px 18px; font:500 15px/1 Helvetica,Arial,sans-serif; cursor:pointer; }
+        .drawer-motion-work-back { position:absolute; left:14px; top:18px; z-index:110; appearance:none; border:0; border-radius:0; background:transparent; color:#161616; padding:2px 3px; font:400 13px/1.2 Helvetica,Arial,sans-serif; white-space:nowrap; cursor:pointer; }
+        .drawer-motion-work-back:hover { opacity:.58; }
+        .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
+        .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
         body.drawer-motion-lock { overflow:hidden !important; }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }
       `;
@@ -307,6 +322,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       let active = null;
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const workPageDocument = Promise.all([
+        fetch('../work-page/work.html').then(response => response.text()),
+        fetch('../work-page/work.css').then(response => response.text())
+      ]).then(([html, css]) =>
+        html.replace('<link rel="stylesheet" href="work.css">', `<style>${css}</style>`)
+      ).catch(() => null);
 
       function closeDrawerCard() {
         if (!active || active.closing) return;
@@ -315,9 +336,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         else active.timeline.reverse();
       }
 
-      function openDrawerCard(event, source) {
+      async function openDrawerCard(event, source) {
         event.preventDefault();
         if (active) return;
+
+        const isWork = (source.title || '').trim().toUpperCase() === 'WORK';
+        const loadedWorkPage = isWork ? await workPageDocument : null;
 
         const rect = source.getBoundingClientRect();
         const overlay = document.createElement('div');
@@ -356,11 +380,27 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.type = 'button';
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
-        content.append(close);
-        card.append(row, content);
+        if (isWork) {
+          content.classList.add('drawer-motion-content--work');
+          content.style.top = `${Math.max(48, 54 * startScale)}px`;
+          close.classList.add('drawer-motion-work-back');
+          close.textContent = '← back to index';
+          const workFrame = document.createElement('iframe');
+          workFrame.className = 'drawer-motion-work-frame';
+          if (loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
+          else workFrame.src = '../work-page/work.html';
+          workFrame.title = 'Work';
+          content.append(workFrame);
+        }
+        if (isWork) card.append(row, content, close);
+        else {
+          content.append(close);
+          card.append(row, content);
+        }
         document.body.append(overlay, card);
         document.body.classList.add('drawer-motion-lock');
         gsap.set(source, { autoAlpha:0 });
+        if (isWork) gsap.set(content, { autoAlpha:1 });
 
         const finish = () => {
           overlay.remove();
@@ -376,12 +416,21 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (reducedMotion) {
           const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
-          gsap.set(card, {
+          gsap.set(card, isWork ? {
+            x:-rect.left,
+            y:-rect.top,
+            width:innerWidth,
+            height:innerHeight,
+            borderRadius:0,
+            borderWidth:0,
+            clipPath:'inset(0 0 0px 0)'
+          } : {
             x:(innerWidth - rect.width * fit) / 2 - rect.left,
             y:(innerHeight - paperHeight * fit) / 2 - rect.top,
             scale:fit,
             clipPath:'inset(0 0 0px 0)'
           });
+          if (isWork) gsap.set(content, { left:0, right:0, top:44, bottom:0, borderRadius:0, borderWidth:0 });
           gsap.set([overlay, content], { autoAlpha:1 });
           active = { source, overlay, card, content, finish, closing:false };
           close.focus({ preventScroll:true });
@@ -390,8 +439,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const pullDistance = Math.max(80, paperHeight - visibleHeight + 18);
         const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
-        const targetX = (innerWidth - rect.width * fit) / 2 - rect.left;
-        const targetY = (innerHeight - paperHeight * fit) / 2 - rect.top;
+        const targetX = isWork ? -rect.left : (innerWidth - rect.width * fit) / 2 - rect.left;
+        const targetY = isWork ? -rect.top : (innerHeight - paperHeight * fit) / 2 - rect.top;
         const tilt = rect.left + rect.width / 2 < innerWidth / 2 ? -1.1 : 1.1;
         const timeline = gsap.timeline({
           defaults:{ overwrite:'auto' },
@@ -410,12 +459,26 @@ document.addEventListener('DOMContentLoaded', async function() {
           .to(card, {
             x:targetX,
             y:targetY,
-            scale:fit,
+            scale:isWork ? 1 : fit,
+            width:isWork ? innerWidth : rect.width,
+            height:isWork ? innerHeight : paperHeight,
+            borderRadius:isWork ? 0 : 10,
+            borderWidth:isWork ? 0 : 1.6,
             rotationZ:0,
             duration:.72,
             ease:'power3.inOut'
           }, '>-0.06')
-          .to(content, { autoAlpha:1, duration:.3, ease:'power1.out' }, '>-0.2');
+          .to(content, isWork ? {
+            left:0,
+            right:0,
+            top:44,
+            bottom:0,
+            borderRadius:0,
+            borderWidth:0,
+            duration:.72,
+            ease:'power3.inOut'
+          } : {}, '<')
+          .to(content, { autoAlpha:1, duration:isWork ? 0 : .3, ease:'power1.out' }, isWork ? 0 : '>-0.2');
         active = { source, overlay, card, content, timeline, finish, closing:false };
       }
 

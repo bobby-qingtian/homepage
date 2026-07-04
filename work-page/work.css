@@ -1,12 +1,12 @@
 :root {
   color-scheme: light;
-  --page-bg: #242424;
-  --canvas: #e9e9e8;
-  --band: #dbdbda;
-  --line: #8f8f8f;
-  --ink: #202020;
-  --muted: #777;
-  --blue-gray: #8792a5;
+  --page-bg: #403c37;
+  --canvas: #f8f2e8;
+  --band: #eee6da;
+  --line: #b9ad9c;
+  --ink: #403c37;
+  --muted: #81786d;
+  --blue-gray: #3f6174;
 }
 
 * {
@@ -23,7 +23,7 @@ body {
 body {
   background: var(--page-bg);
   color: var(--ink);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Courier New", Courier, monospace;
 }
 
 a {
@@ -39,7 +39,7 @@ a {
   min-height: 100vh;
   overflow: hidden;
   background: var(--canvas);
-  border: 1px solid #2b2b2b;
+  border: 1px solid var(--ink);
 }
 
 .work-page::before {
@@ -52,7 +52,7 @@ a {
   min-height: 210px;
   content: "";
   border-radius: 50%;
-  background: #d6d6d5;
+  background: #e7ded1;
 }
 
 .topbar {
@@ -75,7 +75,7 @@ a {
 .footer-button,
 .footer-logo {
   border: 1px solid var(--line);
-  background: #efefee;
+  background: #fbf6ee;
 }
 
 .nav-box {
@@ -86,7 +86,7 @@ a {
   min-height: 28px;
   padding: 0 1.4vw;
   gap: 0.35vw;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Courier New", Courier, monospace;
   font-size: clamp(16px, 1.15vw, 26px);
   line-height: 1;
   white-space: nowrap;
@@ -106,7 +106,7 @@ a {
 .footer-button:hover,
 .footer-logo:hover,
 .download-bar:hover {
-  background: #f7f7f6;
+  background: #fffaf2;
 }
 
 .experience-section {
@@ -123,7 +123,7 @@ a {
   margin: 0;
   padding-left: 0.8vw;
   align-items: center;
-  font-family: "Times New Roman", Times, serif;
+  font-family: "Courier New", Courier, monospace;
   font-size: clamp(13px, 0.9vw, 20px);
   font-weight: 400;
 }
@@ -197,8 +197,8 @@ a {
   display: grid;
   place-items: center;
   background: var(--blue-gray);
-  border-top: 1px solid #555;
-  border-bottom: 1px solid #555;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
   font-size: clamp(14px, 1vw, 22px);
 }
 

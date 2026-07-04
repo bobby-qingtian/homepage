@@ -6,9 +6,9 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #dedede; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: Helvetica, Arial, sans-serif; }
+    body { background: #f4eee5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: "Courier New", Courier, monospace; }
     #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
-    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #dedede; z-index: 9999; }
+    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f4eee5; z-index: 9999; }
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
     #__bundler_placeholder { color: #999; font-size: 14px; }
   </style>
@@ -192,13 +192,44 @@ document.addEventListener('DOMContentLoaded', async function() {
       let template = JSON.parse(source.textContent);
 
       template = template
-        .replaceAll('#e5e4e1', '#dedede')
+        .replace("tabFill: d.d ? '#161616' : 'none'", "tabFill: d.d ? '#3f6174' : 'none'")
+        .replaceAll('#e5e4e1', '#f4eee5')
+        .replaceAll('#ffffff', '#f8f2e8')
+        .replaceAll('#f7ee52', '#bd873f')
+        .replaceAll('font-family:Helvetica,Arial,sans-serif', 'font-family:"Courier New",Courier,monospace')
         .replaceAll(' href="Profile.dc.html"', '')
+        .replace("{ num: '01', name: 'about', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '02', name: 'archive', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ d: 1, num: 'A', name: '002', u: 0.03 }", "{ d: 1, num: '', name: '', u: 0.03 }")
+        .replace("{ num: '03', name: 'blog', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '04', name: 'books', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ num: '05', name: 'code', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '06', name: 'collections', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ d: 1, num: 'C', name: '003', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'About', u: 0.03 }")
+        .replace("{ num: '07', name: 'contact', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '08', name: 'design', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ num: '09', name: 'drawings', u: 0.13 }", "{ full: 1, num: '', name: 'Education', u: 0.13 }")
+        .replace("{ num: '10', name: 'music', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ num: '11', name: 'notes', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '12', name: 'photos', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '13', name: 'playlists', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ num: '14', name: 'projects', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '15', name: 'reading', u: 0.80 }", "{ full: 1, num: '', name: 'photography', u: 0.80 }")
+        .replace("{ num: '16', name: 'sketches', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '17', name: 'studio', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '18', name: 'travel', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ num: '19', name: 'work', u: 0.40 }", "{ full: 1, wide: 1, num: '', name: 'Professional Experiences', u: 0.40 }")
+        .replace("{ num: '20', name: 'writing', u: 0.40 }", "{ full: 1, num: '', name: 'Projects', u: 0.40 }")
+        .replace("{ num: '21', name: 'wishlist', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
         .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'INTERESTS', u: 0.95 }")
-        .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'WORK', u: 0.03 }")
-        .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'ABOUT', u: 0.95 }")
+        .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ d: 1, full: 1, narrow: 1, num: '', name: 'WORK', u: 0.03 }")
+        .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ d: 1, num: '', name: '', u: 0.95 }")
         .replace('transform:{{ nameTransform }}', 'transform:{{ row.nameTransform }}')
         .replace('left:{{ row.nameX }}px;top:12px;', 'left:{{ row.nameX }}px;top:{{ row.nameTop }}px;')
+        .replace(
+          'const tx = L + d.u * (R - L - tw);\n      const x1 = tx, x2 = tx + tw, xt1 = tx + slant, xt2 = tx + tw - slant;',
+          'const rowTw = d.wide ? 280 : (d.narrow ? 140 : tw);\n      const tx = L + d.u * (R - L - rowTw);\n      const x1 = tx, x2 = tx + rowTw, xt1 = tx + slant, xt2 = tx + rowTw - slant;'
+        )
         .replace(
           'nameX: xt2 - 14,',
           "nameX: d.full ? (xt1 + xt2) / 2 : xt2 - 14,\n        nameTop: d.full ? 16 : 12,\n        nameTransform: d.full ? 'translateX(-50%)' : (flipped ? 'translateX(-100%) scaleY(-1)' : 'translateX(-100%)'),"
@@ -279,14 +310,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         )
         .replace(
           '<path d="M -66 30 L 12 240 M 1146 30 L 1068 240" fill="none" stroke="#161616" stroke-width="1.6" stroke-linecap="round"></path>',
-          '<path d="M -66 30 L 1146 30 L 1068 240 L 12 240 Z" fill="#dedede" stroke="none"></path>\n      <path d="M -66 30 L 12 240 M 1146 30 L 1068 240" fill="none" stroke="#161616" stroke-width="1.6" stroke-linecap="round"></path>'
+          '<path d="M -66 30 L 1146 30 L 1068 240 L 12 240 Z" fill="#f4eee5" stroke="none"></path>\n      <path d="M -66 30 L 12 240 M 1146 30 L 1068 240" fill="none" stroke="#b9ad9c" stroke-width="1.6" stroke-linecap="round"></path>'
         )
         .replace(
           'M 470 92 Q 471 88 475 88 L 603 88 Q 607 88 608 92 L 620 126 Q 621 130 617 130 L 461 130 Q 457 130 458 126 Z',
           'M 446 168 Q 447 164 451 164 L 629 164 Q 633 164 634 168 L 638 196 Q 639 200 635 200 L 445 200 Q 441 200 442 196 Z'
         )
         .replace('labelY: drawerY + 108,', 'labelY: drawerY + 183,')
-        .replace('font-size:19px;font-weight:500', 'font-size:18px;font-weight:500');
+        .replace('font-size:19px;font-weight:500', 'font-size:18px;font-weight:500')
+        .replaceAll('stroke="#161616"', 'stroke="#b9ad9c"')
+        .replaceAll('#161616', '#403c37');
 
       source.textContent = JSON.stringify(template);
     })();
@@ -301,17 +334,18 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       const style = document.createElement('style');
       style.textContent = `
-        .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(222,222,222,.42); opacity:0; }
-        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#dedede; border:1.6px solid #161616; border-radius:10px; box-shadow:0 18px 48px rgba(0,0,0,.08); will-change:transform,clip-path; }
+        html, body { overflow-anchor:none; }
+        .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(244,238,229,.58); opacity:0; }
+        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#f4eee5; border:1.6px solid #403c37; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
-        .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#161616; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
-        .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #161616; border-radius:10px; background:#e9e9e8; }
-        .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#e9e9e8; }
+        .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#403c37; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
+        .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #403c37; border-radius:10px; background:#f8f2e8; }
+        .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#f8f2e8; }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
-        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #161616; background:#f7ee52; color:#161616; border-radius:999px; padding:10px 18px; font:500 15px/1 Helvetica,Arial,sans-serif; cursor:pointer; }
-        .drawer-motion-work-back { position:absolute; left:14px; top:18px; z-index:110; appearance:none; border:0; border-radius:0; background:transparent; color:#161616; padding:2px 3px; font:400 13px/1.2 Helvetica,Arial,sans-serif; white-space:nowrap; cursor:pointer; }
-        .drawer-motion-work-back:hover { opacity:.58; }
+        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#403c37; border-radius:999px; padding:10px 18px; font:500 15px/1 "Courier New",Courier,monospace; cursor:pointer; }
+        .drawer-motion-work-back { position:absolute; left:-15px; top:0; z-index:110; display:grid; width:145px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#f8f2e8; color:#403c37; padding:0; clip-path:path('M 0 46 C 9 46 14 41 18 30 L 22 14 C 25 5 31 1 40 1 L 105 1 C 114 1 120 5 123 14 L 127 30 C 131 41 136 46 145 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:400 17px/1 "Courier New",Courier,monospace; white-space:nowrap; cursor:pointer; }
+        .drawer-motion-work-back:hover { background:#fffaf2; }
         .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
@@ -333,7 +367,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!active || active.closing) return;
         active.closing = true;
         if (reducedMotion) active.finish();
-        else active.timeline.reverse();
+        else if (active.returnToSource) active.returnToSource();
+        else {
+          // Play the complete extraction in reverse: first shrink the full WORK
+          // page back into its paper card, then slide and clip that card into
+          // the exact source tab before revealing the original stack again.
+          if (active.isWork) {
+            const homeTab = active.card.querySelector('.drawer-motion-work-back');
+            if (homeTab) gsap.to(homeTab, { autoAlpha:0, duration:.18, ease:'power1.out' });
+          }
+          active.timeline.timeScale(active.isWork ? .86 : 1).reverse();
+        }
       }
 
       async function openDrawerCard(event, source) {
@@ -342,6 +386,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const isWork = (source.title || '').trim().toUpperCase() === 'WORK';
         const loadedWorkPage = isWork ? await workPageDocument : null;
+        const scrollXAtOpen = window.scrollX;
+        const scrollYAtOpen = window.scrollY;
+        const bodyStyleAtOpen = {
+          position:document.body.style.position,
+          top:document.body.style.top,
+          left:document.body.style.left,
+          right:document.body.style.right,
+          width:document.body.style.width
+        };
 
         const rect = source.getBoundingClientRect();
         const overlay = document.createElement('div');
@@ -369,6 +422,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         row.removeAttribute('style-hover');
         const smoothPaperPath = source.getAttribute('data-paper-path');
         const clonedPaperPath = row.querySelector('svg path');
+        const sourcePaperRectAtOpen = source.querySelector('svg path').getBoundingClientRect();
+        const rawTabRectAtOpen = source.querySelectorAll('svg path')[1].getBoundingClientRect();
+        const sourceTabRectAtOpen = rawTabRectAtOpen.width > 1 ? rawTabRectAtOpen : sourcePaperRectAtOpen;
         if (smoothPaperPath && clonedPaperPath) clonedPaperPath.setAttribute('d', smoothPaperPath);
         const startScale = rect.width / 1080;
         row.style.transform = `scale(${startScale})`;
@@ -384,7 +440,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           content.classList.add('drawer-motion-content--work');
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
           close.classList.add('drawer-motion-work-back');
-          close.textContent = '← back to index';
+          close.textContent = 'HOME';
           const workFrame = document.createElement('iframe');
           workFrame.className = 'drawer-motion-work-frame';
           if (loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
@@ -399,16 +455,34 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         document.body.append(overlay, card);
         document.body.classList.add('drawer-motion-lock');
+        Object.assign(document.body.style, {
+          position:'fixed',
+          top:`-${scrollYAtOpen}px`,
+          left:`-${scrollXAtOpen}px`,
+          right:'0',
+          width:'100%'
+        });
         gsap.set(source, { autoAlpha:0 });
         if (isWork) gsap.set(content, { autoAlpha:1 });
 
         const finish = () => {
+          if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
           overlay.remove();
           card.remove();
           gsap.set(source, { clearProps:'opacity,visibility' });
           document.body.classList.remove('drawer-motion-lock');
+          Object.assign(document.body.style, bodyStyleAtOpen);
           active = null;
-          source.focus({ preventScroll:true });
+          if (!isWork) source.focus({ preventScroll:true });
+          const restoreScroll = () => window.scrollTo(scrollXAtOpen, scrollYAtOpen);
+          restoreScroll();
+          requestAnimationFrame(() => {
+            restoreScroll();
+            requestAnimationFrame(restoreScroll);
+          });
+          window.setTimeout(restoreScroll, 50);
+          window.setTimeout(restoreScroll, 150);
+          window.setTimeout(restoreScroll, 300);
         };
 
         overlay.addEventListener('click', closeDrawerCard);
@@ -431,8 +505,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             clipPath:'inset(0 0 0px 0)'
           });
           if (isWork) gsap.set(content, { left:0, right:0, top:44, bottom:0, borderRadius:0, borderWidth:0 });
+          if (isWork && clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
           gsap.set([overlay, content], { autoAlpha:1 });
-          active = { source, overlay, card, content, finish, closing:false };
+          active = { source, overlay, card, content, finish, closing:false, isWork };
           close.focus({ preventScroll:true });
           return;
         }
@@ -478,8 +553,58 @@ document.addEventListener('DOMContentLoaded', async function() {
             duration:.72,
             ease:'power3.inOut'
           } : {}, '<')
+          .to(clonedPaperPath, isWork ? { opacity:0, duration:.2, ease:'power1.out' } : {}, '<.5')
           .to(content, { autoAlpha:1, duration:isWork ? 0 : .3, ease:'power1.out' }, isWork ? 0 : '>-0.2');
-        active = { source, overlay, card, content, timeline, finish, closing:false };
+        const returnToSource = () => {
+          const homeTab = card.querySelector('.drawer-motion-work-back');
+          const paperScale = Math.min(.94, sourcePaperRectAtOpen.width / rect.width);
+          const scaledPaperHeight = paperHeight * paperScale;
+          const insertionY = sourceTabRectAtOpen.top + visibleHeight;
+          const centeredLeft = sourcePaperRectAtOpen.left;
+          const floatTop = insertionY - scaledPaperHeight;
+          const finalTop = sourceTabRectAtOpen.top;
+          const scaleInsetX = rect.width * (1 - paperScale) / 2;
+          const scaleInsetY = paperHeight * (1 - paperScale) / 2;
+          const floatX = centeredLeft - rect.left - scaleInsetX;
+          const floatY = floatTop - rect.top - scaleInsetY;
+          const finalY = finalTop - rect.top - scaleInsetY;
+          const closedClip = `inset(0 0 ${paperHeight - visibleHeight / paperScale}px 0)`;
+
+          const returnTimeline = gsap.timeline({ defaults:{ overwrite:'auto' }, onComplete:finish });
+          returnTimeline
+            // Turn the full-screen view into a proportionally smaller sheet.
+            .to(card, {
+              x:floatX,
+              y:floatY,
+              width:rect.width,
+              height:paperHeight,
+              scale:paperScale,
+              rotationZ:0,
+              borderRadius:10,
+              borderWidth:1.6,
+              clipPath:'inset(0 0 0px 0)',
+              duration:.78,
+              ease:'power3.inOut'
+            })
+            .to(content, {
+              left:'4%', right:'4%', top:Math.max(48, 54 * startScale), bottom:'4%',
+              borderRadius:10, borderWidth:1.5,
+              duration:.78, ease:'power3.inOut'
+            }, '<');
+          if (homeTab) returnTimeline.to(homeTab, { autoAlpha:0, duration:.18, ease:'power1.out' }, '<.48');
+          returnTimeline
+            .to(clonedPaperPath, { opacity:1, duration:.2, ease:'power1.out' }, homeTab ? '<' : '<.48')
+            // Feed the sheet downward from its bottom edge into its source slot.
+            .to(card, {
+              y:finalY,
+              clipPath:closedClip,
+              duration:1.05,
+              ease:'power2.inOut'
+            })
+            .to(overlay, { autoAlpha:0, duration:.55, ease:'power1.out' }, '<.42');
+        };
+
+        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork };
       }
 
       document.addEventListener('click', event => {

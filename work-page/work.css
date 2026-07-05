@@ -39,7 +39,8 @@ a {
   min-height: 100vh;
   overflow: hidden;
   background: var(--canvas);
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line);
+  border-top: 0;
 }
 
 .work-page::before {

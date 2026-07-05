@@ -196,39 +196,40 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replaceAll('#e5e4e1', '#f4eee5')
         .replaceAll('#ffffff', '#f8f2e8')
         .replaceAll('#f7ee52', '#bd873f')
+        .replace('my secret files', 'My Archive')
         .replaceAll('font-family:Helvetica,Arial,sans-serif', 'font-family:"Courier New",Courier,monospace')
         .replaceAll(' href="Profile.dc.html"', '')
         .replace("{ num: '01', name: 'about', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '02', name: 'archive', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ d: 1, num: 'A', name: '002', u: 0.03 }", "{ d: 1, num: '', name: '', u: 0.03 }")
-        .replace("{ num: '03', name: 'blog', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '04', name: 'books', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ num: '05', name: 'code', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ d: 1, num: 'A', name: '002', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'About', u: 0.03 }")
+        .replace("{ num: '03', name: 'blog', u: 0.40 }", "{ full: 1, num: '', name: 'Profile', u: 0.40 }")
+        .replace("{ num: '04', name: 'books', u: 0.80 }", "{ full: 1, num: '', name: 'Education', u: 0.80 }")
+        .replace("{ num: '05', name: 'code', u: 0.40 }", "{ full: 1, num: '', name: 'Skills', u: 0.40 }")
         .replace("{ num: '06', name: 'collections', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ d: 1, num: 'C', name: '003', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'About', u: 0.03 }")
-        .replace("{ num: '07', name: 'contact', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '08', name: 'design', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ num: '09', name: 'drawings', u: 0.13 }", "{ full: 1, num: '', name: 'Education', u: 0.13 }")
+        .replace("{ d: 1, num: 'C', name: '003', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'Work', u: 0.08 }")
+        .replace("{ num: '07', name: 'contact', u: 0.40 }", "{ full: 1, num: '', name: 'Experiences', u: 0.40 }")
+        .replace("{ num: '08', name: 'design', u: 0.80 }", "{ full: 1, num: '', name: 'Projects', u: 0.80 }")
+        .replace("{ num: '09', name: 'drawings', u: 0.13 }", "{ num: '', name: '', u: 0.13 }")
         .replace("{ num: '10', name: 'music', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
         .replace("{ num: '11', name: 'notes', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '12', name: 'photos', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '13', name: 'playlists', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
+        .replace("{ num: '12', name: 'photos', u: 0.40 }", "{ full: 1, num: '', name: 'Interests', u: 0.40 }")
+        .replace("{ num: '13', name: 'playlists', u: 0.80 }", "{ full: 1, num: '', name: 'Photography', u: 0.80 }")
         .replace("{ num: '14', name: 'projects', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '15', name: 'reading', u: 0.80 }", "{ full: 1, num: '', name: 'photography', u: 0.80 }")
+        .replace("{ num: '15', name: 'reading', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
         .replace("{ num: '16', name: 'sketches', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '17', name: 'studio', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '18', name: 'travel', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ num: '19', name: 'work', u: 0.40 }", "{ full: 1, wide: 1, num: '', name: 'Professional Experiences', u: 0.40 }")
-        .replace("{ num: '20', name: 'writing', u: 0.40 }", "{ full: 1, num: '', name: 'Projects', u: 0.40 }")
+        .replace("{ num: '19', name: 'work', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
+        .replace("{ num: '20', name: 'writing', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '21', name: 'wishlist', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
         .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'INTERESTS', u: 0.95 }")
-        .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ d: 1, full: 1, narrow: 1, num: '', name: 'WORK', u: 0.03 }")
-        .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ d: 1, num: '', name: '', u: 0.95 }")
+        .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ num: '', name: '', u: 0.03 }")
+        .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ num: '', name: '', u: 0.95 }")
         .replace('transform:{{ nameTransform }}', 'transform:{{ row.nameTransform }}')
         .replace('left:{{ row.nameX }}px;top:12px;', 'left:{{ row.nameX }}px;top:{{ row.nameTop }}px;')
         .replace(
           'const tx = L + d.u * (R - L - tw);\n      const x1 = tx, x2 = tx + tw, xt1 = tx + slant, xt2 = tx + tw - slant;',
-          'const rowTw = d.wide ? 280 : (d.narrow ? 140 : tw);\n      const tx = L + d.u * (R - L - rowTw);\n      const x1 = tx, x2 = tx + rowTw, xt1 = tx + slant, xt2 = tx + rowTw - slant;'
+          'const rowTw = tw;\n      const tx = L + d.u * (R - L - rowTw);\n      const x1 = tx, x2 = tx + rowTw, xt1 = tx + slant, xt2 = tx + rowTw - slant;'
         )
         .replace(
           'nameX: xt2 - 14,',
@@ -314,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         )
         .replace(
           'M 470 92 Q 471 88 475 88 L 603 88 Q 607 88 608 92 L 620 126 Q 621 130 617 130 L 461 130 Q 457 130 458 126 Z',
-          'M 446 168 Q 447 164 451 164 L 629 164 Q 633 164 634 168 L 638 196 Q 639 200 635 200 L 445 200 Q 441 200 442 196 Z'
+          'M 447 164 Q 443 164 442 168 L 449 196 Q 450 200 454 200 L 626 200 Q 630 200 631 196 L 638 168 Q 639 164 635 164 Z'
         )
         .replace('labelY: drawerY + 108,', 'labelY: drawerY + 183,')
         .replace('font-size:19px;font-weight:500', 'font-size:18px;font-weight:500')
@@ -336,23 +337,66 @@ document.addEventListener('DOMContentLoaded', async function() {
       style.textContent = `
         html, body { overflow-anchor:none; }
         .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(244,238,229,.58); opacity:0; }
-        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#f4eee5; border:1.6px solid #403c37; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
+        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#f4eee5; border:1.6px solid #b9ad9c; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
+        .drawer-motion-card--work::after { position:absolute; left:0; right:0; top:46px; z-index:200; height:1px; content:''; background:#b9ad9c; pointer-events:none; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
         .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#403c37; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
-        .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #403c37; border-radius:10px; background:#f8f2e8; }
+        .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #b9ad9c; border-radius:10px; background:#f8f2e8; }
         .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#f8f2e8; }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
         .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#403c37; border-radius:999px; padding:10px 18px; font:500 15px/1 "Courier New",Courier,monospace; cursor:pointer; }
-        .drawer-motion-work-back { position:absolute; left:-15px; top:0; z-index:110; display:grid; width:145px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#f8f2e8; color:#403c37; padding:0; clip-path:path('M 0 46 C 9 46 14 41 18 30 L 22 14 C 25 5 31 1 40 1 L 105 1 C 114 1 120 5 123 14 L 127 30 C 131 41 136 46 145 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:400 17px/1 "Courier New",Courier,monospace; white-space:nowrap; cursor:pointer; }
+        .drawer-motion-work-back { position:absolute; left:0; top:0; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#fffaf2; color:#403c37; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:400 17px/1 "Courier New",Courier,monospace; white-space:nowrap; cursor:pointer; }
         .drawer-motion-work-back:hover { background:#fffaf2; }
         .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
+        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#403c37; font:400 18px/1.15 "Courier New",Courier,monospace; }
+        .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:1px solid #403c37; background:#403c37; color:#f8f2e8; font:inherit; font-size:14px; cursor:pointer; }
+        .homepage-language-switch span { display:grid; place-items:center; }
+        .homepage-language-switch span.is-active { background:#b9ad9c; color:#403c37; }
+        .homepage-corner-link { color:#403c37; text-decoration:none; border-bottom:1px solid currentColor; }
+        .homepage-corner-link::before { content:'↘'; display:inline-block; margin-right:8px; text-decoration:none; }
+        .homepage-corner-link:hover { color:#3f6174; }
+        @media (max-width:700px) { .homepage-corner-nav { top:14px; right:14px; gap:8px; font-size:14px; } .homepage-language-switch { width:58px; height:26px; font-size:12px; } }
         body.drawer-motion-lock { overflow:hidden !important; }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }
       `;
       document.head.appendChild(style);
+
+      if (!document.querySelector('.homepage-corner-nav')) {
+        const cornerNav = document.createElement('nav');
+        cornerNav.className = 'homepage-corner-nav';
+        cornerNav.setAttribute('aria-label', 'Language and contact links');
+        cornerNav.innerHTML = `
+          <button class="homepage-language-switch" type="button" aria-label="Switch language" aria-pressed="false"><span class="is-active">EN</span><span>中</span></button>
+          <a class="homepage-corner-link" href="https://www.linkedin.com/in/bobby-qingtian-huang/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="homepage-corner-link" href="mailto:Qingtianbobby@gmail.com">Email</a>
+        `;
+        document.body.appendChild(cornerNav);
+
+        const languageButton = cornerNav.querySelector('.homepage-language-switch');
+        const labels = {
+          About:'关于', Profile:'简介', Education:'教育', Skills:'技能', Work:'作品',
+          Experiences:'经历', Projects:'项目', INTERESTS:'兴趣', Interests:'兴趣', Photography:'摄影'
+        };
+        languageButton.addEventListener('click', () => {
+          const chinese = languageButton.getAttribute('aria-pressed') !== 'true';
+          languageButton.setAttribute('aria-pressed', String(chinese));
+          const languageSpans = languageButton.querySelectorAll('span');
+          languageSpans[0].classList.toggle('is-active', !chinese);
+          languageSpans[1].classList.toggle('is-active', chinese);
+          document.querySelectorAll('[data-screen-label="Index drawer"] a').forEach(link => {
+            const original = link.getAttribute('title') || '';
+            const textNodes = Array.from(link.children).filter(child => child.tagName === 'DIV');
+            const nameNode = textNodes[textNodes.length - 1];
+            if (nameNode && labels[original]) nameNode.textContent = chinese ? labels[original] : original;
+          });
+          const archiveLabel = Array.from(document.querySelectorAll('[data-screen-label="Index drawer"] div'))
+            .find(node => node.textContent.trim() === 'My Archive' || node.textContent.trim() === '我的档案');
+          if (archiveLabel) archiveLabel.textContent = chinese ? '我的档案' : 'My Archive';
+        });
+      }
 
       let active = null;
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -422,10 +466,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         row.removeAttribute('style-hover');
         const smoothPaperPath = source.getAttribute('data-paper-path');
         const clonedPaperPath = row.querySelector('svg path');
+        const clonedTabPath = row.querySelectorAll('svg path')[1];
         const sourcePaperRectAtOpen = source.querySelector('svg path').getBoundingClientRect();
         const rawTabRectAtOpen = source.querySelectorAll('svg path')[1].getBoundingClientRect();
         const sourceTabRectAtOpen = rawTabRectAtOpen.width > 1 ? rawTabRectAtOpen : sourcePaperRectAtOpen;
         if (smoothPaperPath && clonedPaperPath) clonedPaperPath.setAttribute('d', smoothPaperPath);
+        // The source tab is drawn from y=6 to y=46. In the fullscreen Work view,
+        // extend its coloured face from y=0 through the rule to prevent a seam.
+        if (isWork && clonedTabPath) {
+          // Cover two extra SVG units at the bottom so browser scaling cannot
+          // reveal a hairline gap between the tab face and the horizontal rule.
+          clonedTabPath.setAttribute('transform', 'matrix(1 0 0 1.2 0 -7.2)');
+        }
         const startScale = rect.width / 1080;
         row.style.transform = `scale(${startScale})`;
 
@@ -437,6 +489,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
         if (isWork) {
+          card.classList.add('drawer-motion-card--work');
           content.classList.add('drawer-motion-content--work');
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
           close.classList.add('drawer-motion-work-back');

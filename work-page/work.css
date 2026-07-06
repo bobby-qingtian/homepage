@@ -80,6 +80,7 @@ a {
 
 .logo-box {
   display: grid;
+  margin-left: auto;
   width: clamp(108px, 10vw, 210px);
   height: 3.4vh;
   min-height: 28px;

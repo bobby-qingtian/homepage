@@ -3,10 +3,14 @@
 <head>
   <meta charset="utf-8">
   <title>Huang Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #f4eee5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: "Courier New", Courier, monospace; }
+    html, body, body * { font-family: "Libre Caslon Text", Georgia, serif !important; }
+    body { background: #f4eee5; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
     #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f4eee5; z-index: 9999; }
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
@@ -197,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replaceAll('#ffffff', '#f8f2e8')
         .replaceAll('#f7ee52', '#bd873f')
         .replace('my secret files', 'My Archive')
-        .replaceAll('font-family:Helvetica,Arial,sans-serif', 'font-family:"Courier New",Courier,monospace')
+        .replaceAll('font-family:Helvetica,Arial,sans-serif', 'font-family:"Libre Caslon Text",Georgia,serif')
         .replaceAll(' href="Profile.dc.html"', '')
         .replace("{ num: '01', name: 'about', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '02', name: 'archive', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
@@ -222,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace("{ num: '19', name: 'work', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '20', name: 'writing', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '21', name: 'wishlist', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'INTERESTS', u: 0.95 }")
+        .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'Interests', u: 0.95 }")
         .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ num: '', name: '', u: 0.03 }")
         .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ num: '', name: '', u: 0.95 }")
         .replace('transform:{{ nameTransform }}', 'transform:{{ row.nameTransform }}')
@@ -322,6 +326,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replaceAll('stroke="#161616"', 'stroke="#b9ad9c"')
         .replaceAll('#161616', '#403c37');
 
+      template = template.replace(
+        '</head>',
+        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+        '<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">' +
+        '<style>html,body,body *{font-family:"Libre Caslon Text",Georgia,serif!important}</style></head>'
+      );
+
       source.textContent = JSON.stringify(template);
     })();
 
@@ -345,17 +357,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#f8f2e8; }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
-        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#403c37; border-radius:999px; padding:10px 18px; font:500 15px/1 "Courier New",Courier,monospace; cursor:pointer; }
-        .drawer-motion-work-back { position:absolute; left:0; top:0; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#fffaf2; color:#403c37; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:400 17px/1 "Courier New",Courier,monospace; white-space:nowrap; cursor:pointer; }
+        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#403c37; border-radius:999px; padding:10px 18px; font:500 15px/1 "Libre Caslon Text",Georgia,serif; cursor:pointer; }
+        .drawer-motion-work-back { position:absolute; left:0; top:0; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#fffaf2; color:#403c37; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:400 17px/1 "Libre Caslon Text",Georgia,serif; white-space:nowrap; cursor:pointer; }
         .drawer-motion-work-back:hover { background:#fffaf2; }
         .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
-        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#403c37; font:400 18px/1.15 "Courier New",Courier,monospace; }
+        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#403c37; font:400 18px/1.15 "Libre Caslon Text",Georgia,serif; }
         .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:1px solid #403c37; background:#403c37; color:#f8f2e8; font:inherit; font-size:14px; cursor:pointer; }
         .homepage-language-switch span { display:grid; place-items:center; }
         .homepage-language-switch span.is-active { background:#b9ad9c; color:#403c37; }
-        .homepage-corner-link { color:#403c37; text-decoration:none; border-bottom:1px solid currentColor; }
+        .homepage-corner-link { color:#403c37; text-decoration:none; }
         .homepage-corner-link::before { content:'↘'; display:inline-block; margin-right:8px; text-decoration:none; }
         .homepage-corner-link:hover { color:#3f6174; }
         @media (max-width:700px) { .homepage-corner-nav { top:14px; right:14px; gap:8px; font-size:14px; } .homepage-language-switch { width:58px; height:26px; font-size:12px; } }
@@ -402,9 +414,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const workPageDocument = Promise.all([
         fetch('./work-page/work.html').then(response => response.text()),
-        fetch('./work-page/work.css').then(response => response.text())
-      ]).then(([html, css]) =>
-        html.replace('<link rel="stylesheet" href="work.css">', `<style>${css}</style>`)
+        fetch('./work-page/work.css').then(response => response.text()),
+        fetch('./work-page/work.js').then(response => response.text())
+      ]).then(([html, css, js]) =>
+        html
+          .replace('<link rel="stylesheet" href="work.css">', `<style>${css}</style>`)
+          .replace('<script src="work.js" defer><\/script>', `<script>${js}<\/script>`)
       ).catch(() => null);
 
       function closeDrawerCard() {

@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Work</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="work.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js" defer></script>
+    <script src="work.js" defer></script>
   </head>
   <body>
     <main class="work-page" aria-label="Standalone work page wireframe">
@@ -15,7 +21,7 @@
           <span>&middot;</span>
           <span class="nav-item">ABOUT</span>
           <span>&middot;</span>
-          <span class="nav-item">INTERESTS</span>
+          <span class="nav-item">Interests</span>
           <span>&middot;</span>
           <span class="nav-item">CV</span>
         </nav>
@@ -24,47 +30,120 @@
 
       <section class="experience-section" aria-labelledby="workExperience">
         <h1 class="section-label" id="workExperience">WORK EXPERIENCE</h1>
-        <button class="timeline-button" type="button">Interactive<br>Timeline<br>Button</button>
+        <p class="experience-intro">Finance graduate with institutional experience across J.P. Morgan, UBS, and NAB, now moving toward project and structured finance. My work has centered on how capital moves across borders, and how institutions assess the clients they take on. I'm applying that foundation to infrastructure, energy transition, and real assets.</p>
 
-        <div class="experience-list">
-          <article class="experience-card card-one">
-            <h2>ENTRY - NARRATIVE (~60 WORDS)</h2>
-            <p>META LINE + TAGS (~10 WORDS)</p>
+        <div class="timeline-wheel" aria-label="Interactive work experience timeline">
+          <div class="timeline-rotor" role="tablist" aria-orientation="vertical">
+            <button class="timeline-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="experience-01" data-index="0">
+              <span class="timeline-number">01</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+            </button>
+            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-02" data-index="1" tabindex="-1">
+              <span class="timeline-number">02</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+            </button>
+            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-03" data-index="2" tabindex="-1">
+              <span class="timeline-number">03</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="experience-list" aria-live="polite">
+          <article class="experience-card is-active" id="experience-01" role="tabpanel" aria-label="Experience 01">
+            <div class="experience-heading-row">
+              <div>
+                <p class="experience-count">01 / 03 · AUG 2022 – MAR 2023</p>
+                <h2>Strategic Project Coordinator, Clio</h2>
+              </div>
+            </div>
+            <div class="experience-details" id="experience-01-details">
+              <p class="experience-description">I sat on the business operations team and coordinated the company-wide projects behind Clio's push into Asia-Pacific. The two big ones were migrating 30,000+ clients onto a new pricing model, and shaping the go-to-market strategy for the APAC launch across five international teams. I also ran the change-management hub and weekly training that kept everyone executing off the same playbook.</p>
+              <p class="experience-stats">30K+ CLIENTS MIGRATED · $500K RECURRING REVENUE · 60% ABOVE TARGET · 5 INTL TEAMS</p>
+            </div>
           </article>
-          <article class="experience-card card-two">
-            <h2>ENTRY - NARRATIVE (~60 WORDS)</h2>
-            <p>META LINE + TAGS (~10 WORDS)</p>
+          <article class="experience-card" id="experience-02" role="tabpanel" aria-label="Experience 02" aria-hidden="true">
+            <div class="experience-heading-row">
+              <div>
+                <p class="experience-count">02 / 03 · JUL 2024 – JUL 2025</p>
+                <h2>Payments Analyst, J.P. Morgan</h2>
+              </div>
+            </div>
+            <div class="experience-details" id="experience-02-details">
+              <p class="experience-description">I rotated between Payments Sales and the Product team. On the sales side I supported coverage across TMT, aviation, EV, and healthcare, helping Chinese corporates expand into Latin America, Europe, APAC, and the US, and helping multinationals run their China payments through liquidity pooling and consolidation. On product, I worked with the Cash team to launch two products: FTU, a cross-border free-trade account solution for China, and X-Pay. I also ran EV-sector and Mongolia market research that fed into the firm's entry planning.</p>
+              <p class="experience-stats">$2M+ NEW DEAL FLOW · 2 PRODUCTS LAUNCHED · 83 CLIENTS MIGRATED · 110K+ TRANSACTIONS ANALYSED</p>
+            </div>
           </article>
-          <article class="experience-card card-three">
-            <h2>ENTRY - NARRATIVE (~60 WORDS)</h2>
-            <p>META LINE + TAGS (~10 WORDS)</p>
+          <article class="experience-card" id="experience-03" role="tabpanel" aria-label="Experience 03" aria-hidden="true">
+            <div class="experience-heading-row">
+              <div>
+                <p class="experience-count">03 / 03 · JAN 2026 – MAR 2026</p>
+                <h2>Client Onboarding Apprentice, UBS</h2>
+              </div>
+            </div>
+            <div class="experience-details" id="experience-03-details">
+              <p class="experience-description">I worked on the client onboarding lifecycle team, focused on KYC. I supported the full range of investment-bank clients, from institutions and funds to high-net-worth individuals, through account setup, due diligence, and the reporting that gets them onboarded into the firm. This is detail-heavy, compliance-driven work, done one review at a time.</p>
+              <p class="experience-stats">ALL IB CLIENT TYPES · KYC · ACCOUNT DUE DILIGENCE · ONBOARDING</p>
+            </div>
           </article>
         </div>
       </section>
 
       <div class="download-bar" id="cv" role="button" tabindex="0">
-        CV DOWNLOAD BUTTON
+        ↓ DOWNLOAD CV (EN)
       </div>
 
       <section class="projects-section" aria-labelledby="projectsTitle">
         <h2 class="section-label projects-label" id="projectsTitle">PROJECTS</h2>
+        <p class="projects-intro">Case work from competitions and consulting interviews. These are the problems I take on when no one is assigning them. Each one is a market entry, a turnaround, or a risk nobody saw coming, worked from start to finish.</p>
 
-        <article class="case-study">
-          <div class="ppt-box" aria-label="PPT file preview">
-            <span>PPT FILE</span>
-          </div>
-          <div class="case-copy">
-            <h3>CASE STUDY 1</h3>
-            <p>(~40 WORDS DESCRIPTION)</p>
-          </div>
-        </article>
+        <div class="project-list">
+          <article class="project-card is-open">
+            <button class="project-summary" type="button" aria-expanded="true" aria-controls="project-01-details">
+              <span class="project-index">01</span>
+              <span class="project-summary-copy">
+                <span class="project-meta">COMPETITION · TEAM OF 4 · 2023</span>
+                <span class="project-title">7-Eleven &amp; SAP: Growth strategy under pressure</span>
+              </span>
+              <span class="project-action">Close case</span>
+            </button>
+            <div class="project-details" id="project-01-details">
+              <p>Two live cases at Canada's National Strategy Consulting Competition, run back to back with the same four-person team. For 7-Eleven we built a Gen Z growth play: AI-assisted store security to cut theft, a reworked rewards app, and a campus-expansion push. SAP was the harder problem. A company known for large enterprises wanted into the small and medium market, where it was seen as expensive and complex. We reframed the real barrier as access rather than price, then designed an AI-driven tool to match SMEs to the right SAP package.</p>
+              <p class="project-callout"><strong>Achievement</strong> Reached the final six out of 50+ teams nationally.</p>
+              <p class="project-method">Market and competitor sizing · consumer segmentation · MECE-structured recommendations · phased implementation and KPI design</p>
+            </div>
+          </article>
 
-        <div class="project-grid">
-          <article class="project-box">PROJECT ACCOMPLISHMENT (~20 WORDS)</article>
-          <article class="project-box">Key Statistics (~10 WORDS)</article>
+          <article class="project-card">
+            <button class="project-summary" type="button" aria-expanded="false" aria-controls="project-02-details">
+              <span class="project-index">02</span>
+              <span class="project-summary-copy">
+                <span class="project-meta">CASE INTERVIEW · SOLO · 2024 &amp; 2026</span>
+                <span class="project-title">Cloud-first thinking, two ways</span>
+              </span>
+              <span class="project-action">View case</span>
+            </button>
+            <div class="project-details" id="project-02-details" hidden>
+              <p>Two interview cases, two years apart, both circling the same question: how does cloud infrastructure unlock an organization that has stalled? The first reimagined a government film-permit system as a cloud service, with faster approvals, less red tape, and cost shifted onto inelastic end-user demand. The second, InnovateX, laid out a three-year roadmap for a manufacturer to consolidate its fragmented finance systems into a single cloud ERP, then layered automation and AI-driven analytics on top.</p>
+              <p class="project-callout"><strong>Approach</strong> Diagnosed the real constraint before proposing a fix · benchmarked against real precedents such as Siemens and Microsoft · sequenced change into a staged roadmap with named execution risks.</p>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <button class="project-summary" type="button" aria-expanded="false" aria-controls="project-03-details">
+              <span class="project-index">03</span>
+              <span class="project-summary-copy">
+                <span class="project-meta">CASE INTERVIEW · SOLO · 2025</span>
+                <span class="project-title">When a vendor's breach becomes your problem</span>
+              </span>
+              <span class="project-action">View case</span>
+            </button>
+            <div class="project-details" id="project-03-details" hidden>
+              <p>A financial-services case on third-party and supply-chain cyber risk, the kind that starts outside the bank but lands on its balance sheet anyway. I worked through two real incidents: a ransomware attack on DBS and Bank of China's print vendor that exposed 11,000+ customer records, and the Snowflake-hosted breach that hit Santander and 30 million customers. For Asia's major financial institutions, a supplier's weak link turns straight into trust, reputation, and regulatory exposure.</p>
+              <p class="project-callout"><strong>Angle</strong> Traced how operational risk becomes reputational and regulatory risk · read the market reaction · framed the response as a value proposition rather than damage control.</p>
+            </div>
+          </article>
         </div>
-
-        <article class="competition-row">CASE COMPETITIONS ROW (~15 WORDS)</article>
       </section>
 
       <footer class="work-footer">

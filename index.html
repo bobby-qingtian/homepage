@@ -446,6 +446,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
       }
 
+      function syncActiveWorkViewport() {
+        if (!active || !active.isWork || active.closing) return;
+        gsap.set(active.card, {
+          x:-active.originRect.left,
+          y:-active.originRect.top,
+          scale:1,
+          width:innerWidth,
+          height:innerHeight,
+          borderRadius:0,
+          borderWidth:0,
+          rotationZ:0,
+          clipPath:'inset(0 0 0px 0)'
+        });
+        gsap.set(active.content, {
+          left:0,
+          right:0,
+          top:44,
+          bottom:0,
+          borderRadius:0,
+          borderWidth:0,
+          autoAlpha:1
+        });
+      }
+
       async function openDrawerCard(event, source) {
         event.preventDefault();
         if (active) return;
@@ -582,7 +606,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (isWork) gsap.set(content, { left:0, right:0, top:44, bottom:0, borderRadius:0, borderWidth:0 });
           if (isWork && clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
           gsap.set([overlay, content], { autoAlpha:1 });
-          active = { source, overlay, card, content, finish, closing:false, isWork };
+          active = { source, overlay, card, content, finish, closing:false, isWork, originRect:rect };
           close.focus({ preventScroll:true });
           return;
         }
@@ -679,7 +703,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             .to(overlay, { autoAlpha:0, duration:.55, ease:'power1.out' }, '<.42');
         };
 
-        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork };
+        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork, originRect:rect };
       }
 
       document.addEventListener('click', event => {
@@ -698,6 +722,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape') closeDrawerCard();
       });
+      window.addEventListener('resize', syncActiveWorkViewport);
     };
   </script>
 </body>

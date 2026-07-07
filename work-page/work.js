@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearLabel = document.querySelector('.timeline-year');
   const experienceSection = document.querySelector('.experience-section');
   const experienceList = document.querySelector('.experience-list');
+  const experienceNext = document.querySelector('.experience-next');
   const tabs = Array.from(document.querySelectorAll('.timeline-tab'));
   const panels = Array.from(document.querySelectorAll('.experience-card'));
   const languageButton = document.querySelector('.language-switch');
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const monthAngles = [-70, -35, 0, 35, 70];
+  const monthAngles = [-56, -28, 0, 28, 56];
   const slotOffsets = [-2, -1, 0, 1, 2];
   const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   const experienceRanges = [
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activeIndex = 0;
   let activeMonth = monthIndex(2022, 8);
+  let animatingExperienceJump = false;
   let wheelLocked = false;
   let visualAngles = [...monthAngles];
 
@@ -123,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.set(panel, { autoAlpha: 0, y: 18 });
       }
     });
+    updateNextButton();
     requestAnimationFrame(alignActiveExperience);
   }
 
@@ -130,6 +133,50 @@ document.addEventListener('DOMContentLoaded', () => {
     activeMonth = index;
     updateMonthTabs(focus);
     setActivePanel(activeMonth, animatePanel);
+  }
+
+  function updateNextButton() {
+    if (!experienceNext) return;
+    const current = activeIndex ?? 0;
+    const next = (current + 1) % experienceRanges.length;
+    experienceNext.setAttribute('aria-label', `Next experience: ${panels[next].getAttribute('aria-label')}`);
+  }
+
+  function jumpToExperience(index, { focus = false } = {}) {
+    if (animatingExperienceJump) return;
+
+    const range = experienceRanges[index];
+    if (!range) return;
+
+    animatingExperienceJump = true;
+    const direction = range.start >= activeMonth ? 1 : -1;
+    const step = monthAngles[1] - monthAngles[0];
+
+    setActiveMonth(range.start, { focus, animatePanel: true });
+
+    tabs.forEach((tab, tabIndex) => {
+      const desired = monthAngles[tabIndex];
+      const startAngle = desired + direction * step * 2.35;
+      const state = { angle: startAngle };
+
+      placeTab(tab, startAngle);
+
+      gsap.to(state, {
+        angle: desired,
+        duration: reducedMotion ? 0 : 0.78,
+        ease: 'power3.inOut',
+        overwrite: true,
+        onUpdate() { placeTab(tab, state.angle); },
+        onComplete() {
+          visualAngles[tabIndex] = desired;
+          placeTab(tab, desired);
+        }
+      });
+    });
+
+    gsap.delayedCall(reducedMotion ? 0 : 0.78, () => {
+      animatingExperienceJump = false;
+    });
   }
 
   function rotateMonth(direction, { focus = false } = {}) {
@@ -173,6 +220,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  if (experienceNext) {
+    experienceNext.addEventListener('click', () => {
+      const current = activeIndex ?? 0;
+      jumpToExperience((current + 1) % experienceRanges.length);
+    });
+  }
+
   wheel.addEventListener('wheel', (event) => {
     event.preventDefault();
     if (wheelLocked) return;
@@ -204,6 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tabs.forEach((tab, tabIndex) => placeTab(tab, visualAngles[tabIndex]));
   setActiveMonth(activeMonth, { animatePanel: false });
+  updateNextButton();
 
   const projectCards = Array.from(document.querySelectorAll('.project-card'));
   projectCards.forEach((card) => {

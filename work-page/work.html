@@ -7,10 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="work.css?v=language-top-right">
+    <link rel="stylesheet" href="work.css?v=timeline-five-nodes">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js" defer></script>
-    <script src="work.js?v=work-language-toggle" defer></script>
+    <script src="work.js?v=timeline-five-nodes" defer></script>
   </head>
   <body>
     <main class="work-page" aria-label="Standalone work page wireframe">
@@ -79,11 +79,16 @@
               <p class="experience-stats">ALL IB CLIENT TYPES · KYC · ACCOUNT DUE DILIGENCE · ONBOARDING</p>
             </div>
           </article>
+          <button class="experience-next" type="button" aria-label="Next experience">
+            <span class="experience-next-mark" aria-hidden="true">→</span>
+            <span class="experience-next-label">Next</span>
+          </button>
         </div>
       </section>
 
       <a class="download-bar" id="cv" href="../assets/qingtian-huang-bobby-cv-ch.pdf" target="_blank" rel="noopener noreferrer" aria-label="Preview Qingtian Huang CV in English">
-        ↓ DOWNLOAD CV (EN)
+        <span class="download-mark" aria-hidden="true">↓</span>
+        <span class="download-label">Download CV (EN)</span>
       </a>
 
       <section class="projects-section" aria-label="Projects">
@@ -106,10 +111,14 @@
             <div class="project-details" id="project-01-details">
               <div class="project-media-grid" aria-label="Case competition project images">
                 <figure class="project-media-frame">
-                  <img src="../assets/case-comp-711-2023-01.png" alt="7-Eleven strategy case presentation slide">
+                  <a class="project-media-link" href="../assets/Case_Comp_711_2023.pdf" target="_blank" rel="noopener noreferrer" aria-label="Preview 7-Eleven case competition PDF">
+                    <img src="../assets/case-comp-711-2023-01.png" alt="7-Eleven strategy case presentation slide">
+                  </a>
                 </figure>
                 <figure class="project-media-frame">
-                  <img src="../assets/case-comp-sap-2023-01.png" alt="SAP growth strategy case presentation slide">
+                  <a class="project-media-link" href="../assets/Case_Comp_SAP_2023.pdf" target="_blank" rel="noopener noreferrer" aria-label="Preview SAP case competition PDF">
+                    <img src="../assets/case-comp-sap-2023-01.png" alt="SAP growth strategy case presentation slide">
+                  </a>
                 </figure>
               </div>
               <p>Two live cases at Canada's National Strategy Consulting Competition, run back to back with the same four-person team. For 7-Eleven we built a Gen Z growth play: AI-assisted store security to cut theft, a reworked rewards app, and a campus-expansion push. SAP was the harder problem. A company known for large enterprises wanted into the small and medium market, where it was seen as expensive and complex. We reframed the real barrier as access rather than price, then designed an AI-driven tool to match SMEs to the right SAP package.</p>
@@ -131,10 +140,14 @@
             <div class="project-details" id="project-02-details" hidden>
               <div class="project-media-grid" aria-label="Accenture cloud case project images">
                 <figure class="project-media-frame">
-                  <img src="../assets/accenture-2026-01.png" alt="Accenture 2026 cloud case presentation slide">
+                  <a class="project-media-link" href="../assets/Presentation_Accenture_2026.pdf" target="_blank" rel="noopener noreferrer" aria-label="Preview Accenture 2026 presentation PDF">
+                    <img src="../assets/accenture-2026-01.png" alt="Accenture 2026 cloud case presentation slide">
+                  </a>
                 </figure>
                 <figure class="project-media-frame">
-                  <img src="../assets/accenture-2024-01.png" alt="Accenture 2024 cloud case presentation slide">
+                  <a class="project-media-link" href="../assets/Presentation_Accenture_2024.pdf" target="_blank" rel="noopener noreferrer" aria-label="Preview Accenture 2024 presentation PDF">
+                    <img src="../assets/accenture-2024-01.png" alt="Accenture 2024 cloud case presentation slide">
+                  </a>
                 </figure>
               </div>
               <p>Two interview cases, two years apart, both circling the same question: how does cloud infrastructure unlock an organization that has stalled? The first reimagined a government film-permit system as a cloud service, with faster approvals, less red tape, and cost shifted onto inelastic end-user demand. The second, InnovateX, laid out a three-year roadmap for a manufacturer to consolidate its fragmented finance systems into a single cloud ERP, then layered automation and AI-driven analytics on top.</p>

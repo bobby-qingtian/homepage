@@ -134,7 +134,7 @@ a {
 .experience-section {
   position: relative;
   z-index: 1;
-  min-height: 790px;
+  min-height: 860px;
   padding: 44px 38px 34px;
 }
 
@@ -180,8 +180,8 @@ a {
 
 .timeline-wheel {
   position: absolute;
-  top: 370px;
-  bottom: 34px;
+  top: 400px;
+  bottom: 36px;
   left: 0;
   z-index: 1;
   width: 348px;
@@ -303,6 +303,67 @@ a {
   left: 257px;
 }
 
+.experience-next {
+  position: absolute;
+  top: 130px;
+  left: 1048px;
+  z-index: 3;
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-items: center;
+  row-gap: 0;
+  width: 144px;
+  height: 144px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #0f1010;
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+  transform: translateY(-50%);
+}
+
+.experience-next::before {
+  content: "";
+  position: absolute;
+  inset: 28px;
+  background: rgba(238, 230, 218, 0.52);
+  transform: rotate(45deg);
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.experience-next:hover::before,
+.experience-next:focus-visible::before {
+  background: rgba(238, 230, 218, 0.88);
+  transform: rotate(45deg) scale(1.08);
+}
+
+.experience-next:focus-visible {
+  outline: 1px solid var(--blue-gray);
+  outline-offset: 4px;
+}
+
+.experience-next-mark,
+.experience-next-label {
+  position: relative;
+  z-index: 1;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1;
+}
+
+.experience-next-mark {
+  font-size: 46px;
+  font-weight: 300;
+}
+
+.experience-next-label {
+  margin-top: -4px;
+  font-size: 27px;
+  font-weight: 400;
+}
+
 .experience-card {
   position: absolute;
   inset: 0 0 auto;
@@ -398,18 +459,72 @@ a {
 }
 
 .download-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: fit-content;
+  min-height: 92px;
+  margin: -12px auto 24px;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  color: #0f1010;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 25px;
+  line-height: 1;
+}
+
+.download-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 78px;
+  height: 78px;
+  background: rgba(238, 230, 218, 0.52);
+  transform: rotate(45deg);
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.download-bar:hover,
+.download-bar:focus-visible {
+  background: transparent;
+}
+
+.download-bar:hover::before,
+.download-bar:focus-visible::before {
+  background: rgba(238, 230, 218, 0.88);
+  transform: rotate(45deg) scale(1.08);
+}
+
+.download-bar:focus-visible {
+  outline: 1px solid var(--blue-gray);
+  outline-offset: 6px;
+}
+
+.download-mark,
+.download-label {
+  position: relative;
+  z-index: 1;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.download-mark {
   display: grid;
+  width: 78px;
+  height: 78px;
   place-items: center;
-  background: var(--blue-gray);
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
-  font-size: 15px;
-  min-height: 54px;
+  font-size: 46px;
+  font-weight: 300;
+}
+
+.download-label {
+  font-size: 25px;
+  font-weight: 400;
 }
 
 .projects-section {
   position: relative;
-  padding: 42px 48px 54px;
+  padding: 0 48px 54px;
 }
 
 .projects-label {
@@ -545,11 +660,28 @@ a {
   background: #fff;
 }
 
+.project-media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.project-media-link:focus-visible {
+  outline: 3px solid var(--blue-gray);
+  outline-offset: -3px;
+}
+
+.project-media-link:hover img {
+  transform: scale(1.015);
+}
+
 .project-media-frame img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: transform 180ms ease;
 }
 
 .project-callout {

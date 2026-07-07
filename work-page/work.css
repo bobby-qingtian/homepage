@@ -22,7 +22,8 @@ body {
 }
 
 body {
-  background: var(--page-bg);
+  overflow-x: auto;
+  background: var(--canvas);
   color: var(--ink);
   font-family: "Libre Caslon Text", Georgia, serif;
 }
@@ -34,8 +35,9 @@ a {
 
 .work-page {
   position: relative;
-  width: 100vw;
-  min-height: 100vh;
+  width: min(100%, 1512px);
+  min-height: 951px;
+  margin: 0 auto;
   overflow-x: hidden;
   background: var(--canvas);
   border: 1px solid var(--line);
@@ -48,18 +50,53 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5vh 3.2vw 1vh;
+  padding: 14px 48px 10px;
   min-height: 70px;
   background: var(--band);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+  margin-right: 94px;
+}
+
+.language-switch {
+  position: fixed;
+  top: 12px;
+  right: 22px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 66px;
+  height: 29px;
+  padding: 3px;
+  border: 1px solid #3d3d3d;
+  background: #f5f5f5;
+  color: #3d3d3d;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.language-switch span {
+  display: grid;
+  place-items: center;
+}
+
+.language-switch span.is-active {
+  background: var(--line);
+  color: var(--ink);
 }
 
 .nav-box,
 .logo-box,
 .section-label,
 .experience-card,
-.project-card,
-.footer-button,
-.footer-logo {
+.project-card {
   border: 1px solid var(--line);
   background: #fbf6ee;
 }
@@ -67,31 +104,29 @@ a {
 .nav-box {
   display: flex;
   align-items: center;
-  width: min(62vw, 760px);
-  height: 3.4vh;
+  width: 760px;
+  height: 32px;
   min-height: 28px;
-  padding: 0 1.4vw;
-  gap: 0.35vw;
+  padding: 0 21px;
+  gap: 5px;
   font-family: "Libre Caslon Text", Georgia, serif;
-  font-size: clamp(16px, 1.15vw, 26px);
+  font-size: 17px;
   line-height: 1;
   white-space: nowrap;
 }
 
 .logo-box {
   display: grid;
-  margin-left: auto;
-  width: clamp(108px, 10vw, 210px);
-  height: 3.4vh;
+  width: 151px;
+  height: 32px;
   min-height: 28px;
   place-items: center;
-  font-size: clamp(14px, 1vw, 22px);
+  font-size: 15px;
 }
 
 .nav-box a:hover,
 .logo-box:hover,
-.footer-button:hover,
-.footer-logo:hover,
+.language-switch:hover,
 .download-bar:hover {
   background: #fffaf2;
 }
@@ -99,38 +134,57 @@ a {
 .experience-section {
   position: relative;
   z-index: 1;
-  min-height: 650px;
-  padding: 28px 3vw 34px;
+  min-height: 790px;
+  padding: 44px 38px 34px;
 }
 
-.experience-intro,
-.projects-intro {
-  max-width: 860px;
-  margin: 24px 7vw 0 17vw;
-  font-size: clamp(15px, 1.15vw, 21px);
-  line-height: 1.55;
+.experience-intro {
+  max-width: 1370px;
+  margin: 0 auto;
+  color: #0f1010;
+}
+
+.experience-intro p {
+  max-width: 1336px;
+  margin: 0 0 42px;
+  font-size: 25px;
+  line-height: 1.42;
+}
+
+.experience-intro hr {
+  height: 1px;
+  margin: 0 0 30px;
+  border: 0;
+  background: var(--line);
+}
+
+.experience-intro h1 {
+  margin: 0;
+  color: #0f1010;
+  font-size: 34px;
+  line-height: 1.1;
 }
 
 .section-label {
   display: grid;
-  width: clamp(166px, 17vw, 340px);
-  height: 2.6vh;
+  width: 257px;
+  height: 25px;
   min-height: 22px;
   margin: 0;
-  padding-left: 0.8vw;
+  padding-left: 12px;
   align-items: center;
   font-family: "Libre Caslon Text", Georgia, serif;
-  font-size: clamp(13px, 0.9vw, 20px);
+  font-size: 14px;
   font-weight: 400;
 }
 
 .timeline-wheel {
   position: absolute;
-  top: 150px;
+  top: 370px;
   bottom: 34px;
   left: 0;
   z-index: 1;
-  width: clamp(300px, 23vw, 460px);
+  width: 348px;
   overflow: hidden;
   touch-action: none;
   cursor: grab;
@@ -142,7 +196,7 @@ a {
 }
 
 .timeline-rotor {
-  --wheel-size: clamp(360px, 27vw, 540px);
+  --wheel-size: 408px;
   position: absolute;
   top: 50%;
   left: calc(var(--wheel-size) * -0.5 - 42px);
@@ -157,11 +211,11 @@ a {
 .timeline-year {
   position: absolute;
   top: 50%;
-  left: clamp(30px, 4vw, 76px);
+  left: 60px;
   z-index: 2;
   color: var(--ink);
   font-family: Georgia, "Libre Caslon Text", serif;
-  font-size: clamp(24px, 1.8vw, 36px);
+  font-size: 27px;
   font-weight: 700;
   line-height: 1;
   transform: translateY(-50%);
@@ -206,9 +260,9 @@ a {
 .timeline-number {
   position: absolute;
   top: 0;
-  left: clamp(4px, 0.55vw, 12px);
+  left: 8px;
   font-family: Georgia, "Libre Caslon Text", serif;
-  font-size: clamp(16px, 1.45vw, 29px);
+  font-size: 22px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
@@ -217,7 +271,7 @@ a {
 }
 
 .timeline-tab:not(.is-active) .timeline-number {
-  font-size: clamp(11px, 0.9vw, 19px);
+  font-size: 14px;
 }
 
 .timeline-dot {
@@ -243,18 +297,18 @@ a {
 
 .experience-list {
   position: absolute;
-  top: 250px;
-  right: 6vw;
+  top: 485px;
+  right: 91px;
   bottom: 34px;
-  left: 17vw;
+  left: 257px;
 }
 
 .experience-card {
   position: absolute;
   inset: 0 0 auto;
-  width: min(66vw, 1160px);
+  width: 998px;
   min-height: 260px;
-  padding: clamp(28px, 2.35vw, 42px) clamp(30px, 2.75vw, 52px) clamp(26px, 2.25vw, 40px);
+  padding: 36px 42px 34px;
   border-color: var(--line);
   background: rgba(251, 246, 238, 0.5);
   opacity: 0;
@@ -274,7 +328,7 @@ a {
 .experience-card h2 {
   margin: 8px 0 0;
   color: #0f1010;
-  font-size: clamp(25px, 2vw, 39px);
+  font-size: 30px;
   font-weight: 400;
   line-height: 1.04;
 }
@@ -282,13 +336,13 @@ a {
 .experience-card p {
   margin: 0;
   color: var(--muted);
-  font-size: clamp(12px, 0.85vw, 18px);
+  font-size: 13px;
   line-height: 1.35;
 }
 
 .experience-card .experience-count {
   color: var(--blue-gray);
-  font-size: clamp(13px, 0.86vw, 17px);
+  font-size: 13px;
   letter-spacing: 0.04em;
 }
 
@@ -321,7 +375,7 @@ a {
 .experience-description {
   max-width: 1020px;
   color: var(--ink) !important;
-  font-size: clamp(14px, 0.96vw, 17px) !important;
+  font-size: 15px !important;
   line-height: 1.46 !important;
 }
 
@@ -331,7 +385,7 @@ a {
   border-top: 1px solid var(--line);
   color: var(--blue-gray) !important;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(11px, 0.82vw, 16px) !important;
+  font-size: 12px !important;
   font-weight: 400;
   letter-spacing: 0.015em;
   text-transform: uppercase;
@@ -349,23 +403,43 @@ a {
   background: var(--blue-gray);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
-  font-size: clamp(14px, 1vw, 22px);
+  font-size: 15px;
   min-height: 54px;
 }
 
 .projects-section {
   position: relative;
-  padding: 42px 3.2vw 54px;
+  padding: 42px 48px 54px;
 }
 
 .projects-label {
-  width: clamp(168px, 17vw, 340px);
-  margin-bottom: 1vh;
+  width: 257px;
+  margin-bottom: 10px;
 }
 
 .projects-intro {
-  margin-left: 0;
-  margin-bottom: 30px;
+  max-width: 1360px;
+  margin: 0 0 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: #0f1010;
+}
+
+.projects-intro h2 {
+  margin: 0 0 24px;
+  font-size: 34px;
+  line-height: 1.1;
+}
+
+.projects-intro p {
+  margin: 0 0 42px;
+  max-width: 1350px;
+  font-size: 25px;
+  line-height: 1.42;
+}
+
+.projects-intro p:last-child {
+  margin-bottom: 0;
 }
 
 .project-list {
@@ -377,13 +451,18 @@ a {
   overflow: hidden;
 }
 
+.project-card.is-open {
+  border-color: transparent;
+  background: transparent;
+}
+
 .project-summary {
   display: grid;
-  grid-template-columns: clamp(52px, 5vw, 90px) minmax(0, 1fr) auto;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
   width: 100%;
   gap: 22px;
   align-items: center;
-  padding: clamp(20px, 2vw, 34px);
+  padding: 30px;
   text-align: left;
 }
 
@@ -391,9 +470,14 @@ a {
   background: #fffaf2;
 }
 
+.project-card.is-open .project-summary {
+  background: rgba(251, 246, 238, 0.72);
+  border: 3px solid #4d7ee8;
+}
+
 .project-index {
   color: var(--line);
-  font-size: clamp(28px, 2.5vw, 48px);
+  font-size: 38px;
   font-weight: 700;
 }
 
@@ -408,12 +492,12 @@ a {
 
 .project-meta {
   color: var(--blue-gray);
-  font-size: clamp(11px, 0.78vw, 15px);
+  font-size: 12px;
   letter-spacing: 0.06em;
 }
 
 .project-title {
-  font-size: clamp(20px, 1.65vw, 32px);
+  font-size: 25px;
   line-height: 1.15;
 }
 
@@ -421,14 +505,14 @@ a {
   padding-bottom: 5px;
   border-bottom: 1px solid currentColor;
   color: var(--muted);
-  font-size: clamp(12px, 0.8vw, 15px);
+  font-size: 12px;
   white-space: nowrap;
 }
 
 .project-details {
-  padding: 0 clamp(28px, 7vw, 132px) clamp(28px, 3vw, 52px);
+  padding: 0 83px 45px;
   color: var(--ink);
-  font-size: clamp(15px, 1.05vw, 19px);
+  font-size: 16px;
   line-height: 1.65;
 }
 
@@ -439,6 +523,33 @@ a {
 .project-details > p {
   max-width: 1100px;
   margin: 0;
+}
+
+.project-media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  max-width: 1100px;
+  gap: 76px;
+  align-items: center;
+  margin: 18px 0 22px;
+  padding: 0;
+}
+
+.project-media-frame {
+  display: block;
+  aspect-ratio: 16 / 9;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  background: #fff;
+}
+
+.project-media-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .project-callout {
@@ -462,172 +573,57 @@ a {
   font-size: 0.86em;
 }
 
+.project-team {
+  margin-top: 16px !important;
+  color: #0f1010;
+  font-size: 0.86em;
+  line-height: 1.45;
+}
+
 .work-footer {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(140px, 12vw) minmax(130px, 13vw) minmax(130px, 13vw) 1fr minmax(110px, 13vw);
-  align-items: start;
-  gap: 1.6vw;
-  padding: 1.6vh 3.2vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 46px 54px 28px;
   background: var(--band);
-  min-height: 120px;
+  min-height: 132px;
 }
 
-.footer-title {
-  margin: 0.3vh 0 0 0.5vw;
-  font-size: clamp(18px, 1.4vw, 30px);
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 46px;
 }
 
-.footer-button,
-.footer-logo {
-  display: grid;
-  height: 4vh;
-  min-height: 33px;
-  place-items: center;
-  font-size: clamp(14px, 1vw, 22px);
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #202020;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.footer-arrow {
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.footer-link:hover {
+  color: var(--blue-gray);
 }
 
 .copyright {
-  position: absolute;
-  right: 3.2vw;
-  bottom: 1.4vh;
   margin: 0;
-  color: var(--muted);
-  font-size: clamp(12px, 0.85vw, 18px);
-}
-
-@media (max-aspect-ratio: 4 / 3) {
-  body {
-    overflow: auto;
-  }
-
-  .work-page {
-    width: 100%;
-    min-width: 0;
-  }
-}
-
-@media (max-width: 900px), (max-aspect-ratio: 4 / 3) {
-  .topbar {
-    min-height: 56px;
-    padding: 12px 20px;
-  }
-
-  .experience-section {
-    display: grid;
-    gap: 24px;
-    min-height: 0;
-    padding: 26px 20px 34px;
-  }
-
-  .experience-intro,
-  .projects-intro {
-    max-width: none;
-    margin: 0;
-  }
-
-  .timeline-wheel {
-    position: relative;
-    top: auto;
-    bottom: auto;
-    left: auto;
-    width: 100%;
-    height: 148px;
-    margin: 2px 0 4px;
-  }
-
-  .timeline-rotor {
-    --wheel-size: 260px;
-    left: -142px;
-  }
-
-  .timeline-year {
-    left: 24px;
-    font-size: 22px;
-  }
-
-  .timeline-number {
-    font-size: 16px;
-    left: 6px;
-    letter-spacing: 0;
-  }
-
-  .timeline-tab:not(.is-active) .timeline-number {
-    font-size: 11px;
-  }
-
-  .experience-list {
-    position: relative;
-    top: auto !important;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    min-height: 330px;
-  }
-
-  .experience-card {
-    width: 100%;
-    min-height: 0;
-    padding: 24px;
-  }
-
-  .project-summary {
-    grid-template-columns: 48px minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  .project-action {
-    grid-column: 2;
-    justify-self: start;
-  }
-
-  .work-footer {
-    grid-template-columns: 1fr 1fr;
-    min-height: 0;
-    padding: 20px;
-  }
-
-  .footer-title,
-  .copyright {
-    position: static;
-    margin: 0;
-  }
-
-  .copyright {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 560px) {
-  .experience-section,
-  .projects-section {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .logo-box {
-    width: 92px;
-  }
-
-  .timeline-wheel {
-    height: 128px;
-  }
-
-  .timeline-rotor {
-    --wheel-size: 228px;
-    left: -126px;
-  }
-
-  .timeline-year {
-    left: 18px;
-    font-size: 20px;
-  }
-
-  .experience-list {
-    min-height: 410px;
-  }
-
-  .experience-card {
-    padding: 20px;
-  }
+  color: #202020;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  line-height: 1.2;
+  text-align: right;
 }

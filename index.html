@@ -355,6 +355,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       style.textContent = `
         html, body { overflow-anchor:none; }
         .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(244,238,229,.58); opacity:0; }
+        .drawer-motion-overlay--work { background:#f8f2e8; }
         .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#F5F1E8; border:1.6px solid #b9ad9c; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
         .drawer-motion-card--work::after { position:absolute; left:0; right:0; top:46px; z-index:200; height:1px; content:''; background:#b9ad9c; pointer-events:none; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
@@ -373,6 +374,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:1px solid #3D3D3D; background:#F5F5F5; color:#3D3D3D; font:inherit; font-size:14px; cursor:pointer; }
         .homepage-language-switch span { display:grid; place-items:center; }
         .homepage-language-switch span.is-active { background:#b9ad9c; color:#403c37; }
+        .drawer-motion-work-language { position:absolute; top:12px; right:22px; z-index:230; }
         .homepage-corner-link { color:#403c37; text-decoration:none; }
         .homepage-corner-link::before { content:'↘'; display:inline-block; margin-right:8px; text-decoration:none; }
         .homepage-corner-link:hover { color:#3f6174; }
@@ -418,6 +420,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       let active = null;
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const getWorkViewportWidth = () => Math.min(1512, innerWidth);
+      const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
         fetch('./work-page/work.html?v=month-wheel-smalltext').then(response => response.text()),
         fetch('./work-page/work.css?v=month-wheel-smalltext').then(response => response.text()),
@@ -449,10 +453,10 @@ document.addEventListener('DOMContentLoaded', async function() {
       function syncActiveWorkViewport() {
         if (!active || !active.isWork || active.closing) return;
         gsap.set(active.card, {
-          x:-active.originRect.left,
+          x:getWorkViewportLeft() - active.originRect.left,
           y:-active.originRect.top,
           scale:1,
-          width:innerWidth,
+          width:getWorkViewportWidth(),
           height:innerHeight,
           borderRadius:0,
           borderWidth:0,
@@ -489,6 +493,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const rect = source.getBoundingClientRect();
         const overlay = document.createElement('div');
         overlay.className = 'drawer-motion-overlay';
+        if (isWork) overlay.classList.add('drawer-motion-overlay--work');
         overlay.setAttribute('aria-hidden', 'true');
 
         const path = source.querySelector('svg path');
@@ -534,12 +539,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.type = 'button';
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
+        let workLanguage = null;
         if (isWork) {
           card.classList.add('drawer-motion-card--work');
           content.classList.add('drawer-motion-content--work');
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
           close.classList.add('drawer-motion-work-back');
           close.textContent = 'HOME';
+          workLanguage = document.createElement('button');
+          workLanguage.className = 'homepage-language-switch drawer-motion-work-language';
+          workLanguage.type = 'button';
+          workLanguage.setAttribute('aria-label', 'Switch language');
+          workLanguage.setAttribute('aria-pressed', 'false');
+          workLanguage.innerHTML = '<span class="is-active">EN</span><span>中</span>';
+          workLanguage.addEventListener('click', () => {
+            const chinese = workLanguage.getAttribute('aria-pressed') !== 'true';
+            workLanguage.setAttribute('aria-pressed', String(chinese));
+            const languageSpans = workLanguage.querySelectorAll('span');
+            languageSpans[0].classList.toggle('is-active', !chinese);
+            languageSpans[1].classList.toggle('is-active', chinese);
+          });
           const workFrame = document.createElement('iframe');
           workFrame.className = 'drawer-motion-work-frame';
           if (loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
@@ -547,7 +566,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           workFrame.title = 'Work';
           content.append(workFrame);
         }
-        if (isWork) card.append(row, content, close);
+        if (isWork) card.append(row, content, close, workLanguage);
         else {
           content.append(close);
           card.append(row, content);
@@ -590,9 +609,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (reducedMotion) {
           const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
           gsap.set(card, isWork ? {
-            x:-rect.left,
+            x:getWorkViewportLeft() - rect.left,
             y:-rect.top,
-            width:innerWidth,
+            width:getWorkViewportWidth(),
             height:innerHeight,
             borderRadius:0,
             borderWidth:0,
@@ -613,7 +632,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const pullDistance = Math.max(80, paperHeight - visibleHeight + 18);
         const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
-        const targetX = isWork ? -rect.left : (innerWidth - rect.width * fit) / 2 - rect.left;
+        const targetX = isWork ? getWorkViewportLeft() - rect.left : (innerWidth - rect.width * fit) / 2 - rect.left;
         const targetY = isWork ? -rect.top : (innerHeight - paperHeight * fit) / 2 - rect.top;
         const tilt = rect.left + rect.width / 2 < innerWidth / 2 ? -1.1 : 1.1;
         const timeline = gsap.timeline({
@@ -634,7 +653,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             x:targetX,
             y:targetY,
             scale:isWork ? 1 : fit,
-            width:isWork ? innerWidth : rect.width,
+            width:isWork ? getWorkViewportWidth() : rect.width,
             height:isWork ? innerHeight : paperHeight,
             borderRadius:isWork ? 0 : 10,
             borderWidth:isWork ? 0 : 1.6,

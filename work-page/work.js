@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const page = document.querySelector('.work-page');
+
   const wheel = document.querySelector('.timeline-wheel');
   const rotor = document.querySelector('.timeline-rotor');
   const yearLabel = document.querySelector('.timeline-year');
@@ -6,6 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const experienceList = document.querySelector('.experience-list');
   const tabs = Array.from(document.querySelectorAll('.timeline-tab'));
   const panels = Array.from(document.querySelectorAll('.experience-card'));
+  const languageButton = document.querySelector('.language-switch');
+
+  if (languageButton) {
+    languageButton.addEventListener('click', () => {
+      const chinese = languageButton.getAttribute('aria-pressed') !== 'true';
+      languageButton.setAttribute('aria-pressed', String(chinese));
+      const languageSpans = languageButton.querySelectorAll('span');
+      languageSpans[0].classList.toggle('is-active', !chinese);
+      languageSpans[1].classList.toggle('is-active', chinese);
+    });
+  }
 
   if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;
 
@@ -40,18 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function panelIndexForMonth(index) {
     const direct = experienceRanges.find((range) => index >= range.start && index <= range.end);
-    if (direct) return direct.panelIndex;
-
-    return experienceRanges
-      .map((range) => ({
-        panelIndex: range.panelIndex,
-        distance: index < range.start ? range.start - index : index - range.end
-      }))
-      .sort((a, b) => a.distance - b.distance)[0].panelIndex;
+    return direct ? direct.panelIndex : null;
   }
 
   function placeTab(tab, angle) {
-    const radius = rotor.getBoundingClientRect().width / 2 - 0.5;
+    const radius = rotor.offsetWidth / 2 - 0.5;
     const radians = angle * Math.PI / 180;
     gsap.set(tab, {
       x: Math.cos(radians) * radius,
@@ -66,8 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!activeCard || !experienceSection || !experienceList) return;
     const sectionRect = experienceSection.getBoundingClientRect();
     const rotorRect = rotor.getBoundingClientRect();
-    const cardHeight = activeCard.getBoundingClientRect().height;
-    const rotorCenterY = rotorRect.top + rotorRect.height / 2 - sectionRect.top;
+    const pageScale = page ? page.getBoundingClientRect().width / page.offsetWidth : 1;
+    const cardHeight = activeCard.getBoundingClientRect().height / pageScale;
+    const rotorCenterY = (rotorRect.top + rotorRect.height / 2 - sectionRect.top) / pageScale;
     experienceList.style.top = `${Math.round(rotorCenterY - cardHeight / 2)}px`;
   }
 
@@ -86,7 +93,11 @@ document.addEventListener('DOMContentLoaded', () => {
       tab.setAttribute('aria-selected', String(selected));
       tab.tabIndex = selected ? 0 : -1;
       tab.dataset.monthIndex = String(tabMonth);
-      tab.setAttribute('aria-controls', panels[panelIndex].id);
+      if (panelIndex === null) {
+        tab.removeAttribute('aria-controls');
+      } else {
+        tab.setAttribute('aria-controls', panels[panelIndex].id);
+      }
       tab.setAttribute('aria-label', `${monthNames[month - 1]} ${tabYear}`);
       tab.querySelector('.timeline-number').textContent = monthLabel(tabMonth);
       if (focusActive && selected) tab.focus({ preventScroll: true });
@@ -95,11 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setActivePanel(index, animatePanel = true) {
     const nextIndex = panelIndexForMonth(index);
-    if (nextIndex === activeIndex && panels[nextIndex].classList.contains('is-active')) return;
+    if (nextIndex !== null && nextIndex === activeIndex && panels[nextIndex].classList.contains('is-active')) return;
+    if (nextIndex === null && activeIndex === null && panels.every((panel) => !panel.classList.contains('is-active'))) return;
 
     activeIndex = nextIndex;
     panels.forEach((panel, panelIndex) => {
-      const selected = panelIndex === activeIndex;
+      const selected = activeIndex !== null && panelIndex === activeIndex;
       panel.classList.toggle('is-active', selected);
       panel.setAttribute('aria-hidden', String(!selected));
 

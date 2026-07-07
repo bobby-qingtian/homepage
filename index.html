@@ -419,14 +419,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       let active = null;
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html').then(response => response.text()),
-        fetch('./work-page/work.css').then(response => response.text()),
-        fetch('./work-page/work.js').then(response => response.text())
+        fetch('./work-page/work.html?v=month-wheel-smalltext').then(response => response.text()),
+        fetch('./work-page/work.css?v=month-wheel-smalltext').then(response => response.text()),
+        fetch('./work-page/work.js?v=month-wheel-smalltext').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
-          .replace('<link rel="stylesheet" href="work.css">', `<style>${css}</style>`)
+          .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
           .replace('href="../assets/qingtian-huang-bobby-cv-ch.pdf"', 'href="./assets/qingtian-huang-bobby-cv-ch.pdf"')
-          .replace('<script src="work.js" defer><\/script>', `<script>${js}<\/script>`)
+          .replace(/<script src="work\.js(?:\?[^"]*)?" defer><\/script>/, `<script>${js}<\/script>`)
       ).catch(() => null);
 
       function closeDrawerCard() {

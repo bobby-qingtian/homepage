@@ -7,10 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="work.css">
+    <link rel="stylesheet" href="work.css?v=month-wheel-smalltext">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js" defer></script>
-    <script src="work.js" defer></script>
+    <script src="work.js?v=month-wheel-smalltext" defer></script>
   </head>
   <body>
     <main class="work-page" aria-label="Standalone work page wireframe">
@@ -22,17 +22,26 @@
         <p class="experience-intro">Finance graduate with institutional experience across J.P. Morgan, UBS, and NAB, now moving toward project and structured finance. My work has centered on how capital moves across borders, and how institutions assess the clients they take on. I'm applying that foundation to infrastructure, energy transition, and real assets.</p>
 
         <div class="timeline-wheel" aria-label="Interactive work experience timeline">
+          <div class="timeline-year" aria-live="polite">2022</div>
           <div class="timeline-rotor" role="tablist" aria-orientation="vertical">
-            <button class="timeline-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="experience-01" data-index="0">
-              <span class="timeline-number">01</span>
+            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-01" data-slot="-2" tabindex="-1">
+              <span class="timeline-number">JUN</span>
               <span class="timeline-dot" aria-hidden="true"></span>
             </button>
-            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-02" data-index="1" tabindex="-1">
-              <span class="timeline-number">02</span>
+            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-01" data-slot="-1" tabindex="-1">
+              <span class="timeline-number">JUL</span>
               <span class="timeline-dot" aria-hidden="true"></span>
             </button>
-            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-03" data-index="2" tabindex="-1">
-              <span class="timeline-number">03</span>
+            <button class="timeline-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="experience-01" data-slot="0">
+              <span class="timeline-number">AUG</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+            </button>
+            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-01" data-slot="1" tabindex="-1">
+              <span class="timeline-number">SEP</span>
+              <span class="timeline-dot" aria-hidden="true"></span>
+            </button>
+            <button class="timeline-tab" type="button" role="tab" aria-selected="false" aria-controls="experience-01" data-slot="2" tabindex="-1">
+              <span class="timeline-number">OCT</span>
               <span class="timeline-dot" aria-hidden="true"></span>
             </button>
           </div>
@@ -41,34 +50,28 @@
         <div class="experience-list" aria-live="polite">
           <article class="experience-card is-active" id="experience-01" role="tabpanel" aria-label="Experience 01">
             <div class="experience-heading-row">
-              <div>
-                <p class="experience-count">01 / 03 · AUG 2022 – MAR 2023</p>
-                <h2>Strategic Project Coordinator, Clio</h2>
-              </div>
+              <p class="experience-count">AUG 2022 — MAR 2023</p>
+              <h2><span>CLIO</span> | Strategic Project Coordinator</h2>
             </div>
             <div class="experience-details" id="experience-01-details">
               <p class="experience-description">I sat on the business operations team and coordinated the company-wide projects behind Clio's push into Asia-Pacific. The two big ones were migrating 30,000+ clients onto a new pricing model, and shaping the go-to-market strategy for the APAC launch across five international teams. I also ran the change-management hub and weekly training that kept everyone executing off the same playbook.</p>
-              <p class="experience-stats">30K+ CLIENTS MIGRATED · $500K RECURRING REVENUE · 60% ABOVE TARGET · 5 INTL TEAMS</p>
+              <p class="experience-stats"><strong>30K+</strong> CLIENTS MIGRATED · <strong>$500K</strong> RECURRING REVENUE · <strong>60%</strong> ABOVE TARGET · <strong>5</strong> INTL TEAMS</p>
             </div>
           </article>
           <article class="experience-card" id="experience-02" role="tabpanel" aria-label="Experience 02" aria-hidden="true">
             <div class="experience-heading-row">
-              <div>
-                <p class="experience-count">02 / 03 · JUL 2024 – JUL 2025</p>
-                <h2>Payments Analyst, J.P. Morgan</h2>
-              </div>
+              <p class="experience-count">JUL 2024 — JUL 2025</p>
+              <h2><span>J.P. MORGAN</span> | Payments Analyst</h2>
             </div>
             <div class="experience-details" id="experience-02-details">
               <p class="experience-description">I rotated between Payments Sales and the Product team. On the sales side I supported coverage across TMT, aviation, EV, and healthcare, helping Chinese corporates expand into Latin America, Europe, APAC, and the US, and helping multinationals run their China payments through liquidity pooling and consolidation. On product, I worked with the Cash team to launch two products: FTU, a cross-border free-trade account solution for China, and X-Pay. I also ran EV-sector and Mongolia market research that fed into the firm's entry planning.</p>
-              <p class="experience-stats">$2M+ NEW DEAL FLOW · 2 PRODUCTS LAUNCHED · 83 CLIENTS MIGRATED · 110K+ TRANSACTIONS ANALYSED</p>
+              <p class="experience-stats"><strong>$2M+</strong> NEW DEAL FLOW · <strong>2</strong> PRODUCTS LAUNCHED · <strong>83</strong> CLIENTS MIGRATED · <strong>110K+</strong> TRANSACTIONS ANALYSED</p>
             </div>
           </article>
           <article class="experience-card" id="experience-03" role="tabpanel" aria-label="Experience 03" aria-hidden="true">
             <div class="experience-heading-row">
-              <div>
-                <p class="experience-count">03 / 03 · JAN 2026 – MAR 2026</p>
-                <h2>Client Onboarding Apprentice, UBS</h2>
-              </div>
+              <p class="experience-count">JAN 2026 — MAR 2026</p>
+              <h2><span>UBS</span> | Client Onboarding Apprentice</h2>
             </div>
             <div class="experience-details" id="experience-03-details">
               <p class="experience-description">I worked on the client onboarding lifecycle team, focused on KYC. I supported the full range of investment-bank clients, from institutions and funds to high-net-worth individuals, through account setup, due diligence, and the reporting that gets them onboarded into the firm. This is detail-heavy, compliance-driven work, done one review at a time.</p>

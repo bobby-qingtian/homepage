@@ -130,7 +130,7 @@ a {
   bottom: 34px;
   left: 0;
   z-index: 1;
-  width: clamp(260px, 19vw, 390px);
+  width: clamp(300px, 23vw, 460px);
   overflow: hidden;
   touch-action: none;
   cursor: grab;
@@ -142,10 +142,10 @@ a {
 }
 
 .timeline-rotor {
-  --wheel-size: clamp(300px, 21vw, 430px);
+  --wheel-size: clamp(360px, 27vw, 540px);
   position: absolute;
   top: 50%;
-  left: calc(var(--wheel-size) * -0.5 - 24px);
+  left: calc(var(--wheel-size) * -0.5 - 42px);
   width: var(--wheel-size);
   aspect-ratio: 1;
   border: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
@@ -154,8 +154,23 @@ a {
   will-change: transform;
 }
 
+.timeline-year {
+  position: absolute;
+  top: 50%;
+  left: clamp(30px, 4vw, 76px);
+  z-index: 2;
+  color: var(--ink);
+  font-family: Georgia, "Libre Caslon Text", serif;
+  font-size: clamp(24px, 1.8vw, 36px);
+  font-weight: 700;
+  line-height: 1;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
 .timeline-tab {
   --tab-angle: 0deg;
+  --slot-distance: 0;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -168,7 +183,8 @@ a {
   cursor: pointer;
   transform: none;
   transform-origin: center;
-  transition: color 180ms ease;
+  opacity: 0.38;
+  transition: color 180ms ease, opacity 180ms ease;
   will-change: transform;
 }
 
@@ -179,6 +195,7 @@ a {
 .timeline-tab:hover,
 .timeline-tab.is-active {
   color: var(--ink);
+  opacity: 1;
 }
 
 .timeline-tab:focus-visible {
@@ -189,20 +206,26 @@ a {
 .timeline-number {
   position: absolute;
   top: 0;
-  left: clamp(18px, 1.4vw, 28px);
-  font-size: clamp(34px, 3.5vw, 72px);
+  left: clamp(4px, 0.55vw, 12px);
+  font-family: Georgia, "Libre Caslon Text", serif;
+  font-size: clamp(16px, 1.45vw, 29px);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.06em;
-  transform: translateY(-50%);
+  letter-spacing: 0;
+  transform: translateY(-50%) rotate(var(--month-rotation, 0deg));
+  transform-origin: 0 50%;
+}
+
+.timeline-tab:not(.is-active) .timeline-number {
+  font-size: clamp(11px, 0.9vw, 19px);
 }
 
 .timeline-dot {
   position: absolute;
   top: 0;
   left: 0;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: currentColor;
   transform: translate(-50%, -50%);
@@ -221,7 +244,7 @@ a {
 .experience-list {
   position: absolute;
   top: 250px;
-  right: 8vw;
+  right: 6vw;
   bottom: 34px;
   left: 17vw;
 }
@@ -229,11 +252,11 @@ a {
 .experience-card {
   position: absolute;
   inset: 0 0 auto;
-  width: min(62vw, 1180px);
-  min-height: 250px;
-  padding: clamp(24px, 2.5vw, 46px);
+  width: min(66vw, 1160px);
+  min-height: 260px;
+  padding: clamp(28px, 2.35vw, 42px) clamp(30px, 2.75vw, 52px) clamp(26px, 2.25vw, 40px);
   border-color: var(--line);
-  background: rgba(251, 246, 238, 0.72);
+  background: rgba(251, 246, 238, 0.5);
   opacity: 0;
   pointer-events: none;
   transform: translateY(18px);
@@ -250,9 +273,10 @@ a {
 
 .experience-card h2 {
   margin: 8px 0 0;
-  font-size: clamp(24px, 2vw, 40px);
+  color: #0f1010;
+  font-size: clamp(25px, 2vw, 39px);
   font-weight: 400;
-  line-height: 1.05;
+  line-height: 1.04;
 }
 
 .experience-card p {
@@ -264,12 +288,18 @@ a {
 
 .experience-card .experience-count {
   color: var(--blue-gray);
-  font-size: clamp(13px, 0.9vw, 18px);
-  letter-spacing: 0.08em;
+  font-size: clamp(13px, 0.86vw, 17px);
+  letter-spacing: 0.04em;
 }
 
 .experience-heading-row {
   display: block;
+}
+
+.experience-heading-row h2 span {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 .project-summary {
@@ -283,25 +313,34 @@ a {
 
 .experience-details {
   max-height: none;
-  margin-top: 26px;
+  margin-top: 28px;
   opacity: 1;
   overflow: visible;
 }
 
 .experience-description {
-  max-width: 930px;
+  max-width: 1020px;
   color: var(--ink) !important;
-  font-size: clamp(14px, 1vw, 18px) !important;
-  line-height: 1.55 !important;
+  font-size: clamp(14px, 0.96vw, 17px) !important;
+  line-height: 1.46 !important;
 }
 
 .experience-stats {
-  margin-top: 22px !important;
+  margin-top: 24px !important;
   padding-top: 14px;
   border-top: 1px solid var(--line);
   color: var(--blue-gray) !important;
-  font-size: clamp(11px, 0.78vw, 15px) !important;
-  letter-spacing: 0.045em;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(11px, 0.82vw, 16px) !important;
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.experience-stats strong {
+  color: #0f1010;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
 }
 
 .download-bar {
@@ -502,9 +541,19 @@ a {
     left: -142px;
   }
 
+  .timeline-year {
+    left: 24px;
+    font-size: 22px;
+  }
+
   .timeline-number {
-    font-size: 34px;
+    font-size: 16px;
+    left: 6px;
     letter-spacing: 0;
+  }
+
+  .timeline-tab:not(.is-active) .timeline-number {
+    font-size: 11px;
   }
 
   .experience-list {
@@ -567,6 +616,11 @@ a {
   .timeline-rotor {
     --wheel-size: 228px;
     left: -126px;
+  }
+
+  .timeline-year {
+    left: 18px;
+    font-size: 20px;
   }
 
   .experience-list {

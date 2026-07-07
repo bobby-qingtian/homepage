@@ -384,6 +384,37 @@ document.addEventListener('DOMContentLoaded', async function() {
       `;
       document.head.appendChild(style);
 
+      let active = null;
+      let siteLanguage = 'en';
+      const labels = {
+        About:'关于', Profile:'简介', Education:'教育', Skills:'技能', Work:'作品',
+        Experiences:'经历', Projects:'项目', INTERESTS:'兴趣', Interests:'兴趣', Photography:'摄影'
+      };
+
+      function applySiteLanguage(language, { syncFrame = true } = {}) {
+        siteLanguage = language === 'zh' ? 'zh' : 'en';
+        const chinese = siteLanguage === 'zh';
+        document.querySelectorAll('.homepage-language-switch').forEach(button => {
+          button.setAttribute('aria-pressed', String(chinese));
+          const languageSpans = button.querySelectorAll('span');
+          languageSpans[0].classList.toggle('is-active', !chinese);
+          languageSpans[1].classList.toggle('is-active', chinese);
+        });
+        document.querySelectorAll('[data-screen-label="Index drawer"] a').forEach(link => {
+          const original = link.getAttribute('title') || '';
+          const textNodes = Array.from(link.children).filter(child => child.tagName === 'DIV');
+          const nameNode = textNodes[textNodes.length - 1];
+          if (nameNode && labels[original]) nameNode.textContent = chinese ? labels[original] : original;
+        });
+        const archiveLabel = Array.from(document.querySelectorAll('[data-screen-label="Index drawer"] div'))
+          .find(node => node.textContent.trim() === 'My Archive' || node.textContent.trim() === '我的档案');
+        if (archiveLabel) archiveLabel.textContent = chinese ? '我的档案' : 'My Archive';
+        if (syncFrame) {
+          const frame = (active && active.isWork && active.content.querySelector('.drawer-motion-work-frame')) || document.querySelector('.drawer-motion-work-frame');
+          if (frame && frame.contentWindow) frame.contentWindow.postMessage({ type:'set-language', language:siteLanguage }, '*');
+        }
+      }
+
       if (!document.querySelector('.homepage-corner-nav')) {
         const cornerNav = document.createElement('nav');
         cornerNav.className = 'homepage-corner-nav';
@@ -396,42 +427,29 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.body.appendChild(cornerNav);
 
         const languageButton = cornerNav.querySelector('.homepage-language-switch');
-        const labels = {
-          About:'关于', Profile:'简介', Education:'教育', Skills:'技能', Work:'作品',
-          Experiences:'经历', Projects:'项目', INTERESTS:'兴趣', Interests:'兴趣', Photography:'摄影'
-        };
         languageButton.addEventListener('click', () => {
-          const chinese = languageButton.getAttribute('aria-pressed') !== 'true';
-          languageButton.setAttribute('aria-pressed', String(chinese));
-          const languageSpans = languageButton.querySelectorAll('span');
-          languageSpans[0].classList.toggle('is-active', !chinese);
-          languageSpans[1].classList.toggle('is-active', chinese);
-          document.querySelectorAll('[data-screen-label="Index drawer"] a').forEach(link => {
-            const original = link.getAttribute('title') || '';
-            const textNodes = Array.from(link.children).filter(child => child.tagName === 'DIV');
-            const nameNode = textNodes[textNodes.length - 1];
-            if (nameNode && labels[original]) nameNode.textContent = chinese ? labels[original] : original;
-          });
-          const archiveLabel = Array.from(document.querySelectorAll('[data-screen-label="Index drawer"] div'))
-            .find(node => node.textContent.trim() === 'My Archive' || node.textContent.trim() === '我的档案');
-          if (archiveLabel) archiveLabel.textContent = chinese ? '我的档案' : 'My Archive';
+          applySiteLanguage(languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh');
         });
       }
 
-      let active = null;
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=month-wheel-smalltext').then(response => response.text()),
-        fetch('./work-page/work.css?v=month-wheel-smalltext').then(response => response.text()),
-        fetch('./work-page/work.js?v=month-wheel-smalltext').then(response => response.text())
+        fetch('./work-page/work.html?v=zh-i18n-20').then(response => response.text()),
+        fetch('./work-page/work.css?v=zh-i18n-20').then(response => response.text()),
+        fetch('./work-page/work.js?v=zh-i18n-20').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
           .replace('href="../assets/qingtian-huang-bobby-cv-ch.pdf"', 'href="./assets/qingtian-huang-bobby-cv-ch.pdf"')
+          .replaceAll('href="../assets/', 'href="./assets/')
+          .replaceAll('src="../assets/', 'src="./assets/')
           .replace(/<script src="work\.js(?:\?[^"]*)?" defer><\/script>/, `<script>${js}<\/script>`)
       ).catch(() => null);
+      const aboutPageDocument = fetch('./about-page/about.html?v=story-route-map')
+        .then(response => response.text())
+        .catch(() => null);
 
       function closeDrawerCard() {
         if (!active || active.closing) return;
@@ -478,8 +496,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         event.preventDefault();
         if (active) return;
 
-        const isWork = (source.title || '').trim().toUpperCase() === 'WORK';
+        const sourceTitle = (source.title || '').trim();
+        const isWork = sourceTitle.toUpperCase() === 'WORK';
+        const isAbout = sourceTitle.toUpperCase() === 'ABOUT';
+        const isFullPage = isWork || isAbout;
         const loadedWorkPage = isWork ? await workPageDocument : null;
+        const loadedAboutPage = isAbout ? await aboutPageDocument : null;
         const scrollXAtOpen = window.scrollX;
         const scrollYAtOpen = window.scrollY;
         const bodyStyleAtOpen = {
@@ -493,7 +515,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const rect = source.getBoundingClientRect();
         const overlay = document.createElement('div');
         overlay.className = 'drawer-motion-overlay';
-        if (isWork) overlay.classList.add('drawer-motion-overlay--work');
+        if (isFullPage) overlay.classList.add('drawer-motion-overlay--work');
         overlay.setAttribute('aria-hidden', 'true');
 
         const path = source.querySelector('svg path');
@@ -524,7 +546,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (smoothPaperPath && clonedPaperPath) clonedPaperPath.setAttribute('d', smoothPaperPath);
         // The source tab is drawn from y=6 to y=46. In the fullscreen Work view,
         // extend its coloured face from y=0 through the rule to prevent a seam.
-        if (isWork && clonedTabPath) {
+        if (isFullPage && clonedTabPath) {
           // Cover two extra SVG units at the bottom so browser scaling cannot
           // reveal a hairline gap between the tab face and the horizontal rule.
           clonedTabPath.setAttribute('transform', 'matrix(1 0 0 1.2 0 -7.2)');
@@ -540,7 +562,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
         let workLanguage = null;
-        if (isWork) {
+        if (isFullPage) {
           card.classList.add('drawer-motion-card--work');
           content.classList.add('drawer-motion-content--work');
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
@@ -550,23 +572,23 @@ document.addEventListener('DOMContentLoaded', async function() {
           workLanguage.className = 'homepage-language-switch drawer-motion-work-language';
           workLanguage.type = 'button';
           workLanguage.setAttribute('aria-label', 'Switch language');
-          workLanguage.setAttribute('aria-pressed', 'false');
-          workLanguage.innerHTML = '<span class="is-active">EN</span><span>中</span>';
+          workLanguage.setAttribute('aria-pressed', String(siteLanguage === 'zh'));
+          workLanguage.innerHTML = `<span class="${siteLanguage === 'zh' ? '' : 'is-active'}">EN</span><span class="${siteLanguage === 'zh' ? 'is-active' : ''}">中</span>`;
           workLanguage.addEventListener('click', () => {
-            const chinese = workLanguage.getAttribute('aria-pressed') !== 'true';
-            workLanguage.setAttribute('aria-pressed', String(chinese));
-            const languageSpans = workLanguage.querySelectorAll('span');
-            languageSpans[0].classList.toggle('is-active', !chinese);
-            languageSpans[1].classList.toggle('is-active', chinese);
+            applySiteLanguage(workLanguage.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh');
           });
           const workFrame = document.createElement('iframe');
           workFrame.className = 'drawer-motion-work-frame';
-          if (loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
-          else workFrame.src = './work-page/work.html';
-          workFrame.title = 'Work';
+          if (isWork && loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
+          else if (isAbout && loadedAboutPage) workFrame.srcdoc = loadedAboutPage;
+          else workFrame.src = isAbout ? './about-page/about.html' : './work-page/work.html';
+          workFrame.title = isAbout ? 'About' : 'Work';
+          workFrame.addEventListener('load', () => {
+            if (workFrame.contentWindow) workFrame.contentWindow.postMessage({ type:'set-language', language:siteLanguage }, '*');
+          });
           content.append(workFrame);
         }
-        if (isWork) card.append(row, content, close, workLanguage);
+        if (isFullPage) card.append(row, content, close, workLanguage);
         else {
           content.append(close);
           card.append(row, content);
@@ -581,7 +603,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           width:'100%'
         });
         gsap.set(source, { autoAlpha:0 });
-        if (isWork) gsap.set(content, { autoAlpha:1 });
+        if (isFullPage) gsap.set(content, { autoAlpha:1 });
 
         const finish = () => {
           if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
@@ -591,7 +613,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           document.body.classList.remove('drawer-motion-lock');
           Object.assign(document.body.style, bodyStyleAtOpen);
           active = null;
-          if (!isWork) source.focus({ preventScroll:true });
+          if (!isFullPage) source.focus({ preventScroll:true });
           const restoreScroll = () => window.scrollTo(scrollXAtOpen, scrollYAtOpen);
           restoreScroll();
           requestAnimationFrame(() => {
@@ -608,7 +630,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (reducedMotion) {
           const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
-          gsap.set(card, isWork ? {
+          gsap.set(card, isFullPage ? {
             x:getWorkViewportLeft() - rect.left,
             y:-rect.top,
             width:getWorkViewportWidth(),
@@ -622,18 +644,18 @@ document.addEventListener('DOMContentLoaded', async function() {
             scale:fit,
             clipPath:'inset(0 0 0px 0)'
           });
-          if (isWork) gsap.set(content, { left:0, right:0, top:44, bottom:0, borderRadius:0, borderWidth:0 });
-          if (isWork && clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
+          if (isFullPage) gsap.set(content, { left:0, right:0, top:44, bottom:0, borderRadius:0, borderWidth:0 });
+          if (isFullPage && clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
           gsap.set([overlay, content], { autoAlpha:1 });
-          active = { source, overlay, card, content, finish, closing:false, isWork, originRect:rect };
+          active = { source, overlay, card, content, finish, closing:false, isWork:isFullPage, originRect:rect };
           close.focus({ preventScroll:true });
           return;
         }
 
         const pullDistance = Math.max(80, paperHeight - visibleHeight + 18);
         const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
-        const targetX = isWork ? getWorkViewportLeft() - rect.left : (innerWidth - rect.width * fit) / 2 - rect.left;
-        const targetY = isWork ? -rect.top : (innerHeight - paperHeight * fit) / 2 - rect.top;
+        const targetX = isFullPage ? getWorkViewportLeft() - rect.left : (innerWidth - rect.width * fit) / 2 - rect.left;
+        const targetY = isFullPage ? -rect.top : (innerHeight - paperHeight * fit) / 2 - rect.top;
         const tilt = rect.left + rect.width / 2 < innerWidth / 2 ? -1.1 : 1.1;
         const timeline = gsap.timeline({
           defaults:{ overwrite:'auto' },
@@ -652,16 +674,16 @@ document.addEventListener('DOMContentLoaded', async function() {
           .to(card, {
             x:targetX,
             y:targetY,
-            scale:isWork ? 1 : fit,
-            width:isWork ? getWorkViewportWidth() : rect.width,
-            height:isWork ? innerHeight : paperHeight,
-            borderRadius:isWork ? 0 : 10,
-            borderWidth:isWork ? 0 : 1.6,
+            scale:isFullPage ? 1 : fit,
+            width:isFullPage ? getWorkViewportWidth() : rect.width,
+            height:isFullPage ? innerHeight : paperHeight,
+            borderRadius:isFullPage ? 0 : 10,
+            borderWidth:isFullPage ? 0 : 1.6,
             rotationZ:0,
             duration:.72,
             ease:'power3.inOut'
           }, '>-0.06')
-          .to(content, isWork ? {
+          .to(content, isFullPage ? {
             left:0,
             right:0,
             top:44,
@@ -671,8 +693,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             duration:.72,
             ease:'power3.inOut'
           } : {}, '<')
-          .to(clonedPaperPath, isWork ? { opacity:0, duration:.2, ease:'power1.out' } : {}, '<.5')
-          .to(content, { autoAlpha:1, duration:isWork ? 0 : .3, ease:'power1.out' }, isWork ? 0 : '>-0.2');
+          .to(clonedPaperPath, isFullPage ? { opacity:0, duration:.2, ease:'power1.out' } : {}, '<.5')
+          .to(content, { autoAlpha:1, duration:isFullPage ? 0 : .3, ease:'power1.out' }, isFullPage ? 0 : '>-0.2');
         const returnToSource = () => {
           const homeTab = card.querySelector('.drawer-motion-work-back');
           const paperScale = Math.min(.94, sourcePaperRectAtOpen.width / rect.width);
@@ -722,7 +744,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             .to(overlay, { autoAlpha:0, duration:.55, ease:'power1.out' }, '<.42');
         };
 
-        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork, originRect:rect };
+        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork:isFullPage, originRect:rect };
       }
 
       document.addEventListener('click', event => {

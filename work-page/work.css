@@ -151,6 +151,12 @@ a {
   line-height: 1.42;
 }
 
+html[lang="zh-CN"] .experience-intro p {
+  font-family: "Songti SC", "Noto Serif SC", "SimSun", serif;
+  font-size: 24px;
+  line-height: 1.62;
+}
+
 .experience-intro hr {
   height: 1px;
   margin: 0 0 30px;
@@ -261,17 +267,28 @@ a {
   position: absolute;
   top: 0;
   left: 8px;
+  width: max-content;
   font-family: Georgia, "Libre Caslon Text", serif;
   font-size: 22px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
+  white-space: nowrap;
   transform: translateY(-50%) rotate(var(--month-rotation, 0deg));
   transform-origin: 0 50%;
 }
 
+html[lang="zh-CN"] .timeline-number {
+  font-size: 25px;
+  transform: translateY(-50%) rotate(0deg);
+}
+
 .timeline-tab:not(.is-active) .timeline-number {
   font-size: 14px;
+}
+
+html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
+  font-size: 18px;
 }
 
 .timeline-dot {

@@ -9,24 +9,105 @@ document.addEventListener('DOMContentLoaded', () => {
   const experienceNext = document.querySelector('.experience-next');
   const tabs = Array.from(document.querySelectorAll('.timeline-tab'));
   const panels = Array.from(document.querySelectorAll('.experience-card'));
-  const languageButton = document.querySelector('.language-switch');
+  const embeddedInFrame = window.self !== window.top;
+  let languageButton = document.querySelector('.language-switch');
+  if (!embeddedInFrame && !languageButton) {
+    languageButton = document.createElement('button');
+    languageButton.className = 'language-switch';
+    languageButton.type = 'button';
+    languageButton.setAttribute('aria-label', 'Switch language');
+    languageButton.setAttribute('aria-pressed', 'false');
+    languageButton.innerHTML = '<span class="is-active">EN</span><span>中</span>';
+    document.body.prepend(languageButton);
+  }
+  const translatableSelector = [
+    '.experience-intro p',
+    '.experience-intro h1',
+    '.experience-count',
+    '.experience-heading-row h2',
+    '.experience-description',
+    '.experience-stats',
+    '.experience-next-label',
+    '.download-label',
+    '.projects-intro h2',
+    '.projects-intro p',
+    '.project-meta',
+    '.project-title',
+    '.project-details > p',
+    '.project-action',
+    '.footer-link span:not(.footer-arrow)',
+    '.copyright'
+  ].join(',');
+  const actionLabels = {
+    en: { open: 'View case', close: 'Close case' },
+    zh: { open: 'View case', close: 'Close case' }
+  };
+  let currentLanguage = document.documentElement.lang === 'zh-CN' ? 'zh' : 'en';
+
+  function prepareTranslations() {
+    document.querySelectorAll(translatableSelector).forEach((element) => {
+      if (element.dataset.i18nPrepared === 'true') return;
+      element.dataset.enHtml = element.innerHTML;
+      if (!element.dataset.zhHtml) element.dataset.zhHtml = element.dataset.enHtml;
+      element.dataset.i18nPrepared = 'true';
+    });
+  }
+
+  function translateElement(element, language) {
+    const htmlKey = language === 'zh' ? 'zhHtml' : 'enHtml';
+    const textKey = language === 'zh' ? 'zh' : 'en';
+    if (element.dataset[htmlKey]) {
+      element.innerHTML = element.dataset[htmlKey];
+    } else if (element.dataset[textKey]) {
+      element.textContent = element.dataset[textKey];
+    }
+  }
+
+  function setLanguage(language) {
+    currentLanguage = language === 'zh' ? 'zh' : 'en';
+    document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll(translatableSelector).forEach((element) => translateElement(element, currentLanguage));
+
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const button = card.querySelector('.project-summary');
+      const action = card.querySelector('.project-action');
+      if (!button || !action) return;
+      action.textContent = actionLabels[currentLanguage][button.getAttribute('aria-expanded') === 'true' ? 'close' : 'open'];
+    });
+
+    if (languageButton) {
+      languageButton.setAttribute('aria-pressed', String(currentLanguage === 'zh'));
+      const languageSpans = languageButton.querySelectorAll('span');
+      languageSpans[0].classList.toggle('is-active', currentLanguage !== 'zh');
+      languageSpans[1].classList.toggle('is-active', currentLanguage === 'zh');
+    }
+
+    updateMonthTabs();
+    updateNextButton();
+  }
+
+  prepareTranslations();
 
   if (languageButton) {
     languageButton.addEventListener('click', () => {
-      const chinese = languageButton.getAttribute('aria-pressed') !== 'true';
-      languageButton.setAttribute('aria-pressed', String(chinese));
-      const languageSpans = languageButton.querySelectorAll('span');
-      languageSpans[0].classList.toggle('is-active', !chinese);
-      languageSpans[1].classList.toggle('is-active', chinese);
+      setLanguage(languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh');
     });
   }
+
+  window.addEventListener('message', (event) => {
+    if (!event.data || event.data.type !== 'set-language') return;
+    setLanguage(event.data.language);
+  });
 
   if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const monthAngles = [-56, -28, 0, 28, 56];
   const slotOffsets = [-2, -1, 0, 1, 2];
-  const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const monthNames = {
+    en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+    zh: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+  };
   const experienceRanges = [
     { panelIndex: 0, start: monthIndex(2022, 8), end: monthIndex(2023, 3) },
     { panelIndex: 1, start: monthIndex(2024, 7), end: monthIndex(2025, 7) },
@@ -50,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function monthLabel(index) {
-    return monthNames[dateParts(index).month - 1];
+    return monthNames[currentLanguage][dateParts(index).month - 1];
   }
 
   function panelIndexForMonth(index) {
@@ -100,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         tab.setAttribute('aria-controls', panels[panelIndex].id);
       }
-      tab.setAttribute('aria-label', `${monthNames[month - 1]} ${tabYear}`);
+      tab.setAttribute('aria-label', `${monthNames[currentLanguage][month - 1]} ${tabYear}`);
       tab.querySelector('.timeline-number').textContent = monthLabel(tabMonth);
       if (focusActive && selected) tab.focus({ preventScroll: true });
     });
@@ -139,7 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!experienceNext) return;
     const current = activeIndex ?? 0;
     const next = (current + 1) % experienceRanges.length;
-    experienceNext.setAttribute('aria-label', `Next experience: ${panels[next].getAttribute('aria-label')}`);
+    const prefix = currentLanguage === 'zh' ? 'Next experience' : 'Next experience';
+    experienceNext.setAttribute('aria-label', `${prefix}: ${panels[next].getAttribute('aria-label')}`);
   }
 
   function jumpToExperience(index, { focus = false } = {}) {
@@ -275,14 +357,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const otherAction = otherCard.querySelector('.project-action');
         otherCard.classList.remove('is-open');
         otherButton.setAttribute('aria-expanded', 'false');
-        otherAction.textContent = 'View case';
+        otherAction.textContent = actionLabels[currentLanguage].open;
         otherDetails.hidden = true;
       });
 
       if (opening) {
         card.classList.add('is-open');
         button.setAttribute('aria-expanded', 'true');
-        action.textContent = 'Close case';
+        action.textContent = actionLabels[currentLanguage].close;
         details.hidden = false;
         if (!reducedMotion) {
           gsap.fromTo(details, { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.36, ease: 'power2.out' });

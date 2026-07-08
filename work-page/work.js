@@ -88,6 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   prepareTranslations();
 
+  function scrollToWorkSection(targetName) {
+    const target = document.getElementById(targetName);
+    if (!target) return;
+
+    if (targetName === 'experiences') {
+      const heading = target.querySelector('.experience-intro h1');
+      const anchor = heading || target;
+      const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(0, anchorTop - 64), behavior: 'auto' });
+      return;
+    }
+
+    target.scrollIntoView({ block: 'start' });
+  }
+
   if (languageButton) {
     languageButton.addEventListener('click', () => {
       setLanguage(languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh');
@@ -101,8 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     if (event.data.type === 'scroll-to') {
-      const target = document.getElementById(event.data.target);
-      if (target) target.scrollIntoView({ block: 'start' });
+      scrollToWorkSection(event.data.target);
     }
   });
 

@@ -366,6 +366,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
         .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#403c37; border-radius:999px; padding:10px 18px; font:500 15px/1 "Libre Caslon Text",Georgia,serif; cursor:pointer; }
         .drawer-motion-work-back { position:absolute; left:0; top:0; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#fffaf2; color:#403c37; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:400 17px/1 "Libre Caslon Text",Georgia,serif; white-space:nowrap; cursor:pointer; }
+        .drawer-motion-section-tab { position:absolute; left:190px; top:0; z-index:115; display:grid; width:230px; height:46px; place-items:center; background:#2B3D4F; color:#FFFFFF; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z'); filter:drop-shadow(0 0 1.5px #b9ad9c); font:700 17px/1 "Libre Caslon Text",Georgia,serif; white-space:nowrap; pointer-events:none; }
         .drawer-motion-work-back:hover { background:#fffaf2; }
         .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
@@ -411,6 +412,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (archiveLabel) archiveLabel.textContent = chinese ? '档案' : 'My Archive';
         const homeTab = document.querySelector('.drawer-motion-work-back');
         if (homeTab) homeTab.textContent = chinese ? '档案' : 'HOME';
+        const sectionTab = document.querySelector('.drawer-motion-section-tab');
+        if (sectionTab) {
+          const original = sectionTab.dataset.title || '';
+          sectionTab.textContent = chinese && labels[original] ? labels[original] : original;
+        }
         const activeRow = document.querySelector('.drawer-motion-row');
         if (activeRow) {
           const original = activeRow.getAttribute('title') || '';
@@ -448,9 +454,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=timeline-left-27').then(response => response.text()),
-        fetch('./work-page/work.css?v=timeline-left-27').then(response => response.text()),
-        fetch('./work-page/work.js?v=timeline-left-27').then(response => response.text())
+        fetch('./work-page/work.html?v=timeline-left-33').then(response => response.text()),
+        fetch('./work-page/work.css?v=timeline-left-33').then(response => response.text()),
+        fetch('./work-page/work.js?v=timeline-left-33').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
@@ -473,8 +479,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           // page back into its paper card, then slide and clip that card into
           // the exact source tab before revealing the original stack again.
           if (active.isWork) {
-            const homeTab = active.card.querySelector('.drawer-motion-work-back');
-            if (homeTab) gsap.to(homeTab, { autoAlpha:0, duration:.18, ease:'power1.out' });
+            const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
+            if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
           }
           active.timeline.timeScale(active.isWork ? .86 : 1).reverse();
         }
@@ -509,7 +515,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (active) return;
 
         const sourceTitle = (source.title || '').trim();
-        const isWork = sourceTitle.toUpperCase() === 'WORK';
+        const workSectionTargets = {
+          EXPERIENCES: 'experiences',
+          PROJECTS: 'projects'
+        };
+        const targetSection = workSectionTargets[sourceTitle.toUpperCase()] || '';
+        const isWork = sourceTitle.toUpperCase() === 'WORK' || Boolean(targetSection);
         const isAbout = sourceTitle.toUpperCase() === 'ABOUT';
         const isFullPage = isWork || isAbout;
         const loadedWorkPage = isWork ? await workPageDocument : null;
@@ -570,6 +581,11 @@ document.addEventListener('DOMContentLoaded', async function() {
           const rowNameNode = rowTextNodes[rowTextNodes.length - 1];
           if (rowNameNode && labels[sourceTitle]) rowNameNode.textContent = labels[sourceTitle];
         }
+        if (targetSection) {
+          Array.from(row.children)
+            .filter(child => child.tagName === 'DIV')
+            .forEach(node => { node.style.display = 'none'; });
+        }
 
         const content = document.createElement('div');
         content.className = 'drawer-motion-content';
@@ -579,12 +595,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
         let workLanguage = null;
+        let sectionTab = null;
         if (isFullPage) {
           card.classList.add('drawer-motion-card--work');
           content.classList.add('drawer-motion-content--work');
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
           close.classList.add('drawer-motion-work-back');
           close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
+          if (targetSection) {
+            sectionTab = document.createElement('div');
+            sectionTab.className = 'drawer-motion-section-tab';
+            sectionTab.dataset.title = sourceTitle;
+            sectionTab.textContent = siteLanguage === 'zh' && labels[sourceTitle] ? labels[sourceTitle] : sourceTitle;
+          }
           workLanguage = document.createElement('button');
           workLanguage.className = 'homepage-language-switch drawer-motion-work-language';
           workLanguage.type = 'button';
@@ -599,13 +622,20 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (isWork && loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
           else if (isAbout && loadedAboutPage) workFrame.srcdoc = loadedAboutPage;
           else workFrame.src = isAbout ? './about-page/about.html' : './work-page/work.html';
-          workFrame.title = isAbout ? 'About' : 'Work';
+          workFrame.title = isAbout ? 'About' : sourceTitle;
           workFrame.addEventListener('load', () => {
             if (workFrame.contentWindow) workFrame.contentWindow.postMessage({ type:'set-language', language:siteLanguage }, '*');
+            if (workFrame.contentWindow && targetSection) workFrame.contentWindow.postMessage({ type:'scroll-to', target:targetSection }, '*');
+            if (!targetSection) return;
+            requestAnimationFrame(() => {
+              const frameDocument = workFrame.contentDocument;
+              const target = frameDocument && frameDocument.getElementById(targetSection);
+              if (target) target.scrollIntoView({ block:'start' });
+            });
           });
           content.append(workFrame);
         }
-        if (isFullPage) card.append(row, content, close, workLanguage);
+        if (isFullPage) card.append(row, content, close, ...[sectionTab, workLanguage].filter(Boolean));
         else {
           content.append(close);
           card.append(row, content);
@@ -713,7 +743,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           .to(clonedPaperPath, isFullPage ? { opacity:0, duration:.2, ease:'power1.out' } : {}, '<.5')
           .to(content, { autoAlpha:1, duration:isFullPage ? 0 : .3, ease:'power1.out' }, isFullPage ? 0 : '>-0.2');
         const returnToSource = () => {
-          const homeTab = card.querySelector('.drawer-motion-work-back');
+          const topTabs = card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
           const paperScale = Math.min(.94, sourcePaperRectAtOpen.width / rect.width);
           const scaledPaperHeight = paperHeight * paperScale;
           const insertionY = sourceTabRectAtOpen.top + visibleHeight;
@@ -748,9 +778,9 @@ document.addEventListener('DOMContentLoaded', async function() {
               borderRadius:10, borderWidth:1.5,
               duration:.78, ease:'power3.inOut'
             }, '<');
-          if (homeTab) returnTimeline.to(homeTab, { autoAlpha:0, duration:.18, ease:'power1.out' }, '<.48');
+          if (topTabs.length) returnTimeline.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' }, '<.48');
           returnTimeline
-            .to(clonedPaperPath, { opacity:1, duration:.2, ease:'power1.out' }, homeTab ? '<' : '<.48')
+            .to(clonedPaperPath, { opacity:1, duration:.2, ease:'power1.out' }, topTabs.length ? '<' : '<.48')
             // Feed the sheet downward from its bottom edge into its source slot.
             .to(card, {
               y:finalY,

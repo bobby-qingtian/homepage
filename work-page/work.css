@@ -527,7 +527,7 @@ html[lang="zh-CN"] .experience-stats strong {
   margin: 8px auto 28px;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 18px;
   color: #0f1010;
   font-family: var(--font-struct);
   font-size: 18px;
@@ -562,11 +562,13 @@ html[lang="zh-CN"] .experience-stats strong {
 
 .download-mark {
   display: grid;
-  width: 64px;
-  height: 64px;
+  width: 42px;
+  height: 46px;
   place-items: center;
-  font-size: 34px;
+  border-bottom: 2px solid currentColor;
+  font-size: 36px;
   font-weight: 300;
+  line-height: 0.8;
 }
 
 .download-label {

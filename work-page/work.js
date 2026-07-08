@@ -95,8 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.addEventListener('message', (event) => {
-    if (!event.data || event.data.type !== 'set-language') return;
-    setLanguage(event.data.language);
+    if (!event.data) return;
+    if (event.data.type === 'set-language') {
+      setLanguage(event.data.language);
+      return;
+    }
+    if (event.data.type === 'scroll-to') {
+      const target = document.getElementById(event.data.target);
+      if (target) target.scrollIntoView({ block: 'start' });
+    }
   });
 
   if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;

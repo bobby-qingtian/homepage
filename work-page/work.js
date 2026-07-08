@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ].join(',');
   const actionLabels = {
     en: { open: 'View case', close: 'Close case' },
-    zh: { open: 'View case', close: 'Close case' }
+    zh: { open: '查看案例', close: '收起案例' }
   };
   let currentLanguage = document.documentElement.lang === 'zh-CN' ? 'zh' : 'en';
 
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const monthAngles = [-56, -28, 0, 28, 56];
+  const monthAngles = [-36, -18, 0, 18, 36];
   const slotOffsets = [-2, -1, 0, 1, 2];
   const monthNames = {
     en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!experienceNext) return;
     const current = activeIndex ?? 0;
     const next = (current + 1) % experienceRanges.length;
-    const prefix = currentLanguage === 'zh' ? 'Next experience' : 'Next experience';
+    const prefix = currentLanguage === 'zh' ? '下一段' : 'Next experience';
     experienceNext.setAttribute('aria-label', `${prefix}: ${panels[next].getAttribute('aria-label')}`);
   }
 

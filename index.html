@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .homepage-language-switch span.is-active { background:#b9ad9c; color:#403c37; }
         .drawer-motion-work-language { position:absolute; top:12px; right:22px; z-index:230; }
         .homepage-corner-link { color:#403c37; text-decoration:none; }
-        .homepage-corner-link::before { content:'↘'; display:inline-block; margin-right:8px; text-decoration:none; }
+        .homepage-corner-link::before { content:'↗'; display:inline-block; margin-right:8px; text-decoration:none; }
         .homepage-corner-link:hover { color:#3f6174; }
         @media (max-width:700px) { .homepage-corner-nav { top:14px; right:14px; gap:8px; font-size:14px; } .homepage-language-switch { width:58px; height:26px; font-size:12px; } }
         body.drawer-motion-lock { overflow:hidden !important; }
@@ -407,8 +407,20 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (nameNode && labels[original]) nameNode.textContent = chinese ? labels[original] : original;
         });
         const archiveLabel = Array.from(document.querySelectorAll('[data-screen-label="Index drawer"] div'))
-          .find(node => node.textContent.trim() === 'My Archive' || node.textContent.trim() === '我的档案');
-        if (archiveLabel) archiveLabel.textContent = chinese ? '我的档案' : 'My Archive';
+          .find(node => node.textContent.trim() === 'My Archive' || node.textContent.trim() === '档案' || node.textContent.trim() === '我的档案');
+        if (archiveLabel) archiveLabel.textContent = chinese ? '档案' : 'My Archive';
+        const homeTab = document.querySelector('.drawer-motion-work-back');
+        if (homeTab) homeTab.textContent = chinese ? '档案' : 'HOME';
+        const activeRow = document.querySelector('.drawer-motion-row');
+        if (activeRow) {
+          const original = activeRow.getAttribute('title') || '';
+          const textNodes = Array.from(activeRow.children).filter(child => child.tagName === 'DIV');
+          const nameNode = textNodes[textNodes.length - 1];
+          if (nameNode && labels[original]) nameNode.textContent = chinese ? labels[original] : original;
+        }
+        document.querySelectorAll('.homepage-corner-link').forEach(link => {
+          link.textContent = chinese ? link.dataset.zh : link.dataset.en;
+        });
         if (syncFrame) {
           const frame = (active && active.isWork && active.content.querySelector('.drawer-motion-work-frame')) || document.querySelector('.drawer-motion-work-frame');
           if (frame && frame.contentWindow) frame.contentWindow.postMessage({ type:'set-language', language:siteLanguage }, '*');
@@ -421,8 +433,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         cornerNav.setAttribute('aria-label', 'Language and contact links');
         cornerNav.innerHTML = `
           <button class="homepage-language-switch" type="button" aria-label="Switch language" aria-pressed="false"><span class="is-active">EN</span><span>中</span></button>
-          <a class="homepage-corner-link" href="https://www.linkedin.com/in/bobby-qingtian-huang/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="homepage-corner-link" href="mailto:Qingtianbobby@gmail.com">Email</a>
+          <a class="homepage-corner-link" href="https://www.linkedin.com/in/bobby-qingtian-huang/" target="_blank" rel="noopener noreferrer" data-en="LinkedIn" data-zh="领英">LinkedIn</a>
+          <a class="homepage-corner-link" href="mailto:Qingtianbobby@gmail.com" data-en="Email" data-zh="邮箱">Email</a>
         `;
         document.body.appendChild(cornerNav);
 
@@ -436,9 +448,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=zh-i18n-20').then(response => response.text()),
-        fetch('./work-page/work.css?v=zh-i18n-20').then(response => response.text()),
-        fetch('./work-page/work.js?v=zh-i18n-20').then(response => response.text())
+        fetch('./work-page/work.html?v=timeline-left-27').then(response => response.text()),
+        fetch('./work-page/work.css?v=timeline-left-27').then(response => response.text()),
+        fetch('./work-page/work.js?v=timeline-left-27').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
@@ -553,6 +565,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         const startScale = rect.width / 1080;
         row.style.transform = `scale(${startScale})`;
+        if (siteLanguage === 'zh') {
+          const rowTextNodes = Array.from(row.children).filter(child => child.tagName === 'DIV');
+          const rowNameNode = rowTextNodes[rowTextNodes.length - 1];
+          if (rowNameNode && labels[sourceTitle]) rowNameNode.textContent = labels[sourceTitle];
+        }
 
         const content = document.createElement('div');
         content.className = 'drawer-motion-content';
@@ -567,7 +584,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           content.classList.add('drawer-motion-content--work');
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
           close.classList.add('drawer-motion-work-back');
-          close.textContent = 'HOME';
+          close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
           workLanguage = document.createElement('button');
           workLanguage.className = 'homepage-language-switch drawer-motion-work-language';
           workLanguage.type = 'button';

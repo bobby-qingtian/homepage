@@ -101,6 +101,16 @@ a {
   color: var(--ink);
 }
 
+.language-switch--footer {
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: auto;
+  flex: 0 0 auto;
+  margin-left: 0;
+  font-family: var(--font-body-en);
+}
+
 .nav-box,
 .logo-box,
 .section-label,
@@ -912,6 +922,11 @@ html[lang="zh-CN"] .project-team {
     margin: 30px auto 34px;
     overflow: visible;
     touch-action: pan-y;
+    cursor: default;
+  }
+
+  .timeline-wheel:active {
+    cursor: default;
   }
 
   .timeline-rotor {
@@ -1094,6 +1109,12 @@ html[lang="zh-CN"] .project-team {
 
   .footer-links {
     gap: 24px;
+  }
+
+  .footer-links .language-switch--footer {
+    width: 58px;
+    height: 26px;
+    font-size: 12px;
   }
 
   .copyright {

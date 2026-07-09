@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             transform:scale(.62);
             transform-origin:0 0;
           }
-          .drawer-motion-work-language { top:28px; right:0; transform:translateY(-100%); }
+          .drawer-motion-work-language { display:none !important; }
         }
         @media (max-width:360px) {
           .homepage-corner-nav { transform:scale(.56); }
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           .drawer-motion-content--work { top:25px !important; }
           .drawer-motion-work-back { transform:scale(.56); }
           .drawer-motion-section-tab { left:106px; transform:scale(.56); }
-          .drawer-motion-work-language { top:25px; right:0; }
+          .drawer-motion-work-language { display:none !important; }
         }
         @media (max-width:360px) { [data-screen-label="Index drawer"] { transform:translateY(132px) scale(.29) !important; } }
         @media (min-width:431px) and (max-width:520px) { [data-screen-label="Index drawer"] { transform:translateY(158px) scale(.42) !important; } }
@@ -505,6 +505,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
       }
 
+      window.addEventListener('message', (event) => {
+        if (!event.data || event.data.type !== 'set-site-language') return;
+        applySiteLanguage(event.data.language);
+      });
+
       if (!document.querySelector('.homepage-corner-nav')) {
         const cornerNav = document.createElement('nav');
         cornerNav.className = 'homepage-corner-nav';
@@ -526,9 +531,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=mobile-5').then(response => response.text()),
-        fetch('./work-page/work.css?v=mobile-5').then(response => response.text()),
-        fetch('./work-page/work.js?v=mobile-5').then(response => response.text())
+        fetch('./work-page/work.html?v=mobile-8').then(response => response.text()),
+        fetch('./work-page/work.css?v=mobile-8').then(response => response.text()),
+        fetch('./work-page/work.js?v=mobile-8').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
@@ -549,6 +554,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (active.isWork) {
             const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
             if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
+            gsap.set(active.source, { clearProps:'opacity,visibility' });
+            gsap.to(active.overlay, { autoAlpha:0, duration:.22, ease:'power1.out' });
             gsap.set(active.card, { backgroundColor:'transparent', borderColor:'#b9ad9c' });
           }
           active.returnToSource();

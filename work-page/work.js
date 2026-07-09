@@ -10,16 +10,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs = Array.from(document.querySelectorAll('.timeline-tab'));
   const panels = Array.from(document.querySelectorAll('.experience-card'));
   const embeddedInFrame = window.self !== window.top;
+  const footerLinks = document.querySelector('.footer-links');
   let languageButton = document.querySelector('.language-switch');
-  if (!embeddedInFrame && !languageButton) {
-    languageButton = document.createElement('button');
-    languageButton.className = 'language-switch';
-    languageButton.type = 'button';
-    languageButton.setAttribute('aria-label', 'Switch language');
-    languageButton.setAttribute('aria-pressed', 'false');
-    languageButton.innerHTML = '<span class="is-active">EN</span><span>中</span>';
-    document.body.prepend(languageButton);
+
+  function createLanguageButton() {
+    const button = document.createElement('button');
+    button.className = 'language-switch';
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Switch language');
+    button.setAttribute('aria-pressed', 'false');
+    button.innerHTML = '<span class="is-active">EN</span><span>中</span>';
+    return button;
   }
+
+  if (!languageButton) {
+    languageButton = createLanguageButton();
+    if (embeddedInFrame && footerLinks) {
+      languageButton.classList.add('language-switch--footer');
+      footerLinks.append(languageButton);
+    } else {
+      document.body.prepend(languageButton);
+    }
+  } else if (embeddedInFrame && footerLinks) {
+    languageButton.classList.add('language-switch--footer');
+    footerLinks.append(languageButton);
+  }
+
   const translatableSelector = [
     '.experience-intro p',
     '.experience-intro h1',
@@ -105,7 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (languageButton) {
     languageButton.addEventListener('click', () => {
-      setLanguage(languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh');
+      const nextLanguage = languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh';
+      setLanguage(nextLanguage);
+      if (embeddedInFrame) {
+        window.parent.postMessage({ type: 'set-site-language', language: nextLanguage }, '*');
+      }
     });
   }
 
@@ -123,6 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobileTimeline = window.matchMedia('(max-width: 900px), (pointer: coarse)').matches;
   const monthAngles = [-36, -18, 0, 18, 36];
   const slotOffsets = [-2, -1, 0, 1, 2];
   const monthNames = {
@@ -338,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.setTimeout(() => { wheelLocked = false; }, reducedMotion ? 80 : 520);
   }, { passive: false });
 
-  if (window.Draggable) {
+  if (window.Draggable && !mobileTimeline) {
     gsap.registerPlugin(Draggable);
     const dragProxy = document.createElement('div');
     Draggable.create(dragProxy, {
@@ -364,6 +385,12 @@ document.addEventListener('DOMContentLoaded', () => {
   updateNextButton();
 
   const projectCards = Array.from(document.querySelectorAll('.project-card'));
+  function scrollProjectToTop(card) {
+    const offset = window.matchMedia('(max-width: 900px)').matches ? 54 : 18;
+    const top = card.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: reducedMotion ? 'auto' : 'smooth' });
+  }
+
   projectCards.forEach((card) => {
     const button = card.querySelector('.project-summary');
     const details = card.querySelector('.project-details');
@@ -390,6 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!reducedMotion) {
           gsap.fromTo(details, { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.36, ease: 'power2.out' });
         }
+        requestAnimationFrame(() => scrollProjectToTop(card));
       }
     });
   });

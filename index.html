@@ -379,7 +379,60 @@ document.addEventListener('DOMContentLoaded', async function() {
         .homepage-corner-link { color:#403c37; text-decoration:none; }
         .homepage-corner-link::before { content:'↗'; display:inline-block; margin-right:8px; text-decoration:none; }
         .homepage-corner-link:hover { color:#3f6174; }
-        @media (max-width:700px) { .homepage-corner-nav { top:14px; right:14px; gap:8px; font-size:14px; } .homepage-language-switch { width:58px; height:26px; font-size:12px; } }
+        @media (max-width:700px) {
+          html, body { width:100%; height:100%; overflow:hidden; overscroll-behavior:none; }
+          [data-screen-label="Index drawer"] {
+            width:1080px !important;
+            max-width:none !important;
+            transform-origin:50% 0 !important;
+            transform:translateY(150px) scale(.335) !important;
+            scale:1 !important;
+            zoom:1 !important;
+          }
+          .homepage-corner-nav {
+            top:12px;
+            right:12px;
+            gap:12px;
+            font-size:18px;
+            transform:scale(.62);
+            transform-origin:100% 0;
+          }
+          .homepage-language-switch { width:66px; height:29px; font-size:14px; }
+          .drawer-motion-card--work { width:100vw !important; max-width:100vw !important; }
+          .drawer-motion-card--work .drawer-motion-row { display:none !important; }
+          .drawer-motion-card--work::after { top:28px; }
+          .drawer-motion-content--work { top:28px !important; }
+          .drawer-motion-work-back {
+            width:190px;
+            height:46px;
+            clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z');
+            border-right:0;
+            font-size:17px;
+            transform:scale(.62);
+            transform-origin:0 0;
+          }
+          .drawer-motion-section-tab {
+            left:118px;
+            width:230px;
+            height:46px;
+            clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z');
+            font-size:17px;
+            transform:scale(.62);
+            transform-origin:0 0;
+          }
+          .drawer-motion-work-language { top:28px; right:0; transform:translateY(-100%); }
+        }
+        @media (max-width:360px) {
+          .homepage-corner-nav { transform:scale(.56); }
+          .drawer-motion-card--work::after { top:25px; }
+          .drawer-motion-content--work { top:25px !important; }
+          .drawer-motion-work-back { transform:scale(.56); }
+          .drawer-motion-section-tab { left:106px; transform:scale(.56); }
+          .drawer-motion-work-language { top:25px; right:0; }
+        }
+        @media (max-width:360px) { [data-screen-label="Index drawer"] { transform:translateY(132px) scale(.29) !important; } }
+        @media (min-width:431px) and (max-width:520px) { [data-screen-label="Index drawer"] { transform:translateY(158px) scale(.42) !important; } }
+        @media (min-width:521px) and (max-width:700px) { [data-screen-label="Index drawer"] { transform:translateY(166px) scale(.54) !important; } }
         body.drawer-motion-lock { overflow:hidden !important; }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }
       `;
@@ -461,9 +514,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=timeline-left-33').then(response => response.text()),
-        fetch('./work-page/work.css?v=timeline-left-33').then(response => response.text()),
-        fetch('./work-page/work.js?v=timeline-left-33').then(response => response.text())
+        fetch('./work-page/work.html?v=mobile-5').then(response => response.text()),
+        fetch('./work-page/work.css?v=mobile-5').then(response => response.text()),
+        fetch('./work-page/work.js?v=mobile-5').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
@@ -626,13 +679,11 @@ document.addEventListener('DOMContentLoaded', async function() {
           content.style.top = `${Math.max(48, 54 * startScale)}px`;
           close.classList.add('drawer-motion-work-back');
           close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
-          if (targetContentSection) {
-            const tabTitle = targetAboutSection ? 'About' : 'Work';
-            sectionTab = document.createElement('div');
-            sectionTab.className = 'drawer-motion-section-tab';
-            sectionTab.dataset.title = tabTitle;
-            sectionTab.textContent = siteLanguage === 'zh' && labels[tabTitle] ? labels[tabTitle] : tabTitle;
-          }
+          const tabTitle = isAbout ? 'About' : 'Work';
+          sectionTab = document.createElement('div');
+          sectionTab.className = 'drawer-motion-section-tab';
+          sectionTab.dataset.title = tabTitle;
+          sectionTab.textContent = siteLanguage === 'zh' && labels[tabTitle] ? labels[tabTitle] : tabTitle;
           workLanguage = document.createElement('button');
           workLanguage.className = 'homepage-language-switch drawer-motion-work-language';
           workLanguage.type = 'button';

@@ -881,10 +881,15 @@ document.addEventListener('DOMContentLoaded', async function() {
           .to(content, { autoAlpha:1, duration:isFullPage ? 0 : .3, ease:'power1.out' }, isFullPage ? 0 : '>-0.2');
         const returnToSource = () => {
           const topTabs = card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
-          const paperScale = Math.min(.94, sourcePaperRectAtOpen.width / rect.width);
+          const isMobileDrawer = matchMedia('(max-width:700px)').matches;
+          const drawerRect = source.closest('[data-screen-label="Index drawer"]')?.getBoundingClientRect();
+          const insertionRect = isMobileDrawer && drawerRect && drawerRect.width > 0
+            ? drawerRect
+            : sourcePaperRectAtOpen;
+          const paperScale = Math.min(isMobileDrawer ? 1 : .94, insertionRect.width / rect.width);
           const scaledPaperHeight = paperHeight * paperScale;
           const insertionY = sourceTabRectAtOpen.top + visibleHeight;
-          const centeredLeft = sourcePaperRectAtOpen.left;
+          const centeredLeft = insertionRect.left + (insertionRect.width - rect.width * paperScale) / 2;
           const floatTop = insertionY - scaledPaperHeight;
           const finalTop = sourceTabRectAtOpen.top;
           const scaleInsetX = rect.width * (1 - paperScale) / 2;

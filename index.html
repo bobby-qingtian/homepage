@@ -359,6 +359,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#F5F1E8; border:1.6px solid #b9ad9c; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
         .drawer-motion-card--work::after { position:absolute; left:0; right:0; top:46px; z-index:108; height:1px; content:''; background:#b9ad9c; pointer-events:none; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; z-index:112 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
+        .drawer-motion-card--work .drawer-motion-row { visibility:hidden !important; }
         .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#403c37; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
         .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #b9ad9c; border-radius:10px; background:#f8f2e8; }
         .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#f8f2e8; }
@@ -595,12 +596,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         const sourceTitle = (source.title || '').trim();
         const visibleTitle = getDrawerVisibleTitle(source);
         const sectionTitle = ['Experiences', 'Projects'].includes(visibleTitle) ? visibleTitle : sourceTitle;
-        const aboutTitle = ['Education', 'Skills'].includes(visibleTitle) ? visibleTitle : sourceTitle;
+        const aboutTitle = ['Profile', 'Education', 'Skills'].includes(visibleTitle) ? visibleTitle : sourceTitle;
         const workSectionTargets = {
           EXPERIENCES: 'experiences',
           PROJECTS: 'projects'
         };
         const aboutSectionTargets = {
+          PROFILE: 'story',
           EDUCATION: 'education',
           SKILLS: 'skills'
         };

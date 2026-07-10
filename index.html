@@ -235,6 +235,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'Interests', u: 0.95 }")
         .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ num: '', name: '', u: 0.03 }")
         .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ num: '', name: '', u: 0.95 }")
+        // Guide entry tab: front-most row of the drawer, where the welcome
+        // overlay tucks itself away and can be pulled out again.
+        .replace("{ plain: 1, num: '', name: '', u: 0 },\n    ];", "{ plain: 1, num: '', name: '', u: 0 },\n      { d: 1, full: 1, num: '', name: 'Welcome', u: 0.50 },\n    ];")
         .replace('transform:{{ nameTransform }}', 'transform:{{ row.nameTransform }}')
         .replace('left:{{ row.nameX }}px;top:12px;', 'left:{{ row.nameX }}px;top:{{ row.nameTop }}px;')
         .replace(
@@ -410,7 +413,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             transform-origin:100% 0;
           }
           .homepage-language-switch { width:66px; height:29px; font-size:14px; }
-          .drawer-motion-card--work { width:100vw !important; max-width:100vw !important; }
+          .drawer-motion-card--work { width:100vw; max-width:100vw; }
           .drawer-motion-card--work .drawer-motion-row { display:none !important; }
           .drawer-motion-card--work::after { top:28px; }
           .drawer-motion-content--work { top:28px !important; }
@@ -445,6 +448,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         @media (max-width:360px) { [data-screen-label="Index drawer"] { transform:translateY(132px) scale(.29) !important; } }
         @media (min-width:431px) and (max-width:520px) { [data-screen-label="Index drawer"] { transform:translateY(158px) scale(.42) !important; } }
         @media (min-width:521px) and (max-width:700px) { [data-screen-label="Index drawer"] { transform:translateY(166px) scale(.54) !important; } }
+        .guide-card-body { left:8%; right:8%; bottom:6%; padding:clamp(20px,3vw,48px) 0; align-items:center; justify-content:space-evenly; text-align:center; }
+        .guide-title { max-width:24em; font-size:clamp(24px,3.4vw,44px); font-weight:700; line-height:1.3; color:#3D3D3D; letter-spacing:.01em; }
+        .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(18px,6vw,110px); }
+        .guide-option { appearance:none; cursor:pointer; border:1.5px solid #3D3D3D; border-radius:999px; background:#EDE6D8; color:#3D3D3D; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:500 clamp(16px,1.7vw,21px)/1.1 "Libre Caslon Text",Georgia,serif; transition:background .18s ease, transform .18s ease; }
+        .guide-option:hover { background:#bd873f; transform:translateY(-2px); }
+        .guide-option:focus-visible { outline:3px solid #3D3D3D; outline-offset:3px; }
+        .guide-everything { appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#3D3D3D; font:700 clamp(18px,2vw,26px)/1.1 "Libre Caslon Text",Georgia,serif; }
+        .guide-everything-arrow { font-size:1.25em; line-height:1; transition:transform .18s ease; }
+        .guide-everything:hover .guide-everything-arrow { transform:translateX(6px); }
+        .guide-everything:focus-visible { outline:3px solid #3D3D3D; outline-offset:3px; }
+        body.guide-open .homepage-corner-nav { z-index:99995; }
         body.drawer-motion-lock { overflow:hidden !important; }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }
       `;
@@ -454,7 +468,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       let siteLanguage = 'en';
       const labels = {
         About:'关于', Profile:'简介', Education:'教育', Skills:'技能', Work:'作品',
-        Experiences:'经历', Projects:'项目', INTERESTS:'兴趣', Interests:'兴趣', Music:'音乐', Photography:'摄影'
+        Experiences:'经历', Projects:'项目', INTERESTS:'兴趣', Interests:'兴趣', Music:'音乐', Photography:'摄影',
+        Welcome:'欢迎'
       };
       const labelLookup = Object.fromEntries(Object.entries(labels).flatMap(([en, zh]) => [[en, en], [zh, en]]));
 
@@ -498,6 +513,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         document.querySelectorAll('.homepage-corner-link').forEach(link => {
           link.textContent = chinese ? link.dataset.zh : link.dataset.en;
+        });
+        document.querySelectorAll('[data-guide-text]').forEach(node => {
+          node.textContent = chinese ? node.dataset.zh : node.dataset.en;
         });
         if (syncFrame) {
           const frame = (active && active.isWork && active.content.querySelector('.drawer-motion-work-frame')) || document.querySelector('.drawer-motion-work-frame');
@@ -551,6 +569,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         active.closing = true;
         if (reducedMotion) active.finish();
         else if (active.returnToSource) {
+          // Stop the opening timeline so its queued tweens cannot fight the
+          // return animation when the card is closed mid-open.
+          if (active.timeline) active.timeline.kill();
           if (active.isWork) {
             const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
             if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
@@ -882,10 +903,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         const returnToSource = () => {
           const topTabs = card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
           const isMobileDrawer = matchMedia('(max-width:700px)').matches;
-          const drawerRect = source.closest('[data-screen-label="Index drawer"]')?.getBoundingClientRect();
-          const insertionRect = isMobileDrawer && drawerRect && drawerRect.width > 0
-            ? drawerRect
-            : sourcePaperRectAtOpen;
+          // Aim the sheet at its own paper slot so it re-inserts centered and
+          // exactly as wide as the drawer stack below.
+          const insertionRect = sourcePaperRectAtOpen;
           const paperScale = Math.min(isMobileDrawer ? 1 : .94, insertionRect.width / rect.width);
           const scaledPaperHeight = paperHeight * paperScale;
           const insertionY = sourceTabRectAtOpen.top + visibleHeight;
@@ -938,6 +958,182 @@ document.addEventListener('DOMContentLoaded', async function() {
         active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork:isFullPage, originRect:rect };
       }
 
+      // ---- Guide overlay: entry layer shown before the drawer -----------
+      let guideActive = null;
+      const getGuideRow = () => document.querySelector('[data-screen-label="Index drawer"] a[title="Welcome"]');
+      const getDrawerStack = () => document.querySelector('[data-screen-label="Index drawer"]');
+
+      // Keep clear of the fixed corner nav (language switch / LinkedIn / Email)
+      // on desktop; on narrow screens fall back to a near-full-width sheet.
+      function guideCardMetrics() {
+        const compact = innerWidth < 700;
+        const cardW = compact ? innerWidth * .92 : Math.min(1240, innerWidth - 300);
+        const cardTop = Math.max(72, innerHeight * .08);
+        const cardH = Math.max(320, innerHeight - cardTop - Math.max(36, innerHeight * .06));
+        const cardLeft = Math.max(0, (innerWidth - cardW) / 2);
+        return { cardW, cardTop, cardH, cardLeft, startScale: cardW / 1080 };
+      }
+
+      // Same insertion math as returnToSource: aim the sheet at the guide
+      // row's paper slot so it feeds downward into the drawer front tab.
+      function guideGeometry(source, cardLeft, cardTop, cardW, cardH) {
+        const sourceRect = source.getBoundingClientRect();
+        const paperRect = source.querySelector('svg path').getBoundingClientRect();
+        const rawTabRect = source.querySelectorAll('svg path')[1].getBoundingClientRect();
+        const tabRect = rawTabRect.width > 1 ? rawTabRect : paperRect;
+        const visibleHeight = Math.min(sourceRect.height, 92);
+        const isMobileDrawer = matchMedia('(max-width:700px)').matches;
+        const paperScale = Math.min(isMobileDrawer ? 1 : .94, paperRect.width / cardW);
+        const scaleInsetX = cardW * (1 - paperScale) / 2;
+        const scaleInsetY = cardH * (1 - paperScale) / 2;
+        const centeredLeft = paperRect.left + (paperRect.width - cardW * paperScale) / 2;
+        return {
+          paperScale,
+          floatX: centeredLeft - cardLeft - scaleInsetX,
+          floatY: (tabRect.top + visibleHeight - cardH * paperScale) - cardTop - scaleInsetY,
+          finalY: tabRect.top - cardTop - scaleInsetY,
+          closedClip: `inset(0 0 ${Math.max(0, cardH - visibleHeight / paperScale)}px 0)`
+        };
+      }
+
+      function openGuide({ fromTab = false } = {}) {
+        if (guideActive || active) return;
+        const source = getGuideRow();
+        if (!source) return;
+        source.style.animation = 'none';
+
+        const { cardW, cardTop, cardH, cardLeft, startScale } = guideCardMetrics();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'drawer-motion-overlay';
+        overlay.setAttribute('aria-hidden', 'true');
+
+        const card = document.createElement('article');
+        card.className = 'drawer-motion-card guide-card';
+        card.setAttribute('role', 'dialog');
+        card.setAttribute('aria-modal', 'true');
+        card.setAttribute('aria-label', 'Welcome');
+        Object.assign(card.style, {
+          left:`${cardLeft}px`, top:`${cardTop}px`, width:`${cardW}px`, height:`${cardH}px`
+        });
+
+        const row = source.cloneNode(true);
+        row.className = 'drawer-motion-row';
+        row.removeAttribute('href');
+        row.removeAttribute('style-hover');
+        const smoothPaperPath = source.getAttribute('data-paper-path');
+        const clonedPaperPath = row.querySelector('svg path');
+        if (smoothPaperPath && clonedPaperPath) clonedPaperPath.setAttribute('d', smoothPaperPath);
+        row.style.transform = `scale(${startScale})`;
+
+        const content = document.createElement('div');
+        content.className = 'drawer-motion-content guide-card-body';
+        content.style.top = `${Math.max(92, 118 * startScale)}px`;
+        content.innerHTML = `
+          <h1 class="guide-title" data-guide-text data-en="Welcome to Bobby&rsquo;s Archive, what brings you here?" data-zh="欢迎来到 Bobby 的档案馆，你为何而来？"></h1>
+          <div class="guide-options">
+            <button type="button" class="guide-option" data-guide-target="About" data-guide-text data-en="About" data-zh="关于"></button>
+            <button type="button" class="guide-option" data-guide-target="Work" data-guide-text data-en="Work" data-zh="作品"></button>
+            <button type="button" class="guide-option" data-guide-target="Interests" data-guide-text data-en="Interests" data-zh="兴趣"></button>
+          </div>
+          <button type="button" class="guide-everything" data-guide-target="">
+            <span class="guide-everything-arrow" aria-hidden="true">&#10230;</span>
+            <span data-guide-text data-en="Everything" data-zh="全部"></span>
+          </button>`;
+        const chinese = siteLanguage === 'zh';
+        content.querySelectorAll('[data-guide-text]').forEach(node => {
+          node.textContent = chinese ? node.dataset.zh : node.dataset.en;
+        });
+
+        card.append(row, content);
+        document.body.append(overlay, card);
+        document.body.classList.add('drawer-motion-lock', 'guide-open');
+        gsap.set(source, { autoAlpha:0 });
+        if (clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
+
+        guideActive = { source, overlay, card, content, cardLeft, cardTop, cardW, cardH, timeline:null, closing:false };
+
+        content.addEventListener('click', event => {
+          const button = event.target.closest('[data-guide-target]');
+          if (!button) return;
+          closeGuide(button.dataset.guideTarget || null);
+        });
+        overlay.addEventListener('click', () => closeGuide(null));
+
+        const drawerStack = getDrawerStack();
+        if (reducedMotion) {
+          if (drawerStack) gsap.set(drawerStack, { autoAlpha:0 });
+          gsap.set([overlay, content], { autoAlpha:1 });
+          return;
+        }
+        const timeline = gsap.timeline({ defaults:{ overwrite:'auto' } });
+        guideActive.timeline = timeline;
+        if (fromTab) {
+          // Pull the guide sheet out of its drawer tab, mirroring openDrawerCard.
+          const geometry = guideGeometry(source, cardLeft, cardTop, cardW, cardH);
+          gsap.set(card, { x:geometry.floatX, y:geometry.finalY, scale:geometry.paperScale, clipPath:geometry.closedClip });
+          timeline
+            .to(overlay, { autoAlpha:1, duration:.55, ease:'power1.out' }, .15)
+            .to(card, { y:geometry.floatY, clipPath:'inset(0 0 0px 0)', duration:.95, ease:'power2.inOut' }, 0)
+            .to(card, { x:0, y:0, scale:1, duration:.7, ease:'power3.inOut' }, '>-0.05')
+            .to(content, { autoAlpha:1, duration:.3, ease:'power1.out' }, '>-0.15');
+          // The drawer fades away once the sheet is fully pulled out.
+          if (drawerStack) timeline.to(drawerStack, { autoAlpha:0, duration:.45, ease:'power1.out' }, .75);
+        } else {
+          if (drawerStack) gsap.set(drawerStack, { autoAlpha:0 });
+          gsap.set(card, { y:26, autoAlpha:0 });
+          timeline
+            .to(overlay, { autoAlpha:1, duration:.5, ease:'power1.out' }, 0)
+            .to(card, { y:0, autoAlpha:1, duration:.6, ease:'power2.out' }, .05)
+            .to(content, { autoAlpha:1, duration:.35, ease:'power1.out' }, '>-0.25');
+        }
+      }
+
+      function syncGuideViewport() {
+        if (!guideActive || guideActive.closing || innerWidth <= 0 || innerHeight <= 0) return;
+        const { cardW, cardTop, cardH, cardLeft, startScale } = guideCardMetrics();
+        Object.assign(guideActive, { cardLeft, cardTop, cardW, cardH });
+        Object.assign(guideActive.card.style, {
+          left:`${cardLeft}px`, top:`${cardTop}px`, width:`${cardW}px`, height:`${cardH}px`
+        });
+        const guideRow = guideActive.card.querySelector('.drawer-motion-row');
+        if (guideRow) guideRow.style.transform = `scale(${startScale})`;
+        guideActive.content.style.top = `${Math.max(92, 118 * startScale)}px`;
+      }
+
+      function closeGuide(nextTitle) {
+        if (!guideActive || guideActive.closing) return;
+        guideActive.closing = true;
+        const guide = guideActive;
+        if (guide.timeline) guide.timeline.kill();
+        const drawerStack = getDrawerStack();
+        const proceed = () => {
+          guide.overlay.remove();
+          guide.card.remove();
+          gsap.set(guide.source, { clearProps:'opacity,visibility' });
+          if (drawerStack) gsap.set(drawerStack, { clearProps:'opacity,visibility' });
+          document.body.classList.remove('drawer-motion-lock', 'guide-open');
+          guideActive = null;
+          if (!nextTitle) return;
+          const target = document.querySelector(`[data-screen-label="Index drawer"] a[title="${nextTitle}"]`);
+          if (target) target.click();
+        };
+        if (reducedMotion) { proceed(); return; }
+        const geometry = guideGeometry(guide.source, guide.cardLeft, guide.cardTop, guide.cardW, guide.cardH);
+        const clonedPaperPath = guide.card.querySelector('svg path');
+        const timeline = gsap.timeline({ defaults:{ overwrite:'auto' }, onComplete: proceed });
+        timeline
+          // The drawer reappears beneath the sheet as it heads back in...
+          .to(drawerStack || {}, drawerStack ? { autoAlpha:1, duration:.5, ease:'power1.out' } : {}, .2)
+          // ...while the sheet shrinks to drawer width above its slot...
+          .to(guide.content, { autoAlpha:0, duration:.3, ease:'power1.out' }, 0)
+          .to(guide.card, { x:geometry.floatX, y:geometry.floatY, scale:geometry.paperScale, duration:.72, ease:'power3.inOut' }, 0)
+          .to(clonedPaperPath, { opacity:1, duration:.25, ease:'power1.out' }, '<.4')
+          // ...then feed it downward into the front tab of the drawer.
+          .to(guide.card, { y:geometry.finalY, clipPath:geometry.closedClip, duration:1, ease:'power2.inOut' })
+          .to(guide.overlay, { autoAlpha:0, duration:.5, ease:'power1.out' }, '<.4');
+      }
+
       document.addEventListener('click', event => {
         const target = event.target instanceof Element ? event.target : event.target.parentElement;
         const source = target && target.closest('[data-screen-label="Index drawer"] a');
@@ -949,12 +1145,28 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         event.preventDefault();
         event.stopPropagation();
+        if ((source.getAttribute('title') || '').trim() === 'Welcome') {
+          openGuide({ fromTab:true });
+          return;
+        }
         openDrawerCard(event, source);
       }, true);
       document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') closeDrawerCard();
+        if (event.key !== 'Escape') return;
+        if (guideActive) closeGuide(null);
+        else closeDrawerCard();
       });
       window.addEventListener('resize', syncActiveWorkViewport);
+      window.addEventListener('resize', syncGuideViewport);
+
+      (function initGuideEntry() {
+        if (guideActive || active) return;
+        if (getGuideRow() && innerWidth > 0 && innerHeight > 0) {
+          openGuide();
+          return;
+        }
+        window.setTimeout(initGuideEntry, 120);
+      })();
     };
   </script>
 </body>

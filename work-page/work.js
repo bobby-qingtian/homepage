@@ -1,5 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.querySelector('.work-page');
+  const pageScrollRail = document.querySelector('.page-scrollbar');
+  const pageScrollTrack = document.querySelector('.page-scrollbar-track');
+  const pageScrollThumb = document.querySelector('.page-scrollbar-thumb');
+  let pageScrollDrag = null;
+
+  function syncPageScrollbar() {
+    if (!pageScrollRail) return;
+    const root = document.documentElement;
+    const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
+    const travel = Math.max(0, pageScrollTrack.clientHeight - pageScrollThumb.offsetHeight);
+    const progress = maxScroll ? window.scrollY / maxScroll : 0;
+    pageScrollRail.hidden = maxScroll === 0;
+    pageScrollThumb.style.transform = `translateY(${Math.round(progress * travel)}px)`;
+  }
+
+  if (pageScrollRail) {
+    window.addEventListener('scroll', syncPageScrollbar, { passive: true });
+    pageScrollRail.addEventListener('pointerdown', (event) => {
+      const trackBox = pageScrollTrack.getBoundingClientRect();
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      const travel = Math.max(1, pageScrollTrack.clientHeight - pageScrollThumb.offsetHeight);
+
+      if (event.target === pageScrollThumb) {
+        pageScrollDrag = { y: event.clientY, scrollTop: window.scrollY, maxScroll, travel };
+        pageScrollThumb.setPointerCapture(event.pointerId);
+      } else {
+        const nextProgress = Math.min(1, Math.max(0, (event.clientY - trackBox.top - pageScrollThumb.offsetHeight / 2) / travel));
+        window.scrollTo({ top: nextProgress * maxScroll, behavior: 'smooth' });
+      }
+    });
+    pageScrollThumb.addEventListener('pointermove', (event) => {
+      if (!pageScrollDrag) return;
+      window.scrollTo({ top: pageScrollDrag.scrollTop + ((event.clientY - pageScrollDrag.y) / pageScrollDrag.travel) * pageScrollDrag.maxScroll });
+    });
+    pageScrollThumb.addEventListener('pointerup', () => { pageScrollDrag = null; });
+    pageScrollThumb.addEventListener('pointercancel', () => { pageScrollDrag = null; });
+    new ResizeObserver(syncPageScrollbar).observe(page);
+    window.addEventListener('load', syncPageScrollbar);
+  }
 
   const wheel = document.querySelector('.timeline-wheel');
   const rotor = document.querySelector('.timeline-rotor');
@@ -192,6 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardHeight = activeCard.getBoundingClientRect().height / pageScale;
     const rotorCenterY = (rotorRect.top + rotorRect.height / 2 - sectionRect.top) / pageScale;
     experienceList.style.top = `${Math.round(rotorCenterY - cardHeight / 2)}px`;
+    if (experienceNext && !mobileTimeline) {
+      experienceNext.style.top = `${Math.round(rotorCenterY + 10)}px`;
+    }
   }
 
   function updateMonthTabs(focusActive = false) {

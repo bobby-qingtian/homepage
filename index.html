@@ -388,10 +388,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           display:inline-block;
           width:.82em;
           height:.82em;
-          margin-right:8px;
-          background:currentColor;
-          -webkit-mask:url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 13 L13 3 M7 3 H13 V9' stroke='black' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
-          mask:url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 13 L13 3 M7 3 H13 V9' stroke='black' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+          margin-right:2px;
+          background:url('./assets/arrow-up-right.svg') center/contain no-repeat;
           transform:translateY(.05em);
           text-decoration:none;
         }
@@ -460,7 +458,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         .guide-option:hover { background:#bd873f; transform:translateY(-2px); }
         .guide-option:focus-visible { outline:3px solid #3D3D3D; outline-offset:3px; }
         .guide-everything { appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#3D3D3D; font:700 clamp(18px,2vw,26px)/1.1 "Martian Mono",monospace; }
-        .guide-everything-arrow { font-size:1.25em; line-height:1; transition:transform .18s ease; }
+        .guide-everything-arrow { display:block; width:32px; height:32px; transition:transform .18s ease; }
+        .guide-everything-arrow img { display:block; width:100%; height:100%; }
         .guide-everything:hover .guide-everything-arrow { transform:translateX(6px); }
         .guide-everything:focus-visible { outline:3px solid #3D3D3D; outline-offset:3px; }
         body.guide-open .homepage-corner-nav { z-index:99995; }
@@ -614,7 +613,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         gsap.set(active.content, {
           left:0,
           right:0,
-          top:56,
+          top:58,
           bottom:0,
           borderRadius:0,
           borderWidth:0,
@@ -722,7 +721,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (isFullPage) {
           card.classList.add('drawer-motion-card--work');
           content.classList.add('drawer-motion-content--work');
-          content.style.top = '56px';
+          content.style.top = '58px';
           close.classList.add('drawer-motion-work-back');
           close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
           const tabTitle = isAbout ? 'About' : 'Work';
@@ -854,7 +853,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             scale:fit,
             clipPath:'inset(0 0 0px 0)'
           });
-          if (isFullPage) gsap.set(content, { left:0, right:0, top:56, bottom:0, borderRadius:0, borderWidth:0 });
+          if (isFullPage) gsap.set(content, { left:0, right:0, top:58, bottom:0, borderRadius:0, borderWidth:0 });
           if (isFullPage && clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
           gsap.set([overlay, content], { autoAlpha:1 });
           active = { source, overlay, card, content, finish, closing:false, isWork:isFullPage, originRect:rect };
@@ -896,7 +895,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           .to(content, isFullPage ? {
             left:0,
             right:0,
-            top:56,
+            top:58,
             bottom:0,
             borderRadius:0,
             borderWidth:0,
@@ -1043,7 +1042,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             <button type="button" class="guide-option" data-guide-target="Interests" data-guide-text data-en="Interests" data-zh="兴趣"></button>
           </div>
           <button type="button" class="guide-everything" data-guide-target="">
-            <span class="guide-everything-arrow" aria-hidden="true">&#10230;</span>
+            <span class="guide-everything-arrow" aria-hidden="true"><img src="./assets/arrow-right.svg" alt=""></span>
             <span data-guide-text data-en="Everything" data-zh="全部"></span>
           </button>`;
         const chinese = siteLanguage === 'zh';

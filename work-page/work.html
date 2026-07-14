@@ -7,10 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="work.css?v=mobile-9">
+    <link rel="stylesheet" href="work.css?v=scrollbar-1">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js" defer></script>
-    <script src="work.js?v=mobile-8" defer></script>
+    <script src="work.js?v=scrollbar-1" defer></script>
   </head>
   <body>
     <main class="work-page" aria-label="Standalone work page wireframe">
@@ -79,21 +79,25 @@
               <p class="experience-stats" data-zh-html="覆盖各类投行客户 · KYC · 客户尽职调查 · 客户准入">ALL IB CLIENT TYPES · KYC · ACCOUNT DUE DILIGENCE · ONBOARDING</p>
             </div>
           </article>
-          <button class="experience-next" type="button" aria-label="Next experience">
-            <span class="experience-next-mark" aria-hidden="true">→</span>
-            <span class="experience-next-label" data-zh-html="下一段">Next</span>
-          </button>
         </div>
+        <button class="experience-next" type="button" aria-label="Next experience">
+          <span class="experience-next-mark" aria-hidden="true">
+            <img src="../assets/arrow-right.svg" alt="">
+          </span>
+          <span class="experience-next-label" data-zh-html="下一段">Next</span>
+        </button>
       </section>
 
       <a class="download-bar" id="cv" href="../assets/qingtian-huang-bobby-cv-ch.pdf" target="_blank" rel="noopener noreferrer" aria-label="Preview Qingtian Huang CV">
-        <span class="download-mark" aria-hidden="true">↓</span>
+        <span class="download-mark" aria-hidden="true">
+          <img src="../assets/arrow-line-down.svg" alt="">
+        </span>
         <span class="download-label" data-zh-html="下载简历">Download CV</span>
       </a>
 
       <section class="projects-section" id="projects" aria-label="Projects">
         <div class="projects-intro">
-          <h2>Projects</h2>
+          <h2 data-zh-html="项目">Projects</h2>
           <p data-zh-html="以下是我过去几年在案例竞赛与咨询实践中的部分项目。我热衷于应对没有标准答案的难题，也享受与团队协作、以扎实研究为支撑逐一破解的过程。">Below are project works from case competitions and consulting cases over the past few years. I like problems that don't come with instructions, and I like solving them with a brilliant team, backed by data and research.</p>
           <p data-zh-html="每一个项目，都是一次市场进入、一场业务转型，或一个此前无人预见的风险，均由我全程主导、从头推演至落地。">Each one is a market entry, a turnaround, or a risk nobody saw coming, worked from start to finish.</p>
         </div>
@@ -182,16 +186,28 @@
       <footer class="work-footer">
         <nav class="footer-links" aria-label="Contact links">
           <a class="footer-link" href="https://www.linkedin.com/in/bobby-qingtian-huang/" target="_blank" rel="noopener noreferrer">
-            <span class="footer-arrow" aria-hidden="true">↗</span>
+            <span class="footer-arrow" aria-hidden="true"><img src="../assets/arrow-up-right.svg" alt=""></span>
             <span data-zh-html="领英">LinkedIn</span>
           </a>
           <a class="footer-link" href="mailto:Qingtianbobby@gmail.com">
-            <span class="footer-arrow" aria-hidden="true">↗</span>
+            <span class="footer-arrow" aria-hidden="true"><img src="../assets/arrow-up-right.svg" alt=""></span>
             <span data-zh-html="邮箱">Email</span>
           </a>
         </nav>
         <p class="copyright" data-zh-html="版权所有 © 2026 黄擎天 保留所有权利">Copyright © 2026 Qingtian Huang. All rights reserved.</p>
       </footer>
     </main>
+
+    <div class="page-scrollbar" aria-hidden="true">
+      <div class="page-scrollbar-track">
+        <div class="page-scrollbar-ticks">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="page-scrollbar-thumb"></div>
+      </div>
+    </div>
   </body>
 </html>

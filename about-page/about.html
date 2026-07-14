@@ -6,7 +6,7 @@
     <title>About</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Noto+Sans+SC:wght@400;500;700&amp;family=Noto+Serif+SC:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
     <style>
       :root {
         color-scheme: light;
@@ -17,11 +17,11 @@
         --ink: #403c37;
         --muted: #81786d;
         --blue-gray: #3f6174;
-        --font-display-en: "Libre Caslon Text", Georgia, serif;
-        --font-display-zh: "Songti SC", "Noto Serif SC", "SimSun", serif;
-        --font-body-en: "Libre Caslon Text", Georgia, serif;
-        --font-body-zh: "Songti SC", "Noto Serif SC", "SimSun", serif;
-        --font-struct: Arial, Helvetica, sans-serif;
+        --font-display-en: "Geist", sans-serif;
+        --font-display-zh: "Geist", sans-serif;
+        --font-body-en: "Martian Mono", monospace;
+        --font-body-zh: "Martian Mono", monospace;
+        --font-struct: "Martian Mono", monospace;
       }
 
       * { box-sizing: border-box; font-family: inherit; }
@@ -59,7 +59,7 @@
       .about-content section {
         padding: 0 0 56px;
         margin: 0 0 56px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 0;
       }
 
       #education,
@@ -102,7 +102,7 @@
       .portrait {
         display: block;
         width: 100%;
-        border: 1px solid var(--line);
+        border: 0;
         background: #fbf6ee;
         filter: saturate(0.92);
       }
@@ -174,7 +174,7 @@
         gap: 8px 24px;
         align-items: baseline;
         padding: 26px 0;
-        border-top: 1px solid var(--line);
+        border-top: 0;
       }
       .edu-item:first-of-type { border-top: 0; padding-top: 0; }
       .edu-inst {
@@ -200,8 +200,8 @@
         gap: 0 10px;
         grid-column: 1 / -1;
         margin-top: 4px;
-        padding-left: 14px;
-        border-left: 2px solid var(--blue-gray);
+        padding-left: 0;
+        border-left: 0;
       }
       .edu-meta-item { display: inline; }
       .edu-meta-item:not(:last-child)::after {
@@ -236,7 +236,7 @@
         align-items: center;
         min-height: 30px;
         padding: 6px 14px;
-        border: 1px solid var(--line);
+        border: 0;
         background: #fbf6ee;
         color: var(--ink);
         font-family: var(--font-struct);
@@ -247,7 +247,7 @@
       .sub-head {
         margin-bottom: 18px;
         padding-bottom: 10px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 0;
         color: var(--muted);
         font-family: var(--font-struct);
         font-size: 13px;
@@ -261,7 +261,7 @@
         align-items: baseline;
         gap: 16px;
         padding: 11px 0;
-        border-bottom: 1px dotted var(--line);
+        border-bottom: 0;
       }
       .cert-name,
       .cert-meta,
@@ -301,29 +301,6 @@
       }
       .footer-arrow { display: inline-block; font-family: var(--font-struct); font-size: 17px; line-height: 1; }
       .footer-link:hover { color: var(--blue-gray); }
-      .language-switch {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        flex: 0 0 auto;
-        width: 66px;
-        height: 29px;
-        padding: 3px;
-        border: 1px solid #3d3d3d;
-        background: #f5f5f5;
-        color: #3d3d3d;
-        font-family: var(--font-body-en);
-        font-size: 14px;
-        line-height: 1;
-        cursor: pointer;
-      }
-      .language-switch span {
-        display: grid;
-        place-items: center;
-      }
-      .language-switch span.is-active {
-        background: var(--line);
-        color: var(--ink);
-      }
       .copyright {
         margin: 0;
         color: #202020;
@@ -371,11 +348,6 @@
         }
         .lang-item:not(:last-child)::after {
           content: none;
-        }
-        .footer-links .language-switch {
-          width: 58px;
-          height: 26px;
-          font-size: 12px;
         }
       }
 
@@ -500,25 +472,7 @@
     <script>
     (function(){
       const translatableSelector = '[data-zh-html]';
-      const embeddedInFrame = window.self !== window.top;
-      const footerLinks = document.querySelector('.footer-links');
       let currentLanguage = document.documentElement.lang === 'zh-CN' ? 'zh' : 'en';
-      let languageButton = null;
-
-      function createLanguageButton() {
-        const button = document.createElement('button');
-        button.className = 'language-switch';
-        button.type = 'button';
-        button.setAttribute('aria-label', 'Switch language');
-        button.setAttribute('aria-pressed', 'false');
-        button.innerHTML = '<span class="is-active">EN</span><span>中</span>';
-        return button;
-      }
-
-      if (embeddedInFrame && footerLinks) {
-        languageButton = createLanguageButton();
-        footerLinks.append(languageButton);
-      }
 
       function prepareTranslations() {
         document.querySelectorAll(translatableSelector).forEach((element) => {
@@ -549,23 +503,10 @@
         document.querySelectorAll('[data-zh-alt]').forEach((element) => {
           element.setAttribute('alt', currentLanguage === 'zh' ? element.dataset.zhAlt : element.dataset.enAlt);
         });
-        if (languageButton) {
-          languageButton.setAttribute('aria-pressed', String(currentLanguage === 'zh'));
-          const languageSpans = languageButton.querySelectorAll('span');
-          languageSpans[0].classList.toggle('is-active', currentLanguage !== 'zh');
-          languageSpans[1].classList.toggle('is-active', currentLanguage === 'zh');
-        }
         if (window.updateAboutMapLabels) window.updateAboutMapLabels(currentLanguage);
       };
 
       prepareTranslations();
-      if (languageButton) {
-        languageButton.addEventListener('click', () => {
-          const nextLanguage = languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh';
-          window.setAboutLanguage(nextLanguage);
-          window.parent.postMessage({ type: 'set-site-language', language: nextLanguage }, '*');
-        });
-      }
       window.addEventListener('message', (event) => {
         if (!event.data) return;
         if (event.data.type === 'set-language') window.setAboutLanguage(event.data.language);

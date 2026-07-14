@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs = Array.from(document.querySelectorAll('.timeline-tab'));
   const panels = Array.from(document.querySelectorAll('.experience-card'));
   const embeddedInFrame = window.self !== window.top;
-  const footerLinks = document.querySelector('.footer-links');
   let languageButton = document.querySelector('.language-switch');
 
   function createLanguageButton() {
@@ -23,17 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     return button;
   }
 
-  if (!languageButton) {
+  if (!languageButton && !embeddedInFrame) {
     languageButton = createLanguageButton();
-    if (embeddedInFrame && footerLinks) {
-      languageButton.classList.add('language-switch--footer');
-      footerLinks.append(languageButton);
-    } else {
-      document.body.prepend(languageButton);
-    }
-  } else if (embeddedInFrame && footerLinks) {
-    languageButton.classList.add('language-switch--footer');
-    footerLinks.append(languageButton);
+    document.body.prepend(languageButton);
   }
 
   const translatableSelector = [

@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'set-language') setLanguage(event.data.language);
+    if (event.data && event.data.type === 'focus-section') {
+      const target = event.data.target === 'photography' ? 'photography' : 'listening';
+      const root = document.querySelector('.interests-page');
+      if (root) root.dataset.entrySection = target;
+      if (window.matchMedia('(max-width: 900px)').matches) {
+        document.getElementById(target)?.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
+    }
   });
 
   const playlistItems = Array.from(document.querySelectorAll('.playlist-item'));
@@ -60,11 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
     brazil: {
       title: 'BRAZIL',
       files: [
-        '20240511_013141.jpg', '20240519_201640.jpg', '20240520_145847.jpg',
-        '20251121_202745.jpg', '20251122_214340.jpg', '20251122_224035.jpg',
-        '20251224_201609.jpg', '20251225_184217.jpg', '20251226_111310.jpg',
-        '20251226_140223.jpg', '20251226_173643.jpg', '20251226_185553.jpg',
-        '20251231_142913.jpg'
+        '20240511_013141.jpg', '20240520_145847.jpg', '20251121_202745.jpg',
+        '20251122_214340.jpg', '20251122_224035.jpg', '20251224_201609.jpg',
+        '20251225_184217.jpg', '20251226_111310.jpg', '20251226_140223.jpg',
+        '20251226_173643.jpg', '20251226_185553.jpg', '20251231_142913.jpg'
       ]
     },
     australia: {
@@ -80,9 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'CHINA',
       files: [
         '20260116_174019.jpg', '20260116_175403.jpg', '20260125_130036.jpg',
-        '20260125_135718.jpg', '20260202_181233.jpg', '20260220_170459.jpg',
-        '20260220_170510.jpg', '20260220_170724.jpg', '20260223_114439.jpg',
-        '20260226_184339.jpg'
+        '20260125_135718.jpg', '20260202_181233.jpg', '20260219_131831.jpg',
+        '20260220_165106.jpg', '20260220_170459.jpg', '20260220_170510.jpg',
+        '20260220_170724.jpg', '20260223_114439.jpg', '20260226_184339.jpg'
       ]
     },
     indonesia: {
@@ -90,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
       files: [
         '20260406_162745.jpg', '20260406_180522.jpg', '20260406_193823.jpg',
         '20260408_111856.jpg', '20260408_112715.jpg', '20260408_132757.jpg',
-        '20260409_163645.jpg', '20260410_115023.jpg', '20260410_125038.jpg',
-        '20260410_133811.jpg'
+        '20260409_163645.jpg', '20260409_174938.jpg', '20260410_115023.jpg',
+        '20260410_125038.jpg', '20260410_133811.jpg', '20260410_142347.jpg'
       ]
     }
   };

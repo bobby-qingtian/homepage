@@ -244,3 +244,141 @@ final result: passed
 - Post-fix evidence: the right region is 1.23 px shorter than the left region, which is visually aligned at the tested viewport without clipping or overlap.
 
 final result: passed
+
+## About Skills and map top alignment
+
+- Source visual truth: `/var/folders/m8/x42xrj1n74n470j55bpc2l0m0000gn/T/codex-clipboard-0f4b1784-e87e-42bf-bd9c-6fab40abba5b.png`.
+- Browser-rendered implementation: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/about-page/implementation-skills-map-aligned.png`.
+- Combined comparison evidence: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/about-page/qa-skills-map-alignment-side-by-side.png`.
+- Viewport/state: 1512 × 949 CSS px, English, About page, initial scroll position; this matches the supplied 1988 × 1248 capture's display ratio.
+
+**Findings**
+
+- No actionable P0, P1, or P2 mismatch remains for the requested vertical alignment.
+
+**Full-view and focused comparison evidence**
+
+- The `Skills & credentials` title now begins at 494.71 px while the left map begins at 494.00 px, a 0.71 px difference.
+- Education content, left map dimensions, skill content, typography, colors, and chips remain unchanged.
+- Horizontal overflow is 0 px at the verified viewport.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: unchanged.
+- Spacing and layout rhythm: the Education-to-Skills desktop separator was reduced to place the Skills title parallel with the map top.
+- Colors and visual tokens: unchanged.
+- Image quality and asset fidelity: the existing map remains unchanged and retains its original rendering.
+- Copy and content: unchanged in English and Chinese.
+
+**Comparison history**
+
+- Earlier P2: the Skills title sat visibly below the map top because the Education section retained 56 px bottom padding plus 56 px bottom margin.
+- Fix: scoped the Education section's desktop bottom padding and margin to 24 px each.
+- Post-fix evidence: the two target top edges differ by only 0.71 px in the browser-rendered implementation.
+
+final result: passed
+
+## Homepage Music and Photography routing
+
+- Source visual truth: `/var/folders/m8/x42xrj1n74n470j55bpc2l0m0000gn/T/codex-clipboard-0e31ab87-6d57-49d1-b34d-327bda493d62.png`.
+- Music implementation screenshot: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/implementation-home-music-entry.png`.
+- Photography implementation screenshot: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/implementation-home-photography-entry.png`.
+- Combined comparison evidence: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/qa-home-interest-tab-routing.png`.
+- Viewport/state: 1512 × 949, English, homepage drawer with the welcome guide dismissed.
+
+**Findings**
+
+- No actionable P0, P1, or P2 issue remains for the two requested tab routes.
+
+**Interaction and visual evidence**
+
+- Clicking the visible `Music` tab opens the existing full-screen Interests view with Listening as the first half.
+- Clicking the visible `Photography` tab opens the same Interests view with Photography promoted to the first half.
+- Both routes retain the existing HOME control, Interests tab, language switch, music controls, photography albums, styling, and source assets.
+- The target section IDs are present in both the standalone Interests page and the inlined iframe version.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: unchanged.
+- Spacing and layout rhythm: unchanged within each section; only the desktop section order changes for the Photography entry.
+- Colors and visual tokens: unchanged.
+- Image quality and asset fidelity: all existing photography and record assets are reused without alteration.
+- Copy and content: unchanged in English and Chinese.
+
+**Comparison history**
+
+- Earlier P1: Music and Photography opened generic drawer cards instead of the Interests experience.
+- First fix: routed both labels into the existing Interests iframe and added stable Listening/Photography section IDs.
+- Earlier P2: the Photography route still showed Listening first because Interests uses a fixed two-row viewport and cannot scroll the whole page.
+- Final fix: added an entry-section message and a Photography-first desktop ordering state, then bumped the embedded Interests asset version to avoid stale cached CSS/JS.
+- Post-fix evidence: browser clicks produced distinct Music-first and Photography-first captures with the requested corresponding content at the top.
+
+final result: passed
+
+## Welcome panel compact height and rounded corners
+
+- Source visual truth: `/var/folders/m8/x42xrj1n74n470j55bpc2l0m0000gn/T/codex-clipboard-6cf18d35-5a24-4352-be5c-a3fd6b7f1ac4.png`.
+- Browser-rendered implementation: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/implementation-welcome-compact-rounded.png`.
+- Combined comparison evidence: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/qa-welcome-compact-rounded-side-by-side.png`.
+- Viewport/state: 1512 × 949, English, initial Welcome guide open.
+
+**Findings**
+
+- No actionable P0, P1, or P2 issue remains for the requested height and corner treatment.
+
+**Full-view and focused comparison evidence**
+
+- The desktop panel height is now capped at 680 CSS px instead of filling almost the entire available viewport; its measured border-box height is 683 px.
+- The card retains its original top alignment while its bottom edge moves upward, producing the requested shorter silhouette.
+- All four corners use a 28 px radius and render cleanly without clipping the Welcome tab, shadow, buttons, or text.
+- Horizontal and vertical page overflow are both 0 px at the verified viewport.
+- At 390 × 844, the panel remains inside the viewport, all four actions stay within the content box, and page overflow remains 0 px.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: unchanged.
+- Spacing and layout rhythm: the existing space-evenly content layout re-centers the title, three choices, and Everything action inside the shorter card.
+- Colors and visual tokens: unchanged.
+- Image quality and asset fidelity: the existing arrow image remains unchanged.
+- Copy and content: unchanged in English and Chinese.
+
+**Comparison history**
+
+- Earlier P2: the Welcome panel consumed almost the full screen height and used a subtle 10 px radius.
+- Fix: capped the responsive guide height at 680 px and raised the guide-specific corner radius to 28 px.
+- Post-fix evidence: browser measurement confirms the shorter 683 px border box, 28 px computed radius, complete content visibility, and no viewport overflow.
+
+final result: passed
+
+## Welcome panel vertical centering
+
+- Source visual truth: `/var/folders/m8/x42xrj1n74n470j55bpc2l0m0000gn/T/codex-clipboard-d6f26a5e-0506-488e-9aaf-ee1f6642de23.png`.
+- Browser-rendered implementation: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/implementation-welcome-centered.png`.
+- Combined comparison evidence: `/Users/lions/Documents/项目开发/项目代做/黄擎天个人主页/huang-homepage/qa-welcome-centered-side-by-side.png`.
+- Viewport/state: 1512 × 949, English, initial Welcome guide open.
+
+**Findings**
+
+- No actionable P0, P1, or P2 issue remains for the requested vertical placement.
+
+**Full-view and focused comparison evidence**
+
+- The panel's measured top gap is 134.5 px and its bottom gap is 131.5 px, a difference of only 3 px.
+- The existing compact height remains 683 px border-box and the 28 px corner radius is unchanged.
+- Horizontal and vertical page overflow remain 0 px at the verified viewport.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: unchanged.
+- Spacing and layout rhythm: the entire Welcome panel, including its tab, moves as one centered unit; internal spacing is unchanged.
+- Colors and visual tokens: unchanged.
+- Image quality and asset fidelity: the existing arrow image remains unchanged.
+- Copy and content: unchanged in English and Chinese.
+
+**Comparison history**
+
+- Earlier P2: after the height reduction, the panel retained its previous near-top placement (about 75.9 px above and 190.1 px below at 1512 × 949).
+- Fix: compute the panel top position from `(innerHeight - cardH) / 2` so the whole panel moves down into the viewport center.
+- Post-fix evidence: browser measurement confirms a 3 px top/bottom gap delta with no clipping or overflow.
+
+final result: passed

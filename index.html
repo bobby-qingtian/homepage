@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('title="{{ row.name }}" style=', 'title="{{ row.name }}" data-paper-path="{{ row.paperPath }}" style=')
         .replace(
           'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }}',
-          'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }};transform-origin:50% 0;scale:1.12 1;zoom:.78'
+          'position:relative;width:1080px;height:1269px;flex:none;transform:{{ stackTransform }};transform-origin:50% 50%;scale:1;zoom:1'
         )
         .replace('&quot;default&quot;:26', '&quot;default&quot;:28')
         .replace('const spacing = this.props.rowSpacing ?? 23;', 'const spacing = this.props.rowSpacing ?? 28;')
@@ -397,7 +397,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         .homepage-corner-link:hover { color:#3f6174; }
         @media (min-width:701px) {
-          [data-screen-label="Index drawer"] { translate:0 -32px; }
+          [data-screen-label="Index drawer"] {
+            position:fixed !important;
+            left:50% !important;
+            top:calc(50% - 32px) !important;
+            transform-origin:50% 50% !important;
+            zoom:1 !important;
+            will-change:transform;
+          }
         }
         @media (max-width:700px) {
           html, body { width:100%; height:100%; overflow:hidden; overscroll-behavior:none; }
@@ -456,7 +463,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         @media (min-width:431px) and (max-width:520px) { [data-screen-label="Index drawer"] { scale:.42 !important; } }
         @media (min-width:521px) and (max-width:700px) { [data-screen-label="Index drawer"] { scale:.54 !important; } }
         .guide-card-body { left:8%; right:8%; bottom:6%; padding:clamp(20px,3vw,48px) 0; align-items:center; justify-content:space-evenly; text-align:center; }
-        .guide-card { overflow:visible; }
+        .guide-card { overflow:visible; border-radius:28px; }
         .guide-title { max-width:24em; font-size:clamp(24px,3.4vw,44px); font-weight:700; line-height:1.3; color:#3D3D3D; letter-spacing:.01em; }
         .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(18px,6vw,110px); }
         .guide-option { appearance:none; cursor:pointer; border:1.5px solid #3D3D3D; border-radius:999px; background:#EDE6D8; color:#3D3D3D; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:500 clamp(16px,1.7vw,21px)/1.1 "Martian Mono",monospace; transition:background .18s ease, transform .18s ease; }
@@ -555,6 +562,28 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
 
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const drawerReferenceViewport = { width:1080, height:1024 };
+      const drawerBaseScale = { x:1.12 * .78, y:.78 };
+
+      function syncDrawerViewport() {
+        if (innerWidth <= 700) return;
+        const drawer = document.querySelector('[data-screen-label="Index drawer"]');
+        if (!drawer) return;
+
+        // The original calibrated desktop state is the 1080 x 1024 baseline:
+        // 1.12 horizontal stretch, .78 zoom and a 32px upward offset. Apply one
+        // additional uniform multiplier so its position and proportions remain
+        // unchanged at the reference size and scale together elsewhere.
+        const responsiveScale = Math.min(
+          innerWidth / drawerReferenceViewport.width,
+          innerHeight / drawerReferenceViewport.height
+        );
+        const scaleX = drawerBaseScale.x * responsiveScale;
+        const scaleY = drawerBaseScale.y * responsiveScale;
+
+        drawer.style.transform = `translate(-50%, -50%) scale(${scaleX}, ${scaleY})`;
+      }
+
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
@@ -573,9 +602,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         .then(response => response.text())
         .catch(() => null);
       const interestsPageDocument = Promise.all([
-        fetch('./interests-page/interests.html?v=10').then(response => response.text()),
-        fetch('./interests-page/interests.css?v=10').then(response => response.text()),
-        fetch('./interests-page/interests.js?v=10').then(response => response.text())
+        fetch('./interests-page/interests.html?v=18').then(response => response.text()),
+        fetch('./interests-page/interests.css?v=18').then(response => response.text()),
+        fetch('./interests-page/interests.js?v=18').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="interests\.css(?:\?[^\"]*)?">/, `<style>${css}</style>`)
@@ -655,12 +684,17 @@ document.addEventListener('DOMContentLoaded', async function() {
           EDUCATION: 'education',
           SKILLS: 'skills'
         };
+        const interestsSectionTargets = {
+          MUSIC: 'listening',
+          PHOTOGRAPHY: 'photography'
+        };
         const targetSection = workSectionTargets[sectionTitle.toUpperCase()] || '';
         const targetAboutSection = aboutSectionTargets[aboutTitle.toUpperCase()] || '';
-        const targetContentSection = targetSection || targetAboutSection;
+        const targetInterestsSection = interestsSectionTargets[visibleTitle.toUpperCase()] || interestsSectionTargets[sourceTitle.toUpperCase()] || '';
+        const targetContentSection = targetSection || targetAboutSection || targetInterestsSection;
         const isWork = sourceTitle.toUpperCase() === 'WORK' || Boolean(targetSection);
         const isAbout = sourceTitle.toUpperCase() === 'ABOUT' || Boolean(targetAboutSection);
-        const isInterests = sourceTitle.toUpperCase() === 'INTERESTS';
+        const isInterests = sourceTitle.toUpperCase() === 'INTERESTS' || Boolean(targetInterestsSection);
         const isFullPage = isWork || isAbout || isInterests;
         const loadedWorkPage = isWork ? await workPageDocument : null;
         const loadedAboutPage = isAbout && !targetAboutSection ? await aboutPageDocument : null;
@@ -771,6 +805,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             workFrame.addEventListener('load', () => {
             if (workFrame.contentWindow) workFrame.contentWindow.postMessage({ type:'set-language', language:siteLanguage }, '*');
             if (workFrame.contentWindow && targetSection) workFrame.contentWindow.postMessage({ type:'scroll-to', target:targetSection }, '*');
+            if (workFrame.contentWindow && targetInterestsSection) workFrame.contentWindow.postMessage({ type:'focus-section', target:targetInterestsSection }, '*');
             if (!targetContentSection) {
               requestAnimationFrame(resolveReady);
               return;
@@ -993,8 +1028,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       function guideCardMetrics() {
         const compact = innerWidth < 700;
         const cardW = compact ? innerWidth * .92 : Math.min(1240, innerWidth - 300);
-        const cardTop = Math.max(72, innerHeight * .08);
-        const cardH = Math.max(320, innerHeight - cardTop - Math.max(36, innerHeight * .06));
+        const verticalMargin = compact ? 24 : 48;
+        const cardH = Math.min(680, Math.max(320, innerHeight - verticalMargin * 2));
+        const cardTop = Math.max(0, (innerHeight - cardH) / 2);
         const cardLeft = Math.max(0, (innerWidth - cardW) / 2);
         return { cardW, cardTop, cardH, cardLeft, startScale: cardW / 1080 };
       }
@@ -1185,6 +1221,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (guideActive) closeGuide(null);
         else closeDrawerCard();
       });
+      syncDrawerViewport();
+      window.addEventListener('resize', syncDrawerViewport);
       window.addEventListener('resize', syncActiveWorkViewport);
       window.addEventListener('resize', syncGuideViewport);
 

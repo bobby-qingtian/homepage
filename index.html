@@ -364,6 +364,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#F5F1E8; border:1.6px solid #b9ad9c; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
         .drawer-motion-card--work { background:#f8f2e8; }
         .drawer-motion-card--work::after { position:absolute; left:0; right:0; top:58px; z-index:108; height:1px; content:''; background:#b9ad9c; pointer-events:none; }
+        .drawer-motion-card--interests::after { display:none; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; z-index:112 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
         .drawer-motion-card--work .drawer-motion-row { visibility:hidden !important; }
         .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#403c37; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
@@ -571,6 +572,18 @@ document.addEventListener('DOMContentLoaded', async function() {
       const aboutPageDocument = fetch('./about-page/about.html?v=story-route-map')
         .then(response => response.text())
         .catch(() => null);
+      const interestsPageDocument = Promise.all([
+        fetch('./interests-page/interests.html?v=10').then(response => response.text()),
+        fetch('./interests-page/interests.css?v=10').then(response => response.text()),
+        fetch('./interests-page/interests.js?v=10').then(response => response.text())
+      ]).then(([html, css, js]) =>
+        html
+          .replace(/<link rel="stylesheet" href="interests\.css(?:\?[^\"]*)?">/, `<style>${css}</style>`)
+          .replaceAll('url("assets/', 'url("./interests-page/assets/')
+          .replaceAll('src="../assets/', 'src="./assets/')
+          .replaceAll('src="assets/', 'src="./interests-page/assets/')
+          .replace(/<script src="interests\.js(?:\?[^\"]*)?" defer><\/script>/, `<script>${js}<\/script>`)
+      ).catch(() => null);
 
       function closeDrawerCard() {
         if (!active || active.closing) return;
@@ -647,9 +660,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         const targetContentSection = targetSection || targetAboutSection;
         const isWork = sourceTitle.toUpperCase() === 'WORK' || Boolean(targetSection);
         const isAbout = sourceTitle.toUpperCase() === 'ABOUT' || Boolean(targetAboutSection);
-        const isFullPage = isWork || isAbout;
+        const isInterests = sourceTitle.toUpperCase() === 'INTERESTS';
+        const isFullPage = isWork || isAbout || isInterests;
         const loadedWorkPage = isWork ? await workPageDocument : null;
         const loadedAboutPage = isAbout && !targetAboutSection ? await aboutPageDocument : null;
+        const loadedInterestsPage = isInterests ? await interestsPageDocument : null;
         const scrollXAtOpen = window.scrollX;
         const scrollYAtOpen = window.scrollY;
         const bodyStyleAtOpen = {
@@ -724,11 +739,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         let fullPageReady = Promise.resolve();
         if (isFullPage) {
           card.classList.add('drawer-motion-card--work');
+          if (isInterests) card.classList.add('drawer-motion-card--interests');
           content.classList.add('drawer-motion-content--work');
           content.style.top = '58px';
           close.classList.add('drawer-motion-work-back');
           close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
-          const tabTitle = isAbout ? 'About' : 'Work';
+          const tabTitle = isAbout ? 'About' : isInterests ? 'Interests' : 'Work';
           sectionTab = document.createElement('div');
           sectionTab.className = 'drawer-motion-section-tab';
           sectionTab.dataset.title = tabTitle;
@@ -744,7 +760,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           });
           const workFrame = document.createElement('iframe');
           workFrame.className = 'drawer-motion-work-frame';
-          workFrame.title = isAbout ? 'About' : sourceTitle;
+          workFrame.title = isAbout ? 'About' : isInterests ? 'Interests' : sourceTitle;
           fullPageReady = new Promise(resolve => {
             let isReady = false;
             const resolveReady = () => {
@@ -789,8 +805,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           });
           if (isWork && loadedWorkPage) workFrame.srcdoc = loadedWorkPage;
           else if (isAbout && loadedAboutPage) workFrame.srcdoc = loadedAboutPage;
+          else if (isInterests && loadedInterestsPage) workFrame.srcdoc = loadedInterestsPage;
           else if (targetAboutSection) workFrame.src = `./about-page/about.html#${targetAboutSection}`;
-          else workFrame.src = isAbout ? './about-page/about.html' : './work-page/work.html';
+          else workFrame.src = isAbout ? './about-page/about.html' : isInterests ? './interests-page/interests.html' : './work-page/work.html';
           content.append(workFrame);
         }
         if (isFullPage) card.append(row, content, close, ...[sectionTab, workLanguage].filter(Boolean));

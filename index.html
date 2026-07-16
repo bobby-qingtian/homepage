@@ -868,8 +868,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                 frameDocument.documentElement.style.scrollBehavior = 'auto';
                 frameDocument.body.style.scrollBehavior = 'auto';
                 const aboutSectionOffset = 72;
-                const targetTop = target.getBoundingClientRect().top + (frameWindow ? frameWindow.scrollY : 0);
-                if (frameWindow) frameWindow.scrollTo({ top:Math.max(0, targetTop - aboutSectionOffset), behavior:'auto' });
+                const anchorAbout = () => {
+                  if (!frameWindow) return;
+                  const targetTop = target.getBoundingClientRect().top + frameWindow.scrollY;
+                  frameWindow.scrollTo({ top:Math.max(0, targetTop - aboutSectionOffset), behavior:'auto' });
+                };
+                anchorAbout();
+                // The page reflows ~1.5s in (CDN scripts land and shave ~245px off
+                // the copy above), dragging the heading up under the tab bar.
+                // Re-anchor until the height settles, yielding to the reader.
+                if (frameWindow && typeof frameWindow.ResizeObserver === 'function') {
+                  const observer = new frameWindow.ResizeObserver(anchorAbout);
+                  observer.observe(frameDocument.documentElement);
+                  const stop = () => observer.disconnect();
+                  frameWindow.setTimeout(stop, 4000);
+                  ['wheel', 'touchstart', 'keydown'].forEach(type => {
+                    frameWindow.addEventListener(type, stop, { once:true, passive:true });
+                  });
+                }
               } else {
                 target.scrollIntoView({ block:'start' });
               }

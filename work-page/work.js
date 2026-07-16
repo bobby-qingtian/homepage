@@ -138,15 +138,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = document.getElementById(targetName);
     if (!target) return;
 
-    if (targetName === 'experiences') {
-      const heading = target.querySelector('.experience-intro h1');
-      const anchor = heading || target;
-      const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: Math.max(0, anchorTop - 64), behavior: 'auto' });
-      return;
-    }
+    const apply = () => {
+      if (targetName === 'experiences') {
+        const heading = target.querySelector('.experience-intro h1');
+        const anchor = heading || target;
+        const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: Math.max(0, anchorTop - 64), behavior: 'auto' });
+        return;
+      }
 
-    target.scrollIntoView({ block: 'start' });
+      target.scrollIntoView({ block: 'start' });
+    };
+
+    apply();
+
+    // The page reflows ~1.5s in (CDN scripts land and shave ~200px off the copy
+    // above the section), which would leave the heading scrolled off the top.
+    // Re-anchor until the height settles, but yield as soon as the reader
+    // takes over the scroll.
+    if (typeof ResizeObserver === 'function') {
+      const observer = new ResizeObserver(apply);
+      observer.observe(document.documentElement);
+      const stop = () => observer.disconnect();
+      setTimeout(stop, 4000);
+      ['wheel', 'touchstart', 'keydown'].forEach(type => {
+        window.addEventListener(type, stop, { once: true, passive: true });
+      });
+    }
   }
 
   if (languageButton) {

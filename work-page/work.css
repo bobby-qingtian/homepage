@@ -1,3 +1,7 @@
+/* Type tokens (per design spec, image 2/3) — font families unchanged.
+   h3 26/300/1.12/-0.26px · h4 16/400/1.5 · sui 14/400/1
+   sb 14/300/1.5/-0.42px · c11 11/300/1.45 · c10 10/400/1.15/0.1px · c9 9/300/1.5
+   weights limited to 300/400 across the scale. */
 :root {
   color-scheme: light;
   --page-bg: #403c37;
@@ -44,6 +48,15 @@ body {
 
 html[lang="zh-CN"] body {
   font-family: var(--font-body-zh);
+}
+
+/* Fonts: every heading/title uses Geist; all other text uses Martian Mono. */
+h1, h2, h3, h4, h5, h6,
+[class*="title"] {
+  font-family: var(--font-display-en);
+}
+html[lang="zh-CN"] :is(h1, h2, h3, h4, h5, h6, [class*="title"]) {
+  font-family: var(--font-display-zh);
 }
 
 a {
@@ -182,7 +195,8 @@ a {
   padding: 0 21px;
   gap: 5px;
   font-family: var(--font-body-en);
-  font-size: 17px;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1;
   white-space: nowrap;
 }
@@ -197,7 +211,8 @@ html[lang="zh-CN"] .nav-box {
   height: 32px;
   min-height: 28px;
   place-items: center;
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .nav-box a:hover,
@@ -224,15 +239,17 @@ html[lang="zh-CN"] .nav-box {
   font-family: var(--font-body-en);
   max-width: 1080px;
   margin: 0 0 20px;
-  font-size: 19px;
-  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .experience-intro p {
   font-family: var(--font-body-zh);
   max-width: 1060px;
-  font-size: 18px;
-  line-height: 1.85;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .experience-intro hr {
@@ -246,9 +263,10 @@ html[lang="zh-CN"] .experience-intro p {
   margin: 0;
   color: #0f1010;
   font-family: var(--font-display-en);
-  font-size: 30px;
+  font-size: 26px;
+  font-weight: 300;
   line-height: 1.12;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.26px;
 }
 
 html[lang="zh-CN"] .experience-intro h1 {
@@ -305,8 +323,8 @@ html[lang="zh-CN"] .experience-intro h1 {
   z-index: 2;
   color: var(--ink);
   font-family: var(--font-body-en);
-  font-size: 25px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 300;
   line-height: 1;
   transform: translateY(-50%);
   pointer-events: none;
@@ -353,8 +371,8 @@ html[lang="zh-CN"] .experience-intro h1 {
   left: 8px;
   width: max-content;
   font-family: var(--font-body-en);
-  font-size: 21px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 400;
   line-height: 1;
   letter-spacing: 0;
   white-space: nowrap;
@@ -363,7 +381,7 @@ html[lang="zh-CN"] .experience-intro h1 {
 }
 
 html[lang="zh-CN"] .timeline-number {
-  font-size: 23px;
+  font-size: 16px;
   transform: translateY(-50%) rotate(0deg);
 }
 
@@ -372,7 +390,7 @@ html[lang="zh-CN"] .timeline-number {
 }
 
 html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .timeline-dot {
@@ -393,6 +411,8 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
   margin: 0;
   color: var(--muted);
   font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
   font-style: italic;
 }
 
@@ -449,7 +469,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
 }
 
 .experience-next-mark {
-  font-size: 38px;
+  font-size: 26px;
   font-weight: 300;
 }
 
@@ -461,7 +481,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
 
 .experience-next-label {
   margin-top: 2px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -491,9 +511,10 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
   margin: 6px 0 0;
   color: #0f1010;
   font-family: var(--font-display-en);
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 26px;
+  font-weight: 300;
   line-height: 1.12;
+  letter-spacing: -0.26px;
 }
 
 html[lang="zh-CN"] .experience-card h2 {
@@ -504,8 +525,10 @@ html[lang="zh-CN"] .experience-card h2 {
   margin: 0;
   color: var(--muted);
   font-family: var(--font-body-en);
-  font-size: 13px;
-  line-height: 1.35;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .experience-card p {
@@ -515,8 +538,10 @@ html[lang="zh-CN"] .experience-card p {
 .experience-card .experience-count {
   color: var(--blue-gray);
   font-family: var(--font-struct);
-  font-size: 13px;
-  letter-spacing: 0.06em;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
 }
 
 html[lang="zh-CN"] .experience-card .experience-count {
@@ -530,7 +555,7 @@ html[lang="zh-CN"] .experience-card .experience-count {
 .experience-heading-row h2 span {
   font-family: var(--font-display-en);
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: normal;
 }
 
 .project-summary {
@@ -553,8 +578,10 @@ html[lang="zh-CN"] .experience-card .experience-count {
   font-family: var(--font-body-en) !important;
   max-width: 940px;
   color: var(--ink) !important;
-  font-size: 16px !important;
-  line-height: 1.6 !important;
+  font-size: 14px !important;
+  font-weight: 300;
+  line-height: 1.5 !important;
+  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .experience-description {
@@ -567,17 +594,17 @@ html[lang="zh-CN"] .experience-description {
   border-top: 0;
   color: var(--blue-gray) !important;
   font-family: var(--font-struct) !important;
-  font-size: 12px !important;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-size: 11px !important;
+  font-weight: 300;
+  letter-spacing: normal;
   text-transform: uppercase;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .experience-stats strong {
   color: #0f1010;
   font-family: var(--font-struct) !important;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 html .experience-card .experience-stats,
@@ -599,7 +626,8 @@ html[lang="zh-CN"] .experience-stats strong {
   gap: 18px;
   color: #0f1010;
   font-family: var(--font-struct);
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1;
 }
 
@@ -635,7 +663,7 @@ html[lang="zh-CN"] .experience-stats strong {
   height: 46px;
   place-items: center;
   border-bottom: 0;
-  font-size: 36px;
+  font-size: 26px;
   font-weight: 300;
   line-height: 0.8;
 }
@@ -647,7 +675,7 @@ html[lang="zh-CN"] .experience-stats strong {
 }
 
 .download-label {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
 }
 
@@ -672,9 +700,10 @@ html[lang="zh-CN"] .experience-stats strong {
 .projects-intro h2 {
   margin: 0 0 22px;
   font-family: var(--font-display-en);
-  font-size: 30px;
+  font-size: 26px;
+  font-weight: 300;
   line-height: 1.12;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.26px;
 }
 
 html[lang="zh-CN"] .projects-intro h2 {
@@ -685,15 +714,17 @@ html[lang="zh-CN"] .projects-intro h2 {
   margin: 0 0 20px;
   max-width: 1080px;
   font-family: var(--font-body-en);
-  font-size: 19px;
-  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .projects-intro p {
   font-family: var(--font-body-zh);
   max-width: 1060px;
-  font-size: 18px;
-  line-height: 1.85;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .projects-intro p:last-child {
@@ -739,8 +770,8 @@ html[lang="zh-CN"] .projects-intro p {
 .project-index {
   color: var(--line);
   font-family: var(--font-body-en);
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 300;
 }
 
 .project-card.is-open .project-index {
@@ -755,14 +786,17 @@ html[lang="zh-CN"] .projects-intro p {
 .project-meta {
   color: var(--blue-gray);
   font-family: var(--font-struct);
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: normal;
 }
 
 .project-title {
   font-family: var(--font-display-en);
-  font-size: 20px;
-  line-height: 1.2;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 html[lang="zh-CN"] .project-title {
@@ -774,7 +808,9 @@ html[lang="zh-CN"] .project-title {
   border-bottom: 0;
   color: var(--muted);
   font-family: var(--font-struct);
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
   white-space: nowrap;
 }
 
@@ -782,8 +818,10 @@ html[lang="zh-CN"] .project-title {
   padding: 0 83px 44px;
   color: var(--ink);
   font-family: var(--font-body-en);
-  font-size: 16px;
-  line-height: 1.62;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .project-details {
@@ -866,14 +904,17 @@ html[lang="zh-CN"] .project-details {
   padding-top: 14px;
   border-top: 0;
   color: var(--muted);
-  font-size: 0.88em;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
 }
 
 .project-team {
   margin-top: 16px !important;
   color: #0f1010;
-  font-size: 0.88em;
-  line-height: 1.5;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
 }
 
 html[lang="zh-CN"] .project-method,
@@ -883,13 +924,14 @@ html[lang="zh-CN"] .project-team {
 
 .work-footer {
   position: relative;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  padding: 40px 54px 30px;
+  padding: 0 54px;
   background: var(--band);
-  min-height: 110px;
+  min-height: 72px;
 }
 
 .footer-links {
@@ -904,7 +946,8 @@ html[lang="zh-CN"] .project-team {
   gap: 8px;
   color: #202020;
   font-family: var(--font-struct);
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1;
   text-decoration: none;
 }
@@ -929,10 +972,11 @@ html[lang="zh-CN"] .project-team {
   margin: 0;
   color: #202020;
   font-family: var(--font-struct);
-  font-size: 13px;
-  line-height: 1.3;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
   text-align: right;
-  letter-spacing: 0.02em;
+  letter-spacing: normal;
 }
 
 @media (max-width: 900px) {
@@ -965,7 +1009,7 @@ html[lang="zh-CN"] .project-team {
     right: 12px;
     width: 58px;
     height: 26px;
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .experience-section {
@@ -976,15 +1020,15 @@ html[lang="zh-CN"] .project-team {
   .experience-intro p,
   .projects-intro p {
     max-width: none;
-    font-size: 17px;
-    line-height: 1.58;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   html[lang="zh-CN"] .experience-intro p,
   html[lang="zh-CN"] .projects-intro p {
     max-width: none;
-    font-size: 17px;
-    line-height: 1.78;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .experience-intro hr {
@@ -993,7 +1037,7 @@ html[lang="zh-CN"] .project-team {
 
   .experience-intro h1,
   .projects-intro h2 {
-    font-size: 29px;
+    font-size: 26px;
   }
 
   .timeline-wheel {
@@ -1023,26 +1067,26 @@ html[lang="zh-CN"] .project-team {
   .timeline-year {
     top: 50%;
     left: 50%;
-    font-size: 22px;
+    font-size: 16px;
     transform: translate(-50%, -50%);
   }
 
   .timeline-number {
     left: -9px;
-    font-size: 17px;
+    font-size: 16px;
     text-align: right;
     transform: translate(-100%, -50%) rotate(var(--month-rotation, 0deg));
     transform-origin: 100% 50%;
   }
 
   html[lang="zh-CN"] .timeline-number {
-    font-size: 18px;
+    font-size: 16px;
     transform: translate(-100%, -50%) rotate(0deg);
   }
 
   .timeline-tab:not(.is-active) .timeline-number,
   html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .experience-list {
@@ -1070,8 +1114,8 @@ html[lang="zh-CN"] .project-team {
   }
 
   .experience-card h2 {
-    font-size: 22px;
-    line-height: 1.18;
+    font-size: 26px;
+    line-height: 1.12;
   }
 
   .experience-details {
@@ -1080,8 +1124,8 @@ html[lang="zh-CN"] .project-team {
 
   .experience-description {
     max-width: none;
-    font-size: 15px !important;
-    line-height: 1.62 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
   }
 
   .experience-stats {
@@ -1105,7 +1149,7 @@ html[lang="zh-CN"] .project-team {
   }
 
   .experience-next-mark {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .experience-next-mark img {
@@ -1115,7 +1159,7 @@ html[lang="zh-CN"] .project-team {
 
   .experience-next-label {
     margin-top: 0;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .download-bar {
@@ -1127,11 +1171,11 @@ html[lang="zh-CN"] .project-team {
   .download-mark {
     width: 34px;
     height: 38px;
-    font-size: 30px;
+    font-size: 26px;
   }
 
   .download-label {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .projects-section {
@@ -1154,11 +1198,11 @@ html[lang="zh-CN"] .project-team {
   }
 
   .project-index {
-    font-size: 25px;
+    font-size: 26px;
   }
 
   .project-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .project-action {
@@ -1173,8 +1217,8 @@ html[lang="zh-CN"] .project-team {
 
   .project-details {
     padding: 0 18px 28px;
-    font-size: 15px;
-    line-height: 1.62;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
   .project-media-grid,
@@ -1218,7 +1262,7 @@ html[lang="zh-CN"] .project-team {
 
   .experience-intro p,
   .projects-intro p {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .timeline-wheel {

@@ -1,3 +1,12 @@
+/* Type tokens (per design spec, image 2/3) — font families unchanged.
+   h3  26 / 300 / 1.12 / -0.26px   (heading, display)
+   h4  16 / 400 / 1.5              (heading, subhead)
+   sui 14 / 400 / 1                (ui)
+   sb  14 / 300 / 1.5 / -0.42px    (body)
+   c11 11 / 300 / 1.45             (body, small)
+   c10 10 / 400 / 1.15 / 0.1px     (body, tiny)
+   c9   9 / 300 / 1.5              (body, micro)
+   weights are limited to 300/400 across the scale. */
 :root {
   color-scheme: dark;
   --bg: #0f0f0f;
@@ -25,8 +34,10 @@ body {
   overflow: hidden;
   color: var(--muted);
   font-family: "Martian Mono", "Noto Sans Mono", monospace;
-  font-size: 17px;
-  letter-spacing: .035em;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -50,9 +61,67 @@ button { font: inherit; }
   min-height: 0;
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 50% 50%;
+  grid-template-rows: minmax(0, 0.85fr) minmax(0, 1.15fr) auto;
   overflow: hidden;
   background-color: var(--bg);
+}
+
+.interests-footer {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 72px;
+  padding: 0 54px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.interests-footer .footer-links {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.interests-footer .footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.interests-footer .footer-arrow {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.interests-footer .footer-arrow img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(0.62);
+  transition: filter 180ms ease;
+}
+
+.interests-footer .footer-link:hover { color: var(--green); }
+.interests-footer .footer-link:hover .footer-arrow img { filter: brightness(0) invert(62%) sepia(60%) saturate(520%) hue-rotate(88deg); }
+
+.interests-footer .copyright {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-align: right;
 }
 
 .interests-page[data-entry-section="photography"] .photography { order: -1; }
@@ -96,13 +165,20 @@ button { font: inherit; }
 }
 
 .section-bar h1,
-.section-bar h2,
-.section-bar p {
+.section-bar h2 {
   margin: 0;
   font-size: 16px;
   font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+
+.section-bar p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
   line-height: 1;
-  letter-spacing: .08em;
+  letter-spacing: normal;
 }
 
 .playlist-grid {
@@ -114,8 +190,10 @@ button { font: inherit; }
 
 .playlist-number,
 .photo-index {
-  font-size: 16px;
-  letter-spacing: .05em;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: normal;
 }
 
 .playlist-summary .playlist-number { grid-column: 1; grid-row: 1; }
@@ -142,23 +220,27 @@ button { font: inherit; }
 .featured-copy h2 {
   margin: 0 0 9px;
   color: var(--ink);
-  font-size: 29px;
-  font-weight: 400;
-  line-height: 1.22;
-  letter-spacing: .02em;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.26px;
 }
 
 .featured-copy p {
   margin: 0;
-  font-size: 18px;
-  line-height: 1.25;
-  letter-spacing: .03em;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
 }
 
 .track-count {
   grid-column: 4;
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
 }
 
 .spotify-button {
@@ -174,7 +256,8 @@ button { font: inherit; }
   border: 1px solid var(--green);
   border-radius: 999px;
   color: var(--green);
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 400;
   transition: color 160ms ease, background-color 160ms ease;
 }
 
@@ -283,21 +366,28 @@ button { font: inherit; }
 
 .playlist-summary strong {
   color: var(--ink);
-  font-size: 21px;
+  font-size: 16px;
   font-weight: 400;
-  letter-spacing: .04em;
+  line-height: 1.5;
+  letter-spacing: normal;
   transition: color 220ms ease, letter-spacing 260ms ease, transform 260ms cubic-bezier(.2, .75, .25, 1);
 }
 
 .genre {
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
   transition: color 220ms ease, transform 260ms cubic-bezier(.2, .75, .25, 1);
 }
 .row-count {
   grid-column: 5;
   grid-row: 1;
   justify-self: start;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.42px;
   transition: color 220ms ease, transform 260ms cubic-bezier(.2, .75, .25, 1);
 }
 .row-arrow {
@@ -323,7 +413,8 @@ button { font: inherit; }
   border: 1px solid var(--green);
   border-radius: 999px;
   color: var(--green);
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 400;
   opacity: 0;
   pointer-events: none;
   transform: translateX(14px) scale(.96);
@@ -403,7 +494,7 @@ button { font: inherit; }
   grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 10px 18px;
   min-height: 0;
-  padding: clamp(12px, 2vh, 24px) 68px clamp(14px, 2.5vh, 28px);
+  padding: clamp(8px, 1.2vh, 14px) 68px clamp(10px, 1.6vh, 18px);
 }
 
 .album-index-view[hidden] { display: none; }
@@ -439,8 +530,10 @@ button { font: inherit; }
     #0d1510;
   color: var(--green);
   font-family: "Geist", "Noto Sans SC", sans-serif;
-  font-size: clamp(15px, 1.3vw, 21px);
-  letter-spacing: .16em;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
   text-align: center;
   backface-visibility: hidden;
   transform: rotateY(-180deg);
@@ -475,8 +568,10 @@ button { font: inherit; }
   gap: 6px;
   min-height: 31px;
   padding-top: 8px;
-  font-size: 13px;
-  letter-spacing: .07em;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: normal;
   opacity: 0;
   transform: translateY(-8px);
   transition: opacity 220ms ease 180ms, transform 320ms cubic-bezier(.2, .72, .2, 1) 140ms;
@@ -549,11 +644,11 @@ body.modal-open { overflow: hidden; }
 
 .album-modal-kicker,
 .album-modal-title { margin: 0; }
-.album-modal-kicker { margin-bottom: 5px; color: var(--muted); font-size: 11px; letter-spacing: .12em; }
-.album-modal-title { color: var(--ink); font-size: 20px; font-weight: 400; letter-spacing: .12em; }
+.album-modal-kicker { margin-bottom: 5px; color: var(--muted); font-size: 11px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
+.album-modal-title { color: var(--ink); font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: normal; }
 
 .album-modal-actions { display: flex; align-items: center; gap: 22px; }
-.album-modal-count { color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+.album-modal-count { color: var(--muted); font-size: 11px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
 
 .album-modal button,
 .photo-lightbox button {
@@ -568,7 +663,7 @@ body.modal-open { overflow: hidden; }
 .album-modal-close,
 .lightbox-close,
 .lightbox-prev,
-.lightbox-next { font-size: 12px; letter-spacing: .1em; }
+.lightbox-next { font-size: 11px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
 
 .album-modal button:hover,
 .album-modal button:focus-visible,
@@ -578,7 +673,11 @@ body.modal-open { overflow: hidden; }
 .album-modal-close:hover,
 .album-modal-close:focus-visible,
 .lightbox-close:hover,
-.lightbox-close:focus-visible { outline: 0; }
+.lightbox-close:focus-visible,
+.lightbox-prev:hover,
+.lightbox-prev:focus-visible,
+.lightbox-next:hover,
+.lightbox-next:focus-visible { outline: 0; }
 
 .album-gallery {
   display: grid;
@@ -620,7 +719,9 @@ body.modal-open { overflow: hidden; }
   background: rgba(0, 0, 0, .65);
   color: #ddd;
   font-size: 10px;
-  letter-spacing: .08em;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.1px;
   pointer-events: none;
 }
 
@@ -657,8 +758,10 @@ body.modal-open { overflow: hidden; }
   align-self: end;
   justify-self: center;
   color: var(--muted);
-  font-size: 12px;
-  letter-spacing: .1em;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: normal;
 }
 
 @media (max-width: 1050px) {
@@ -678,9 +781,9 @@ body.modal-open { overflow: hidden; }
   .interests-page { display: block; height: auto; min-height: 100vh; overflow: visible; }
   .listening, .photography { display: block; overflow: visible; }
   .playlist-list, .playlist-list:has(.is-open) { display: block; }
-  body { font-size: 15px; }
+  body { font-size: 14px; }
   .section-bar { height: 64px; padding-inline: 22px; }
-  .section-bar h1, .section-bar h2, .section-bar p { font-size: 13px; }
+  .section-bar h1, .section-bar h2, .section-bar p { font-size: 14px; }
   .playlist-detail {
     grid-template-columns: 42px 76px minmax(0, 1fr);
     grid-template-rows: auto auto;
@@ -690,8 +793,8 @@ body.modal-open { overflow: hidden; }
   }
   .record--large { width: 72px; height: 72px; background-position: center; background-size: contain; }
   .featured-copy { padding-left: 12px; }
-  .featured-copy h2 { font-size: 24px; line-height: 1.12; }
-  .featured-copy p { font-size: 15px; }
+  .featured-copy h2 { font-size: 26px; line-height: 1.12; }
+  .featured-copy p { font-size: 14px; }
   .track-count { grid-column: 2 / 4; grid-row: 2; align-self: center; }
   .spotify-button { grid-column: 3; grid-row: 2; width: 132px; height: 42px; margin-right: 0; }
   .playlist-summary {
@@ -734,7 +837,7 @@ body.modal-open { overflow: hidden; }
   .album-modal-panel { width: 100%; height: min(82vh, 720px); min-height: 460px; grid-template-rows: 68px minmax(0, 1fr); }
   .album-modal-header { padding-inline: 18px; }
   .album-modal-kicker { display: none; }
-  .album-modal-title { font-size: 17px; }
+  .album-modal-title { font-size: 16px; }
   .album-modal-actions { gap: 12px; }
   .album-modal-count { display: none; }
   .album-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 16px; }
@@ -743,6 +846,13 @@ body.modal-open { overflow: hidden; }
   .lightbox-prev { grid-column: 1; grid-row: 2; justify-self: center; }
   .lightbox-next { grid-column: 2; grid-row: 2; justify-self: center; }
   .lightbox-close { top: 24px; right: 22px; }
+  .interests-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 22px;
+  }
+  .interests-footer .copyright { text-align: left; }
 }
 
 @media (prefers-reduced-motion: reduce) {

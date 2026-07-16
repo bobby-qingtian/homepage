@@ -13,7 +13,7 @@
   --ink: #e7e4df;
   --muted: #8f8d8b;
   --line: #20201f;
-  --green: #38c873;
+  --accent: #BE4A2F;
   --source-w: 1402;
   --source-h: 1122;
 }
@@ -47,6 +47,7 @@ h3,
 h4,
 h5,
 h6,
+.section-bar p,
 .playlist-summary strong,
 .album-modal-title {
   font-family: "Geist", "Noto Sans SC", sans-serif;
@@ -97,22 +98,22 @@ button { font: inherit; }
   transition: color 180ms ease;
 }
 
+/* Tint the arrow by masking its shape and painting a flat colour, so the hover
+   state is exactly --accent. A filter chain can only approximate a given hex. */
 .interests-footer .footer-arrow {
   display: block;
   width: 16px;
   height: 16px;
+  background-color: #9e9e9e;
+  -webkit-mask: url("assets/arrow-up-right.svg") center / contain no-repeat;
+  mask: url("assets/arrow-up-right.svg") center / contain no-repeat;
+  transition: background-color 180ms ease;
 }
 
-.interests-footer .footer-arrow img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: brightness(0) invert(0.62);
-  transition: filter 180ms ease;
-}
+.interests-footer .footer-arrow img { display: none; }
 
-.interests-footer .footer-link:hover { color: var(--green); }
-.interests-footer .footer-link:hover .footer-arrow img { filter: brightness(0) invert(62%) sepia(60%) saturate(520%) hue-rotate(88deg); }
+.interests-footer .footer-link:hover { color: var(--accent); }
+.interests-footer .footer-link:hover .footer-arrow { background-color: var(--accent); }
 
 .interests-footer .copyright {
   margin: 0;
@@ -137,6 +138,16 @@ button { font: inherit; }
 .photography::-webkit-scrollbar { display: none; }
 
 .listening {
+  /* Scaled unit: 1 source px at the 1402x1122 design viewport. Row type and
+     artwork are sized in multiples of it, so they track the viewport together.
+     Rows are a fifth of a 100vh grid, so height constrains them as much as
+     width: take whichever is tighter. The width term is capped at 1:1 and
+     floored so the compact layout below 1050px stays legible; the height term
+     is left unfloored so short viewports can always shrink to fit. */
+  --u: min(
+    clamp(0.75px, 100vw / var(--source-w), 1px),
+    100vh / var(--source-h)
+  );
   display: grid;
   grid-template-rows: 77px minmax(0, 1fr);
 }
@@ -183,9 +194,11 @@ button { font: inherit; }
 
 .playlist-grid {
   display: grid;
-  grid-template-columns: 96px 153px 420px minmax(250px, 1fr) 90px 82px;
+  grid-template-columns:
+    calc(96 * var(--u)) calc(153 * var(--u)) calc(420 * var(--u))
+    minmax(calc(250 * var(--u)), 1fr) calc(90 * var(--u)) calc(82 * var(--u));
   align-items: center;
-  padding-inline: 62px;
+  padding-inline: calc(62 * var(--u));
 }
 
 .playlist-number,
@@ -196,7 +209,7 @@ button { font: inherit; }
   letter-spacing: normal;
 }
 
-.playlist-summary .playlist-number { grid-column: 1; grid-row: 1; }
+.playlist-summary .playlist-number { grid-column: 1; grid-row: 1; font-size: calc(14 * var(--u)); }
 .playlist-summary .record--small { grid-column: 2; grid-row: 1; }
 .playlist-summary strong { grid-column: 3; grid-row: 1; }
 .playlist-summary .genre { grid-column: 4; grid-row: 1; }
@@ -210,34 +223,26 @@ button { font: inherit; }
 }
 
 .record--large {
-  width: 84px;
-  height: 84px;
-  margin-left: 2px;
+  width: calc(84 * var(--u));
+  height: calc(84 * var(--u));
+  margin-left: calc(2 * var(--u));
 }
 
 .featured-copy { align-self: center; }
 
 .featured-copy h2 {
-  margin: 0 0 9px;
+  margin: 0;
   color: var(--ink);
-  font-size: 26px;
+  font-size: calc(26 * var(--u));
   font-weight: 300;
   line-height: 1.12;
   letter-spacing: -0.26px;
 }
 
-.featured-copy p {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: -0.42px;
-}
-
 .track-count {
   grid-column: 4;
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14 * var(--u));
   font-weight: 300;
   line-height: 1.5;
   letter-spacing: -0.42px;
@@ -249,34 +254,33 @@ button { font: inherit; }
   align-items: center;
   justify-content: center;
   justify-self: end;
-  width: 158px;
-  height: 48px;
-  margin-right: 80px;
-  gap: 10px;
-  border: 1px solid var(--green);
-  border-radius: 999px;
-  color: var(--green);
-  font-size: 14px;
-  font-weight: 400;
-  transition: color 160ms ease, background-color 160ms ease;
+  width: calc(24 * var(--u));
+  height: calc(24 * var(--u));
+  /* Same right edge as .row-arrow so the two line up down the column. */
+  margin-right: calc(30 * var(--u));
+  transition: opacity 160ms ease, transform 160ms ease;
 }
 
-.spotify-button img,
 .row-arrow {
-  width: 18px;
-  height: 18px;
+  width: calc(18 * var(--u));
+  height: calc(18 * var(--u));
   filter: none;
+}
+
+/* The source SVG is black; invert it to white. */
+.spotify-button img,
+.playlist-hover-spotify img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
 }
 
 .spotify-button:hover,
 .spotify-button:focus-visible {
-  color: #06110a;
-  background: var(--green);
+  opacity: .7;
   outline: 0;
+  transform: scale(1.08);
 }
-
-.spotify-button:hover img,
-.spotify-button:focus-visible img { filter: none; }
 
 .playlist-item {
   min-height: 0;
@@ -286,6 +290,9 @@ button { font: inherit; }
 .playlist-summary {
   width: 100%;
   height: 100%;
+  /* A definite row keeps the artwork from stretching it past the row's own
+     height, which would push the centred text off-centre. */
+  grid-template-rows: 100%;
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -298,18 +305,18 @@ button { font: inherit; }
 .playlist-item:last-child .playlist-summary { height: 100%; }
 
 .playlist-list:has(.is-open) { display: block; }
-.playlist-list:has(.is-open) .playlist-summary { height: 80px; }
-.playlist-list:has(.is-open) .playlist-item:last-child .playlist-summary { height: 91px; }
+.playlist-list:has(.is-open) .playlist-summary { height: calc(80 * var(--u)); }
+.playlist-list:has(.is-open) .playlist-item:last-child .playlist-summary { height: calc(91 * var(--u)); }
 
 .playlist-summary:hover,
 .playlist-summary:focus-visible {
-  background-color: #111713;
-  box-shadow: inset 4px 0 0 #1c2b21;
+  background-color: #171211;
+  box-shadow: inset 4px 0 0 #2b1f1c;
   outline: 0;
 }
 
 .playlist-detail {
-  min-height: 260px;
+  min-height: calc(260 * var(--u));
   cursor: pointer;
 }
 
@@ -319,8 +326,10 @@ button { font: inherit; }
 
 .record--small {
   position: relative;
-  width: 78px;
-  height: 58px;
+  /* Never taller than the row; width follows so the artwork stays in ratio. */
+  height: min(calc(58 * var(--u)), 100%);
+  width: auto;
+  aspect-ratio: 78 / 58;
   margin-left: 0;
   background-image: none;
   transform-origin: center;
@@ -337,8 +346,10 @@ button { font: inherit; }
 .record--small::before {
   right: 0;
   z-index: 0;
-  width: 54px;
-  height: 54px;
+  /* 54/58 of the record box — sized off the parent so the cap above applies. */
+  height: 93.104%;
+  width: auto;
+  aspect-ratio: 1;
   border-radius: 50%;
   background: url("assets/vinyl-record.png") center / contain no-repeat;
   transform: translateY(-50%);
@@ -349,9 +360,11 @@ button { font: inherit; }
 .record--small::after {
   left: 0;
   z-index: 1;
-  width: 48px;
-  height: 48px;
-  border-radius: 7px;
+  /* 48/58 of the record box. */
+  height: 82.759%;
+  width: auto;
+  aspect-ratio: 1;
+  border-radius: calc(7 * var(--u));
   background: var(--cover-image) center / cover no-repeat;
   box-shadow: 0 7px 18px rgba(0, 0, 0, .36);
   transform: translateY(-50%);
@@ -366,7 +379,7 @@ button { font: inherit; }
 
 .playlist-summary strong {
   color: var(--ink);
-  font-size: 16px;
+  font-size: calc(16 * var(--u));
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: normal;
@@ -374,7 +387,7 @@ button { font: inherit; }
 }
 
 .genre {
-  font-size: 14px;
+  font-size: calc(14 * var(--u));
   font-weight: 300;
   line-height: 1.5;
   letter-spacing: -0.42px;
@@ -384,7 +397,7 @@ button { font: inherit; }
   grid-column: 5;
   grid-row: 1;
   justify-self: start;
-  font-size: 14px;
+  font-size: calc(14 * var(--u));
   font-weight: 300;
   line-height: 1.5;
   letter-spacing: -0.42px;
@@ -394,7 +407,9 @@ button { font: inherit; }
   grid-column: 6;
   grid-row: 1;
   justify-self: end;
-  margin-right: 30px;
+  width: calc(18 * var(--u));
+  height: calc(18 * var(--u));
+  margin-right: calc(30 * var(--u));
   transition: opacity 180ms ease, transform 240ms ease;
 }
 
@@ -406,24 +421,15 @@ button { font: inherit; }
   justify-content: center;
   justify-self: end;
   align-self: center;
-  width: 158px;
-  height: 48px;
-  margin-right: 18px;
-  gap: 10px;
-  border: 1px solid var(--green);
-  border-radius: 999px;
-  color: var(--green);
-  font-size: 14px;
-  font-weight: 400;
+  /* Sits exactly where .row-arrow does, so hovering cross-fades the arrow
+     to white in place rather than shifting it. */
+  width: calc(18 * var(--u));
+  height: calc(18 * var(--u));
+  margin-right: calc(30 * var(--u));
   opacity: 0;
   pointer-events: none;
   transform: translateX(14px) scale(.96);
   transition: opacity 180ms ease, transform 260ms cubic-bezier(.2, .75, .25, 1);
-}
-
-.playlist-hover-spotify img {
-  width: 18px;
-  height: 18px;
 }
 
 @keyframes vinyl-hover-spin {
@@ -523,12 +529,12 @@ button { font: inherit; }
   place-items: center;
   box-sizing: border-box;
   padding: 18px;
-  border: 1px solid #244a34;
+  border: 1px solid #4a2b24;
   border-radius: 12px;
   background:
-    radial-gradient(circle at 50% 42%, rgba(56, 200, 115, .12), transparent 52%),
-    #0d1510;
-  color: var(--green);
+    radial-gradient(circle at 50% 42%, rgba(190, 74, 47, .12), transparent 52%),
+    #150f0d;
+  color: var(--accent);
   font-family: "Geist", "Noto Sans SC", sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -644,11 +650,12 @@ body.modal-open { overflow: hidden; }
 
 .album-modal-kicker,
 .album-modal-title { margin: 0; }
-.album-modal-kicker { margin-bottom: 5px; color: var(--muted); font-size: 11px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
+/* Every label in the modal header matches the title's 16px. */
+.album-modal-kicker { margin-bottom: 5px; color: var(--muted); font-size: 16px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
 .album-modal-title { color: var(--ink); font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: normal; }
 
 .album-modal-actions { display: flex; align-items: center; gap: 22px; }
-.album-modal-count { color: var(--muted); font-size: 11px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
+.album-modal-count { color: var(--muted); font-size: 16px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
 
 .album-modal button,
 .photo-lightbox button {
@@ -660,10 +667,13 @@ body.modal-open { overflow: hidden; }
   cursor: pointer;
 }
 
-.album-modal-close,
 .lightbox-close,
 .lightbox-prev,
 .lightbox-next { font-size: 11px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
+
+/* `.album-modal button { font: inherit }` above outranks a lone class, so this
+   needs the extra class to take effect. */
+.album-modal .album-modal-close { font-size: 16px; font-weight: 300; line-height: 1.45; letter-spacing: normal; }
 
 .album-modal button:hover,
 .album-modal button:focus-visible,
@@ -769,9 +779,8 @@ body.modal-open { overflow: hidden; }
     grid-template-columns: 60px 92px minmax(280px, 1fr) minmax(180px, .75fr) 60px 46px;
     padding-inline: 28px;
   }
-  .record--large { margin-left: -13px; }
+  .record--large { margin-left: calc(-13 * var(--u)); }
   .record--small { margin-left: 0; }
-  .featured-copy h2 { font-size: 26px; }
   .album-index-view { padding-inline: 38px; }
 }
 
@@ -779,14 +788,17 @@ body.modal-open { overflow: hidden; }
   html, body { height: auto; min-height: 100%; }
   body { overflow: auto; }
   .interests-page { display: block; height: auto; min-height: 100vh; overflow: visible; }
-  .listening, .photography { display: block; overflow: visible; }
+  /* The mobile row layout below is authored at 1:1, not scaled. */
+  .listening { --u: 1px; display: block; overflow: visible; }
+  .photography { display: block; overflow: visible; }
   .playlist-list, .playlist-list:has(.is-open) { display: block; }
   body { font-size: 14px; }
   .section-bar { height: 64px; padding-inline: 22px; }
   .section-bar h1, .section-bar h2, .section-bar p { font-size: 14px; }
   .playlist-detail {
     grid-template-columns: 42px 76px minmax(0, 1fr);
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
+    row-gap: 14px;
     min-height: 264px;
     padding: 24px 22px;
     align-items: start;
@@ -794,9 +806,16 @@ body.modal-open { overflow: hidden; }
   .record--large { width: 72px; height: 72px; background-position: center; background-size: contain; }
   .featured-copy { padding-left: 12px; }
   .featured-copy h2 { font-size: 26px; line-height: 1.12; }
-  .featured-copy p { font-size: 14px; }
-  .track-count { grid-column: 2 / 4; grid-row: 2; align-self: center; }
-  .spotify-button { grid-column: 3; grid-row: 2; width: 132px; height: 42px; margin-right: 0; }
+  /* Track count and the Spotify arrow stack under the title, sharing its 12px
+     inset so all three sit on one left edge. */
+  .track-count { grid-column: 3; grid-row: 2; justify-self: start; margin-left: 12px; }
+  .spotify-button {
+    grid-column: 3;
+    grid-row: 3;
+    justify-self: start;
+    margin-right: 0;
+    margin-left: 12px;
+  }
   .playlist-summary {
     grid-template-columns: 42px 64px minmax(0, 1fr) 36px;
     height: 88px;

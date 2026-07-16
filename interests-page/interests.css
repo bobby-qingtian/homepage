@@ -822,7 +822,6 @@ body.modal-open { overflow: hidden; }
   .album-cover--australia,
   .album-cover--china,
   .album-cover--indonesia { grid-column: auto; grid-row: auto; }
-  .album-cover:nth-child(even) { transform: translateY(34px); }
   .album-cover::before { display: none; }
   .album-cover > img { height: 28vw; min-height: 128px; }
   .album-cover:hover > img,
@@ -849,10 +848,11 @@ body.modal-open { overflow: hidden; }
   .interests-footer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
-    padding: 22px;
+    gap: 12px;
+    min-height: 0;
+    padding: 18px 22px 16px;
   }
-  .interests-footer .copyright { text-align: left; }
+  .interests-footer .copyright { text-align: left; line-height: 1.3; }
 }
 
 @media (prefers-reduced-motion: reduce) {

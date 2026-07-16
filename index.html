@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .guide-card-body { left:8%; right:8%; bottom:6%; padding:clamp(20px,3vw,48px) 0; align-items:center; justify-content:space-evenly; text-align:center; }
         /* border-box so the height JS centres on is the rendered height, not
            height + the 1.6px border on each edge. */
-        .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; }
+        .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; background:#DAE2E8; }
         .guide-title { max-width:42em; color:#3D3D3D; font-family:"Martian Mono",monospace !important; font-size:14px; font-weight:400; line-height:1.3; letter-spacing:0; }
         .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(18px,6vw,110px); }
         .guide-option { appearance:none; cursor:pointer; border:1.5px solid #87A1BA; border-radius:999px; background:#3D5A7A; color:#F8F9FA; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:400 14px/1.1 "Martian Mono",monospace; transition:background .18s ease, transform .18s ease; }
@@ -504,6 +504,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .guide-everything-arrow img { display:block; width:100%; height:100%; }
         .guide-everything:hover .guide-everything-arrow { transform:translateX(6px); }
         .guide-everything:focus-visible { outline:3px solid #3D3D3D; outline-offset:3px; }
+        body.guide-open .drawer-motion-overlay { background:#F8F9FA; }
         body.guide-open .homepage-corner-nav { z-index:99995; }
         body.drawer-motion-lock { overflow:hidden !important; }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }

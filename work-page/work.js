@@ -81,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
     '.project-title',
     '.project-details > p',
     '.project-action',
+    '.credentials-label',
+    '.skills-link span:first-child',
     '.footer-link span:not(.footer-arrow)',
     '.copyright'
   ].join(',');

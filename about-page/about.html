@@ -15,8 +15,8 @@
       :root {
         color-scheme: light;
         --page-bg: #403c37;
-        --canvas: #f8f2e8;
-        --band: #eee6da;
+        --canvas: #F8F9FA;
+        --band: #F8F9FA;
         --line: #b9ad9c;
         --ink: #403c37;
         --muted: #81786d;
@@ -26,6 +26,13 @@
         --font-body-en: "Martian Mono", monospace;
         --font-body-zh: "Martian Mono", monospace;
         --font-struct: "Martian Mono", monospace;
+        /*
+          Story block only (top-left quadrant). It shares a fixed 50/50 panel
+          split with the map and the panel is overflow:hidden, so the largest
+          usable size is set by viewport height, not width — hence vh.
+          One value drives all three paragraphs, so they always match.
+        */
+        --type-story-size: clamp(10.5px, 1.3vh, 12.5px);
       }
 
       * { box-sizing: border-box; font-family: inherit; }
@@ -68,14 +75,14 @@
         grid-template-columns: minmax(0, 1.04fr) minmax(440px, 0.96fr);
         gap: 14px;
         height: 100%;
-        padding: 14px;
+        padding: 14px 14px 0;
         background: var(--canvas);
       }
 
       .profile-panel,
       .details-panel {
         min-width: 0;
-        background: #f3f1ed;
+        background: #F8F9FA;
         border-radius: 18px;
       }
 
@@ -132,8 +139,8 @@
         width: 10px;
         height: 24px;
         border: 1px solid #8f8a82;
-        background: #f3f1ed;
-        box-shadow: 0 0 0 1px rgba(248, 242, 232, 0.72);
+        background: #F8F9FA;
+        box-shadow: 0 0 0 1px rgba(248, 249, 250, 0.72);
         pointer-events: auto;
         cursor: grab;
         will-change: transform;
@@ -151,14 +158,35 @@
       }
 
       #education,
-      #skills { scroll-margin-top: 72px; }
+      #languages { scroll-margin-top: 72px; }
 
       .details-content section:last-child { margin-bottom: 0; }
 
       @media (min-width: 1101px) {
+        .details-panel {
+          display: flex;
+          flex-direction: column;
+          border-radius: 18px 18px 0 0;
+          background: var(--band);
+        }
+        .details-content {
+          flex: 0 0 auto;
+          width: 100%;
+          padding-bottom: 0;
+          background: #F8F9FA;
+        }
         #education {
           padding-bottom: 24px;
           margin-bottom: 24px;
+        }
+        #languages {
+          padding-bottom: 0;
+          margin-bottom: 0;
+        }
+        .details-panel .work-footer {
+          flex: 1 0 72px;
+          min-height: 72px;
+          padding: 18px clamp(30px, 3.4vw, 54px);
         }
       }
 
@@ -224,7 +252,7 @@
         display: block;
         width: 100%;
         border: 0;
-        background: #fbf6ee;
+        background: #F8F9FA;
         filter: saturate(0.92);
       }
       .story-body p,
@@ -238,22 +266,21 @@
         line-height: 1.5;
         letter-spacing: -0.42px;
       }
+      /* Story block sizes itself to fill its half of the panel; all paragraphs match. */
+      .story-body p {
+        font-size: var(--type-story-size);
+      }
       html[lang="zh-CN"] .story-body p,
       html[lang="zh-CN"] .intro-line {
         max-width: 1060px;
         font-family: var(--font-body-zh);
-        font-size: 14px;
         line-height: 1.5;
+      }
+      html[lang="zh-CN"] .story-body p {
+        font-size: var(--type-story-size);
       }
       .story-body p:last-child {
         margin-bottom: 0;
-        font-size: 11px;
-        font-weight: 300;
-        line-height: 1.45;
-      }
-      html[lang="zh-CN"] .story-body p:last-child {
-        font-size: 11px;
-        line-height: 1.45;
       }
       .story-body:empty { display: none; }
       .story-grid:has(.story-body:empty) {
@@ -269,17 +296,17 @@
         min-height: 0;
         margin-top: 0;
         overflow: hidden;
-        background: #fbf6ee;
+        background: #F8F9FA;
       }
       svg.worldmap { display: block; width: 100%; height: 100%; }
       .dot { fill: var(--blue-gray); opacity: 0.30; }
       .meridian { stroke: color-mix(in srgb, var(--blue-gray) 28%, transparent); stroke-width: 1; stroke-dasharray: 2 6; }
       .route { fill: none; stroke: var(--blue-gray); stroke-width: 2.4; stroke-linecap: round; }
-      .route-casing { fill: none; stroke: #fbf6ee; stroke-width: 5; stroke-linecap: round; opacity: 0.95; }
+      .route-casing { fill: none; stroke: #F8F9FA; stroke-width: 5; stroke-linecap: round; opacity: 0.95; }
       .node { opacity: 0; }
       .route,
       .route-casing { opacity: 0; }
-      .node-dot { fill: var(--blue-gray); stroke: #fbf6ee; stroke-width: 1.5; }
+      .node-dot { fill: var(--blue-gray); stroke: #F8F9FA; stroke-width: 1.5; }
       .node-ring { fill: none; stroke: var(--blue-gray); stroke-width: 1.4; opacity: 0.7; }
       .node-label {
         fill: #0f1010;
@@ -359,6 +386,48 @@
       }
       .edu-meta-item:not(:last-child)::after { content: none; }
 
+      .language-list {
+        border-top: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
+      }
+      .language-row {
+        display: grid;
+        grid-template-columns: minmax(120px, .72fr) minmax(0, 1.8fr) auto;
+        gap: clamp(20px, 2.6vw, 42px);
+        align-items: start;
+        padding: 18px 0;
+        border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
+      }
+      .language-row:last-child {
+        border-bottom: 0;
+      }
+      .language-name {
+        margin: 0;
+        color: #0f1010;
+        font-family: var(--font-struct);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+      .language-description,
+      .language-level {
+        font-family: var(--font-struct);
+        font-weight: 300;
+      }
+      .language-description {
+        margin: 0;
+        color: var(--ink);
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .language-level {
+        color: var(--blue-gray);
+        font-size: 11px;
+        line-height: 1.45;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
       .skill-group { margin-bottom: 26px; }
       .group-label {
         display: flex;
@@ -388,7 +457,7 @@
         min-height: 30px;
         padding: 6px 14px;
         border: 0;
-        background: #fbf6ee;
+        background: #F8F9FA;
         color: var(--ink);
         font-family: var(--font-struct);
         font-size: 14px;
@@ -439,6 +508,7 @@
         gap: 40px;
         min-height: 110px;
         padding: 36px clamp(30px, 3.4vw, 54px);
+        border-top: 1px solid #87A1BA;
         background: var(--band);
       }
       .footer-links { display: flex; align-items: center; gap: 40px; }
@@ -452,7 +522,8 @@
         font-weight: 400;
         line-height: 1;
       }
-      .footer-arrow { display: inline-block; font-family: var(--font-struct); font-size: 16px; line-height: 1; }
+      .footer-arrow { display: block; width: 16px; height: 16px; }
+      .footer-arrow img { display: block; width: 100%; height: 100%; }
       .footer-link:hover { color: var(--blue-gray); }
       .copyright {
         margin: 0;
@@ -476,6 +547,8 @@
       }
 
       @media (max-width: 1100px) {
+        /* Stacked layout: no 50/50 height lock, so the story rejoins body size. */
+        html { --type-story-size: 14px; }
         html, body { height: auto; min-height: 100%; }
         body { overflow: auto; }
         .work-page { height: auto; min-height: 100vh; overflow: visible; }
@@ -520,6 +593,18 @@
         .edu-inst,
         .edu-meta-item { white-space: normal; }
         .edu-loc { margin-bottom: 7px; }
+        .language-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 8px 20px;
+        }
+        .language-description {
+          grid-column: 1 / -1;
+          grid-row: 2;
+        }
+        .language-level {
+          grid-column: 2;
+          grid-row: 1;
+        }
       }
 
       @media (max-width: 520px) {
@@ -529,6 +614,14 @@
         .story-body p,
         .intro-line { font-size: 14px; line-height: 1.5; }
         .footer-links { gap: 22px; }
+        .language-row {
+          grid-template-columns: 1fr;
+        }
+        .language-description,
+        .language-level {
+          grid-column: 1;
+          grid-row: auto;
+        }
         .lang-line {
           display: grid;
           gap: 6px;
@@ -612,56 +705,43 @@
           </div>
         </section>
 
-        <!-- ============ SKILLS ============ -->
-        <section id="skills">
-          <h2 class="section-title" data-zh-html="技能与资质">Skills &amp; credentials</h2>
-          <p class="intro-line" data-zh-html="我使用的工具、覆盖的市场，以及能够切换工作的语言。">The tools I work in, the markets I cover, and the languages I work across.</p>
-
-          <div class="skill-group">
-            <div class="group-label" data-zh-html="跨境与交易银行">Cross-border &amp; Transaction Banking</div>
-            <div class="chips" data-zh-html="&lt;span class=&quot;chip&quot;&gt;外汇与跨境支付&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;资金与流动性方案&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;现金流管理&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;交易银行&lt;/span&gt;"><span class="chip">FX &amp; Cross-Border Payments</span><span class="chip">Treasury &amp; Liquidity Solutions</span><span class="chip">Cash Flow Management</span><span class="chip">Transaction Banking</span></div>
-          </div>
-          <div class="skill-group">
-            <div class="group-label" data-zh-html="交易与顾问">Deal &amp; Advisory</div>
-            <div class="chips" data-zh-html="&lt;span class=&quot;chip&quot;&gt;财务分析&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;财务建模&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;企业顾问&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;客户覆盖&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;投资银行&lt;/span&gt;"><span class="chip">Financial Analysis</span><span class="chip">Financial Modeling</span><span class="chip">Corporate Advisory</span><span class="chip">Client Coverage</span><span class="chip">Investment Banking</span></div>
-          </div>
-          <div class="skill-group">
-            <div class="group-label" data-zh-html="开户与风险">Onboarding &amp; Risk</div>
-            <div class="chips" data-zh-html="&lt;span class=&quot;chip&quot;&gt;客户开户&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;客户身份核验&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;尽职调查&lt;/span&gt;"><span class="chip">Client Onboarding</span><span class="chip">KYC Verification</span><span class="chip">Due Diligence</span></div>
-          </div>
-          <div class="skill-group">
-            <div class="group-label" data-zh-html="战略与市场进入">Strategy &amp; Market Entry</div>
-            <div class="chips" data-zh-html="&lt;span class=&quot;chip&quot;&gt;市场进入策略&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;国际市场进入&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;战略咨询&lt;/span&gt;"><span class="chip">Go-to-Market Strategy</span><span class="chip">International Market Entry</span><span class="chip">Strategy Consulting</span></div>
-          </div>
-          <div class="skill-group">
-            <div class="group-label" data-zh-html="数据与工具">Data &amp; Tools</div>
-            <div class="chips" data-zh-html="&lt;span class=&quot;chip&quot;&gt;数据流程自动化&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;商业智能仪表盘&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;可视化分析&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;电子表格&lt;/span&gt;&lt;span class=&quot;chip&quot;&gt;数据分析&lt;/span&gt;"><span class="chip">Alteryx</span><span class="chip">Power BI</span><span class="chip">Tableau</span><span class="chip">Excel</span><span class="chip">Data Analytics</span></div>
-          </div>
-
-          <div class="sub-block">
-            <div class="sub-head" data-zh-html="证书">Certifications</div>
-            <div class="cert"><span class="cert-name" data-zh-html="彭博市场概念认证">Bloomberg Market Concepts</span><span class="cert-meta" data-zh-html="彭博 · 2025">Bloomberg · 2025</span></div>
-            <div class="cert"><span class="cert-name" data-zh-html="项目融资：分析、评估与建模">Project Finance: Analyze, Evaluate &amp; Model</span><span class="cert-meta" data-zh-html="在线课程平台 · 2026">Coursera · 2026</span></div>
-            <div class="cert"><span class="cert-name" data-zh-html="衍生品：期权与期货">Derivatives: Options &amp; Futures</span><span class="cert-meta" data-zh-html="盈透证券 · 2026">Interactive Brokers · 2026</span></div>
-            <div class="cert"><span class="cert-name" data-zh-html="投资银行培训（摩根大通）">Investment Banking Training (J.P. Morgan)</span><span class="cert-meta" data-zh-html="金融培训平台 · 2024">Financial Edge · 2024</span></div>
-            <div class="cert"><span class="cert-name" data-zh-html="数据处理平台设计师核心认证">Alteryx Designer Core</span><span class="cert-meta" data-zh-html="数据分析平台 · 2025">Alteryx · 2025</span></div>
-          </div>
-
-          <div class="sub-block">
-            <div class="sub-head" data-zh-html="语言">Languages</div>
-            <div class="lang-line" data-zh-html="&lt;span class=&quot;lang-item&quot;&gt;&lt;b&gt;中文&lt;/b&gt;（母语）&lt;/span&gt;&lt;span class=&quot;lang-item&quot;&gt;&lt;b&gt;英语&lt;/b&gt;（流利）&lt;/span&gt;&lt;span class=&quot;lang-item&quot;&gt;&lt;b&gt;葡萄牙语&lt;/b&gt;（流利）&lt;/span&gt;&lt;span class=&quot;lang-item&quot;&gt;&lt;b&gt;西班牙语&lt;/b&gt;（中级证书 · 塞万提斯学院）&lt;/span&gt;"><span class="lang-item"><b>Chinese</b> (native)</span><span class="lang-item"><b>English</b> (fluent)</span><span class="lang-item"><b>Portuguese</b> (fluent)</span><span class="lang-item"><b>Spanish</b> (intermediate, DELE B1 · Instituto Cervantes)</span></div>
+        <!-- ============ LANGUAGES ============ -->
+        <section id="languages" aria-labelledby="languages-title">
+          <h2 class="section-title" id="languages-title" data-zh-html="语言">Languages</h2>
+          <div class="language-list">
+            <article class="language-row">
+              <h3 class="language-name" data-zh-html="普通话">Mandarin</h3>
+              <p class="language-description" data-zh-html="我的母语，无论身处何地，都是家中使用的语言。">My mother tongue, spoken at home wherever I go.</p>
+              <span class="language-level" data-zh-html="母语">NATIVE</span>
+            </article>
+            <article class="language-row">
+              <h3 class="language-name" data-zh-html="葡萄牙语">Portuguese</h3>
+              <p class="language-description" data-zh-html="在巴西生活十年后，它成为了我的第二母语。">A second native language, after a decade in Brazil.</p>
+              <span class="language-level" data-zh-html="流利">FLUENT</span>
+            </article>
+            <article class="language-row">
+              <h3 class="language-name" data-zh-html="英语">English</h3>
+              <p class="language-description" data-zh-html="从小习得，是我接受教育并在工作中使用的语言。">Learned as a kid, the language I was educated in and work in now.</p>
+              <span class="language-level" data-zh-html="流利">FLUENT</span>
+            </article>
+            <article class="language-row">
+              <h3 class="language-name" data-zh-html="西班牙语">Spanish</h3>
+              <p class="language-description" data-zh-html="因对西语文化的兴趣而学习，目前达到中级水平。">Picked up to an intermediate level, drawn in by Hispanic culture.</p>
+              <span class="language-level">DELE B1</span>
+            </article>
           </div>
         </section>
+
           </div>
 
           <footer class="work-footer">
             <nav class="footer-links" aria-label="Contact links" data-zh-aria-label="联系方式链接">
               <a class="footer-link" href="https://www.linkedin.com/in/bobby-qingtian-huang/" target="_blank" rel="noopener noreferrer">
-                <span class="footer-arrow" aria-hidden="true">↗</span>
+                <span class="footer-arrow" aria-hidden="true"><img src="../assets/arrow-up-right.svg" alt=""></span>
                 <span data-zh-html="领英">LinkedIn</span>
               </a>
               <a class="footer-link" href="mailto:Qingtianbobby@gmail.com">
-                <span class="footer-arrow" aria-hidden="true">↗</span>
+                <span class="footer-arrow" aria-hidden="true"><img src="../assets/arrow-up-right.svg" alt=""></span>
                 <span data-zh-html="邮箱">Email</span>
               </a>
             </nav>

@@ -645,12 +645,12 @@ document.addEventListener('DOMContentLoaded', async function() {
           .replaceAll('src="../assets/', 'src="./assets/')
           .replace(/<script src="work\.js(?:\?[^"]*)?" defer><\/script>/, `<script>${js}<\/script>`)
       ).catch(() => null);
-      const aboutPageDocument = fetch('./about-page/about.html?v=story-fit-1')
+      const aboutPageDocument = fetch('./about-page/about.html?v=story-fit-2')
         .then(response => response.text())
         .catch(() => null);
       const interestsPageDocument = Promise.all([
         fetch('./interests-page/interests.html?v=18').then(response => response.text()),
-        fetch('./interests-page/interests.css?v=25').then(response => response.text()),
+        fetch('./interests-page/interests.css?v=26').then(response => response.text()),
         fetch('./interests-page/interests.js?v=19').then(response => response.text())
       ]).then(([html, css, js]) =>
         html

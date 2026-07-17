@@ -292,6 +292,7 @@ button { font: inherit; }
 
 /* Use a dedicated asset so interactive arrows render in the exact accent. */
 .spotify-button img,
+.playlist-row-link > .row-arrow,
 .playlist-hover-spotify img {
   width: 100%;
   height: 100%;

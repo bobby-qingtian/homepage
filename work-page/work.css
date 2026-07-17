@@ -6,15 +6,16 @@
   color-scheme: light;
   --page-bg: #403c37;
   --canvas: #F8F9FA;
+  --bg: var(--canvas);
   --band: #F8F9FA;
   --line: #b9ad9c;
   --ink: #403c37;
   --muted: #81786d;
   --blue-gray: #3f6174;
   --font-display-en: "Geist", sans-serif;
-  --font-display-zh: "Geist", sans-serif;
+  --font-display-zh: "Noto Sans SC", sans-serif;
   --font-body-en: "Martian Mono", monospace;
-  --font-body-zh: "Martian Mono", monospace;
+  --font-body-zh: "SarasaUiSC-Regular", "Sarasa Gothic SC", sans-serif;
   --font-struct: "Martian Mono", monospace;
 }
 
@@ -56,7 +57,16 @@ h1, h2, h3, h4, h5, h6,
   font-family: var(--font-display-en);
 }
 html[lang="zh-CN"] :is(h1, h2, h3, h4, h5, h6, [class*="title"]) {
-  font-family: var(--font-display-zh);
+  font-family: var(--font-display-zh) !important;
+}
+
+html[lang="zh-CN"] body * {
+  font-family: var(--font-body-zh) !important;
+}
+
+html[lang="zh-CN"] body :is(h1, h2, h3, h4, h5, h6, [class*="title"]),
+html[lang="zh-CN"] body :is(h1, h2, h3, h4, h5, h6, [class*="title"]) * {
+  font-family: var(--font-display-zh) !important;
 }
 
 a {
@@ -854,12 +864,28 @@ html[lang="zh-CN"] .project-details {
 }
 
 .project-media-frame {
+  position: relative;
   display: block;
   aspect-ratio: 16 / 9;
   margin: 0;
   overflow: hidden;
   border: 0;
   background: #fff;
+}
+
+.project-media-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  mix-blend-mode: color;
+  opacity: 0.22;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.project-media-frame:hover::after {
+  opacity: 0;
 }
 
 .project-media-link {
@@ -883,7 +909,12 @@ html[lang="zh-CN"] .project-details {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: transform 180ms ease;
+  filter: saturate(0.45) contrast(0.92) brightness(1.04) sepia(0.12);
+  transition: filter 300ms ease, transform 180ms ease;
+}
+
+.project-media-frame img:hover {
+  filter: none;
 }
 
 .project-callout {

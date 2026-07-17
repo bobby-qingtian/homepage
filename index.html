@@ -5,7 +5,8 @@
   <title>Huang Homepage</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/subsetted-fonts@1.0.4/SarasaUiSC-Regular/SarasaUiSC-Regular.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -341,8 +342,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         '</head>',
         '<link rel="preconnect" href="https://fonts.googleapis.com">' +
         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-        '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Martian+Mono:wght@400;500;700&display=swap" rel="stylesheet">' +
-        '<style>html,body,body *{font-family:"Martian Mono",monospace!important}h1,h2,h3,h4,h5,h6,[class*="title"]{font-family:"Geist",sans-serif!important}</style></head>'
+        '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Martian+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
+        '<link href="https://cdn.jsdelivr.net/npm/subsetted-fonts@1.0.4/SarasaUiSC-Regular/SarasaUiSC-Regular.css" rel="stylesheet">' +
+        '<style>html,body,body *{font-family:"Martian Mono",monospace!important}h1,h2,h3,h4,h5,h6,[class*="title"]{font-family:"Geist",sans-serif!important}html[lang="zh-CN"] body *{font-family:"SarasaUiSC-Regular","Sarasa Gothic SC",sans-serif!important}html[lang="zh-CN"] body :is(h1,h2,h3,h4,h5,h6,[class*="title"]),html[lang="zh-CN"] body :is(h1,h2,h3,h4,h5,h6,[class*="title"]) *{font-family:"Noto Sans SC",sans-serif!important}</style></head>'
       );
 
       source.textContent = JSON.stringify(template);
@@ -495,7 +497,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         /* border-box so the height JS centres on is the rendered height, not
            height + the 1.6px border on each edge. */
         .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; background:#DAE2E8; }
-        .guide-title { max-width:42em; color:#3D3D3D; font-family:"Martian Mono",monospace !important; font-size:14px; font-weight:400; line-height:1.3; letter-spacing:0; }
+        .guide-title { max-width:42em; color:#3D3D3D; font-family:"Martian Mono",monospace !important; font-size:20px; font-weight:400; line-height:1.3; letter-spacing:0; }
         .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(18px,6vw,110px); }
         .guide-option { appearance:none; cursor:pointer; border:1.5px solid #87A1BA; border-radius:999px; background:#3D5A7A; color:#F8F9FA; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:400 14px/1.1 "Martian Mono",monospace; transition:background .18s ease, transform .18s ease; }
         .guide-option:hover { background:#3D5A7A; transform:translateY(-2px); }
@@ -530,6 +532,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       function applySiteLanguage(language, { syncFrame = true } = {}) {
         siteLanguage = language === 'zh' ? 'zh' : 'en';
         const chinese = siteLanguage === 'zh';
+        document.documentElement.lang = chinese ? 'zh-CN' : 'en';
         document.querySelectorAll('.homepage-language-switch').forEach(button => {
           button.setAttribute('aria-pressed', String(chinese));
           const languageSpans = button.querySelectorAll('span');
@@ -631,9 +634,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=mobile-8').then(response => response.text()),
-        fetch('./work-page/work.css?v=mobile-8').then(response => response.text()),
-        fetch('./work-page/work.js?v=mobile-8').then(response => response.text())
+        fetch('./work-page/work.html?v=mobile-9').then(response => response.text()),
+        fetch('./work-page/work.css?v=mobile-9').then(response => response.text()),
+        fetch('./work-page/work.js?v=mobile-9').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
@@ -728,13 +731,20 @@ document.addEventListener('DOMContentLoaded', async function() {
           EDUCATION: 'education',
           SKILLS: 'skills'
         };
-        // Music / Photography are sub-tabs of Interests: they open the same
-        // default Interests page as the Interests tab, without focusing a
-        // specific section.
+        // Music / Photography are sub-tabs of Interests. On mobile, enter the
+        // Photography page at its album grid instead of the playlist list.
         const interestsTitles = ['INTERESTS', 'MUSIC', 'PHOTOGRAPHY'];
+        const interestsSectionTargets = {
+          PHOTOGRAPHY: 'photography'
+        };
         const targetSection = workSectionTargets[sectionTitle.toUpperCase()] || '';
         const targetAboutSection = aboutSectionTargets[aboutTitle.toUpperCase()] || '';
-        const targetInterestsSection = '';
+        const interestsSectionTitle = interestsSectionTargets[visibleTitle.toUpperCase()]
+          ? visibleTitle
+          : sourceTitle;
+        const targetInterestsSection = window.matchMedia('(max-width: 700px)').matches
+          ? interestsSectionTargets[interestsSectionTitle.toUpperCase()] || ''
+          : '';
         const targetContentSection = targetSection || targetAboutSection || targetInterestsSection;
         const isWork = sourceTitle.toUpperCase() === 'WORK' || Boolean(targetSection);
         const isAbout = sourceTitle.toUpperCase() === 'ABOUT' || Boolean(targetAboutSection);
@@ -866,8 +876,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const heading = target.querySelector('.experience-intro h1');
                 const anchor = heading || target;
                 const frameWindow = workFrame.contentWindow;
-                const anchorTop = anchor.getBoundingClientRect().top + (frameWindow ? frameWindow.scrollY : 0);
-                if (frameWindow) frameWindow.scrollTo({ top:Math.max(0, anchorTop - 64), behavior:'auto' });
+                const experienceOffset = frameWindow && frameWindow.matchMedia('(max-width: 700px)').matches ? 16 : 64;
+                const anchorExperience = () => {
+                  if (!frameWindow) return;
+                  const anchorTop = anchor.getBoundingClientRect().top + frameWindow.scrollY;
+                  frameWindow.scrollTo({ top:Math.max(0, anchorTop - experienceOffset), behavior:'auto' });
+                };
+                anchorExperience();
+                const intro = target.querySelector('.experience-intro');
+                if (intro && frameWindow && typeof frameWindow.ResizeObserver === 'function') {
+                  const observer = new frameWindow.ResizeObserver(anchorExperience);
+                  observer.observe(intro);
+                  const stop = () => observer.disconnect();
+                  frameWindow.setTimeout(stop, 4000);
+                  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(type => {
+                    frameWindow.addEventListener(type, stop, { once:true, passive:true });
+                  });
+                }
+                if (frameDocument.fonts && frameDocument.fonts.ready) frameDocument.fonts.ready.then(anchorExperience);
               } else if (targetAboutSection) {
                 const frameWindow = workFrame.contentWindow;
                 frameDocument.documentElement.style.scrollBehavior = 'auto';

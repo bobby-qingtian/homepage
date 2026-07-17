@@ -16,6 +16,8 @@
   --accent: #BE4A2F;
   --source-w: 1402;
   --source-h: 1122;
+  --font-display-zh: "Noto Sans SC", sans-serif;
+  --font-body-zh: "SarasaUiSC-Regular", "Sarasa Gothic SC", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -51,6 +53,27 @@ h6,
 .playlist-summary strong,
 .album-modal-title {
   font-family: "Geist", "Noto Sans SC", sans-serif;
+}
+
+html[lang="zh-CN"] body * {
+  font-family: var(--font-body-zh) !important;
+}
+
+html[lang="zh-CN"] body :is(
+  h1, h2, h3, h4, h5, h6,
+  .section-bar p,
+  .playlist-summary strong,
+  .album-modal-title,
+  [class*="title"]
+),
+html[lang="zh-CN"] body :is(
+  h1, h2, h3, h4, h5, h6,
+  .section-bar p,
+  .playlist-summary strong,
+  .album-modal-title,
+  [class*="title"]
+) * {
+  font-family: var(--font-display-zh) !important;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -98,22 +121,21 @@ button { font: inherit; }
   transition: color 180ms ease;
 }
 
-/* Tint the arrow by masking its shape and painting a flat colour, so the hover
-   state is exactly --accent. A filter chain can only approximate a given hex. */
 .interests-footer .footer-arrow {
   display: block;
+  flex: 0 0 auto;
   width: 16px;
   height: 16px;
-  background-color: #9e9e9e;
-  -webkit-mask: url("assets/arrow-up-right.svg") center / contain no-repeat;
-  mask: url("assets/arrow-up-right.svg") center / contain no-repeat;
-  transition: background-color 180ms ease;
 }
 
-.interests-footer .footer-arrow img { display: none; }
+.interests-footer .footer-arrow img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
+}
 
 .interests-footer .footer-link:hover { color: var(--accent); }
-.interests-footer .footer-link:hover .footer-arrow { background-color: var(--accent); }
 
 .interests-footer .copyright {
   margin: 0;
@@ -396,6 +418,8 @@ button { font: inherit; }
 .row-count {
   grid-column: 5;
   grid-row: 1;
+  position: relative;
+  left: calc(-220 * var(--u));
   justify-self: start;
   font-size: calc(14 * var(--u));
   font-weight: 300;
@@ -409,7 +433,7 @@ button { font: inherit; }
   justify-self: end;
   width: calc(18 * var(--u));
   height: calc(18 * var(--u));
-  margin-right: calc(30 * var(--u));
+  margin-right: 0;
   transition: opacity 180ms ease, transform 240ms ease;
 }
 
@@ -425,7 +449,7 @@ button { font: inherit; }
      to white in place rather than shifting it. */
   width: calc(18 * var(--u));
   height: calc(18 * var(--u));
-  margin-right: calc(30 * var(--u));
+  margin-right: 0;
   opacity: 0;
   pointer-events: none;
   transform: translateX(14px) scale(.96);
@@ -780,6 +804,7 @@ body.modal-open { overflow: hidden; }
   }
   .record--large { margin-left: calc(-13 * var(--u)); }
   .record--small { margin-left: 0; }
+  .row-count { left: 0; }
   .album-index-view { padding-inline: 38px; }
 }
 

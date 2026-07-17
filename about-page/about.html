@@ -6,7 +6,8 @@
     <title>About</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/subsetted-fonts@1.0.4/SarasaUiSC-Regular/SarasaUiSC-Regular.css" rel="stylesheet">
     <style>
       /* Type tokens (per design spec, image 2/3) — font families unchanged.
          h3 26/300/1.12/-0.26px · h4 16/400/1.5 · sui 14/400/1
@@ -16,15 +17,16 @@
         color-scheme: light;
         --page-bg: #403c37;
         --canvas: #F8F9FA;
+        --bg: var(--canvas);
         --band: #F8F9FA;
         --line: #b9ad9c;
         --ink: #403c37;
         --muted: #81786d;
         --blue-gray: #3f6174;
         --font-display-en: "Geist", sans-serif;
-        --font-display-zh: "Geist", sans-serif;
+        --font-display-zh: "Noto Sans SC", sans-serif;
         --font-body-en: "Martian Mono", monospace;
-        --font-body-zh: "Martian Mono", monospace;
+        --font-body-zh: "SarasaUiSC-Regular", "Sarasa Gothic SC", sans-serif;
         --font-struct: "Martian Mono", monospace;
         /*
           Story block only (top-left quadrant). It shares a fixed 50/50 panel
@@ -54,7 +56,14 @@
         font-family: var(--font-display-en);
       }
       html[lang="zh-CN"] :is(h1, h2, h3, h4, h5, h6, [class*="title"]) {
-        font-family: var(--font-display-zh);
+        font-family: var(--font-display-zh) !important;
+      }
+      html[lang="zh-CN"] body * {
+        font-family: var(--font-body-zh) !important;
+      }
+      html[lang="zh-CN"] body :is(h1, h2, h3, h4, h5, h6, [class*="title"]),
+      html[lang="zh-CN"] body :is(h1, h2, h3, h4, h5, h6, [class*="title"]) * {
+        font-family: var(--font-display-zh) !important;
       }
       a { color: inherit; text-decoration: none; }
 
@@ -180,7 +189,7 @@
           margin-bottom: 24px;
         }
         #languages {
-          padding-bottom: 0;
+          padding-bottom: 16px;
           margin-bottom: 0;
         }
         .details-panel .work-footer {
@@ -248,13 +257,26 @@
       }
 
       .portrait-wrap { position: relative; }
+      .portrait-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--bg);
+        mix-blend-mode: color;
+        opacity: 0.22;
+        pointer-events: none;
+        transition: opacity 300ms ease;
+      }
+      .portrait-wrap:hover::after { opacity: 0; }
       .portrait {
         display: block;
         width: 100%;
         border: 0;
         background: #F8F9FA;
-        filter: saturate(0.92);
+        filter: saturate(0.45) contrast(0.92) brightness(1.04) sepia(0.12);
+        transition: filter 300ms ease;
       }
+      .portrait:hover { filter: none; }
       .story-body p,
       .intro-line {
         max-width: 1080px;
@@ -391,7 +413,7 @@
       }
       .language-row {
         display: grid;
-        grid-template-columns: minmax(120px, .72fr) minmax(0, 1.8fr) auto;
+        grid-template-columns: minmax(120px, .72fr) minmax(0, 1.8fr) 72px;
         gap: clamp(20px, 2.6vw, 42px);
         align-items: start;
         padding: 18px 0;
@@ -420,6 +442,7 @@
         line-height: 1.5;
       }
       .language-level {
+        justify-self: end;
         color: var(--blue-gray);
         font-size: 11px;
         line-height: 1.45;

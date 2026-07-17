@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '.project-details > p',
     '.project-action',
     '.credentials-label',
+    '.credential-name',
     '.skills-link span:first-child',
     '.footer-link span:not(.footer-arrow)',
     '.copyright'
@@ -145,7 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const heading = target.querySelector('.experience-intro h1');
         const anchor = heading || target;
         const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: Math.max(0, anchorTop - 64), behavior: 'auto' });
+        const headingOffset = window.matchMedia('(max-width: 700px)').matches ? 16 : 64;
+        window.scrollTo({ top: Math.max(0, anchorTop - headingOffset), behavior: 'auto' });
         return;
       }
 
@@ -160,13 +162,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // takes over the scroll.
     if (typeof ResizeObserver === 'function') {
       const observer = new ResizeObserver(apply);
-      observer.observe(document.documentElement);
+      const resizeTarget = targetName === 'experiences'
+        ? target.querySelector('.experience-intro') || target
+        : document.documentElement;
+      observer.observe(resizeTarget);
       const stop = () => observer.disconnect();
       setTimeout(stop, 4000);
-      ['wheel', 'touchstart', 'keydown'].forEach(type => {
+      ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(type => {
         window.addEventListener(type, stop, { once: true, passive: true });
       });
     }
+
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
   }
 
   if (languageButton) {

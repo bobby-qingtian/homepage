@@ -10,9 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (value.includes('<br>')) element.innerHTML = value;
       else element.textContent = value;
     });
+    document.querySelectorAll('.album-cover').forEach((cover) => {
+      const album = albums[cover.dataset.album];
+      if (album) cover.dataset.flipTitle = album.title[currentLanguage];
+    });
     if (activeAlbumKey && albums[activeAlbumKey]) {
-      const total = albums[activeAlbumKey].files.length;
+      const activeAlbum = albums[activeAlbumKey];
+      const total = activeAlbum.files.length;
+      albumModalTitle.textContent = activeAlbum.title[currentLanguage];
       albumModalCount.textContent = currentLanguage === 'zh' ? `${total} 帧` : `${total} FRAMES`;
+      if (!photoLightbox.hidden) showLightboxPhoto(activePhotoIndex);
     }
   }
 
@@ -66,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const albums = {
     brazil: {
-      title: 'BRAZIL',
+      title: { en: 'BRAZIL', zh: '巴西' },
       files: [
         '20240511_013141.jpg', '20240520_145847.jpg', '20251121_202745.jpg',
         '20251122_214340.jpg', '20251122_224035.jpg', '20251224_201609.jpg',
@@ -75,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     australia: {
-      title: 'AUSTRALIA',
+      title: { en: 'AUSTRALIA', zh: '澳大利亚' },
       files: [
         '20260524_133336.jpg', '20260527_204616.jpg', '20260529_143530.jpg',
         '20260529_200904.jpg', '20260606_155503.jpg', '20260612_134305.jpg',
@@ -84,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     china: {
-      title: 'CHINA',
+      title: { en: 'CHINA', zh: '中国' },
       files: [
         '20260116_174019.jpg', '20260116_175403.jpg', '20260125_130036.jpg',
         '20260125_135718.jpg', '20260202_181233.jpg', '20260219_131831.jpg',
@@ -93,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     indonesia: {
-      title: 'INDONESIA',
+      title: { en: 'INDONESIA', zh: '印度尼西亚' },
       files: [
         '20260406_162745.jpg', '20260406_180522.jpg', '20260406_193823.jpg',
         '20260408_111856.jpg', '20260408_112715.jpg', '20260408_132757.jpg',
@@ -132,8 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
     activePhotoIndex = (index + album.files.length) % album.files.length;
     const filename = album.files[activePhotoIndex];
     lightboxImage.src = photoPath(activeAlbumKey, filename);
-    lightboxImage.alt = `${album.title} photograph ${activePhotoIndex + 1}`;
-    lightboxCaption.textContent = `${album.title} · ${String(activePhotoIndex + 1).padStart(2, '0')} / ${String(album.files.length).padStart(2, '0')}`;
+    const title = album.title[currentLanguage];
+    lightboxImage.alt = currentLanguage === 'zh'
+      ? `${title}照片 ${activePhotoIndex + 1}`
+      : `${title} photograph ${activePhotoIndex + 1}`;
+    lightboxCaption.textContent = `${title} · ${String(activePhotoIndex + 1).padStart(2, '0')} / ${String(album.files.length).padStart(2, '0')}`;
   }
 
   function openLightbox(index) {
@@ -155,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     activeAlbumKey = albumKey;
     activePhotoIndex = 0;
     activeAlbumTrigger = document.querySelector(`.album-cover[data-album="${albumKey}"]`);
-    albumModalTitle.textContent = album.title;
+    albumModalTitle.textContent = album.title[currentLanguage];
     albumModalCount.textContent = currentLanguage === 'zh' ? `${album.files.length} 帧` : `${album.files.length} FRAMES`;
     albumGallery.replaceChildren();
     album.files.forEach((filename, index) => {
@@ -163,7 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
       button.className = 'album-gallery-item';
       button.type = 'button';
       button.setAttribute('role', 'listitem');
-      button.setAttribute('aria-label', `${album.title} photograph ${index + 1}`);
+      button.setAttribute('aria-label', currentLanguage === 'zh'
+        ? `${album.title.zh}照片 ${index + 1}`
+        : `${album.title.en} photograph ${index + 1}`);
       button.dataset.index = String(index + 1).padStart(2, '0');
       const image = document.createElement('img');
       image.src = photoPath(albumKey, filename);

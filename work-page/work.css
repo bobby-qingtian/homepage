@@ -262,6 +262,14 @@ html[lang="zh-CN"] .experience-intro p {
   line-height: 1.5;
 }
 
+.experience-intro .inline-display-name {
+  font-family: var(--font-display-en);
+}
+
+html[lang="zh-CN"] body .experience-intro .inline-display-name {
+  font-family: var(--font-display-zh) !important;
+}
+
 .experience-intro hr {
   height: 1px;
   margin: 30px 0 26px;
@@ -1367,7 +1375,7 @@ html[lang="zh-CN"] .skills-title {
   }
 
   .project-callout {
-    padding: 14px 16px;
+    padding: 14px 0;
   }
 
   .project-credentials {

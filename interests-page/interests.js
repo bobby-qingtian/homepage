@@ -35,42 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const playlistItems = Array.from(document.querySelectorAll('.playlist-item'));
-
-  function closePlaylist(item) {
-    const summary = item.querySelector('.playlist-summary');
-    const detail = item.querySelector('.playlist-detail');
-    item.classList.remove('is-open');
-    summary.setAttribute('aria-expanded', 'false');
-    detail.hidden = true;
-  }
-
-  function openPlaylist(item) {
-    playlistItems.forEach((otherItem) => {
-      if (otherItem !== item) closePlaylist(otherItem);
-    });
-    const summary = item.querySelector('.playlist-summary');
-    const detail = item.querySelector('.playlist-detail');
-    item.classList.add('is-open');
-    summary.setAttribute('aria-expanded', 'true');
-    detail.hidden = false;
-  }
-
-  playlistItems.forEach((item) => {
-    const summary = item.querySelector('.playlist-summary');
-    const detail = item.querySelector('.playlist-detail');
-    summary.addEventListener('click', () => {
-      if (item.classList.contains('is-open')) closePlaylist(item);
-      else openPlaylist(item);
-    });
-    detail.addEventListener('click', (event) => {
-      if (event.target.closest('a')) return;
-      closePlaylist(item);
-      summary.focus();
-    });
-    closePlaylist(item);
-  });
-
   const albums = {
     brazil: {
       title: { en: 'BRAZIL', zh: '巴西' },

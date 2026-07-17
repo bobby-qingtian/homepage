@@ -10,7 +10,7 @@
 :root {
   color-scheme: dark;
   --bg: #0f0f0f;
-  --ink: #e7e4df;
+  --ink: #F8F9FA;
   --muted: #8f8d8b;
   --line: #20201f;
   --accent: #BE4A2F;
@@ -85,7 +85,7 @@ button { font: inherit; }
   min-height: 0;
   margin: 0 auto;
   display: grid;
-  grid-template-rows: minmax(0, 0.85fr) minmax(0, 1.15fr) auto;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto;
   overflow: hidden;
   background-color: var(--bg);
 }
@@ -476,7 +476,7 @@ button { font: inherit; }
 
   .playlist-summary:hover strong,
   .playlist-summary:focus-visible strong {
-    color: #f4f1eb;
+    color: #F8F9FA;
     letter-spacing: .055em;
     transform: translateX(12px);
   }
@@ -750,7 +750,7 @@ body.modal-open { overflow: hidden; }
   padding: 3px 5px;
   border-radius: 4px;
   background: rgba(0, 0, 0, .65);
-  color: #ddd;
+  color: #F8F9FA;
   font-size: 10px;
   font-weight: 400;
   line-height: 1.15;

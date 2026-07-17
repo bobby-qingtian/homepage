@@ -9,7 +9,7 @@
   --bg: var(--canvas);
   --band: #F8F9FA;
   --line: #b9ad9c;
-  --ink: #403c37;
+  --ink: #0F172A;
   --muted: #81786d;
   --blue-gray: #3f6174;
   --font-display-en: "Geist", sans-serif;
@@ -170,7 +170,7 @@ a {
   padding: 3px;
   border: 0;
   background: #f5f5f5;
-  color: #3d3d3d;
+  color: #0F172A;
   font: inherit;
   font-size: 14px;
   line-height: 1;
@@ -242,7 +242,7 @@ html[lang="zh-CN"] .nav-box {
 .experience-intro {
   max-width: 1180px;
   margin: 0 auto;
-  color: #0f1010;
+  color: #0F172A;
 }
 
 .experience-intro p {
@@ -271,7 +271,7 @@ html[lang="zh-CN"] .experience-intro p {
 
 .experience-intro h1 {
   margin: 0;
-  color: #0f1010;
+  color: #0F172A;
   font-family: var(--font-display-en);
   font-size: 26px;
   font-weight: 300;
@@ -449,7 +449,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #0f1010;
+  color: #0F172A;
   cursor: pointer;
   font: inherit;
   text-align: center;
@@ -519,7 +519,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
 
 .experience-card h2 {
   margin: 6px 0 0;
-  color: #0f1010;
+  color: #0F172A;
   font-family: var(--font-display-en);
   font-size: 26px;
   font-weight: 300;
@@ -612,7 +612,7 @@ html[lang="zh-CN"] .experience-description {
 }
 
 .experience-stats strong {
-  color: #0f1010;
+  color: #0F172A;
   font-family: var(--font-struct) !important;
   font-weight: 400;
 }
@@ -634,7 +634,7 @@ html[lang="zh-CN"] .experience-stats strong {
   align-items: center;
   justify-content: center;
   gap: 18px;
-  color: #0f1010;
+  color: #0F172A;
   font-family: var(--font-struct);
   font-size: 14px;
   font-weight: 400;
@@ -704,7 +704,7 @@ html[lang="zh-CN"] .experience-stats strong {
   margin: 0 auto 30px;
   padding-top: 26px;
   border-top: 0;
-  color: #0f1010;
+  color: #0F172A;
 }
 
 .projects-intro h2 {
@@ -760,9 +760,9 @@ html[lang="zh-CN"] .projects-intro p {
 
 .project-summary {
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr) auto;
+  grid-template-columns: 108px minmax(0, 1fr) auto;
   width: 100%;
-  gap: 22px;
+  gap: 40px;
   align-items: center;
   padding: 26px 30px;
   text-align: left;
@@ -942,7 +942,7 @@ html[lang="zh-CN"] .project-details {
 
 .project-team {
   margin-top: 16px !important;
-  color: #0f1010;
+  color: #0F172A;
   font-size: 11px;
   font-weight: 300;
   line-height: 1.45;
@@ -960,10 +960,25 @@ html[lang="zh-CN"] .project-team {
   border-top: 1px solid var(--line);
 }
 
+.skills-title {
+  margin: 0 0 34px;
+  color: #0F172A;
+  font-family: var(--font-display-en);
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.26px;
+}
+
+html[lang="zh-CN"] .skills-title {
+  font-family: var(--font-display-zh);
+}
+
 .credentials-row {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 108px minmax(0, 1fr);
   gap: 0 40px;
+  padding: 0 30px;
 }
 
 .credentials-row + .credentials-row {
@@ -1000,7 +1015,7 @@ html[lang="zh-CN"] .project-team {
 }
 
 .credential-name {
-  color: #0f1010;
+  color: #0F172A;
   font-family: var(--font-body-en);
   font-size: 14px;
   font-weight: 400;
@@ -1068,7 +1083,7 @@ html[lang="zh-CN"] .project-team {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #202020;
+  color: #0F172A;
   font-family: var(--font-struct);
   font-size: 14px;
   font-weight: 400;
@@ -1094,7 +1109,7 @@ html[lang="zh-CN"] .project-team {
 
 .copyright {
   margin: 0;
-  color: #202020;
+  color: #0F172A;
   font-family: var(--font-struct);
   font-size: 11px;
   font-weight: 300;
@@ -1360,9 +1375,14 @@ html[lang="zh-CN"] .project-team {
     padding-top: 28px;
   }
 
+  .skills-title {
+    margin-bottom: 24px;
+  }
+
   .credentials-row {
     grid-template-columns: 1fr;
     gap: 14px;
+    padding: 0;
   }
 
   .credentials-row + .credentials-row {

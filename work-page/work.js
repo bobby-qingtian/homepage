@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '.download-label',
     '.projects-intro h2',
     '.projects-intro p',
+    '.skills-title',
     '.project-meta',
     '.project-title',
     '.project-details > p',

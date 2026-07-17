@@ -206,10 +206,10 @@ document.addEventListener('DOMContentLoaded', async function() {
           '<path d="{{ wallPath }}" fill="none" stroke="#161616" stroke-width="1.6" stroke-linecap="round"></path>',
           '<path d="{{ wallFillPath }}" fill="#DAE2E8" stroke="none"></path>\n      <path d="{{ wallPath }}" fill="none" stroke="#161616" stroke-width="1.6" stroke-linecap="round"></path>'
         )
-        .replaceAll('#ffffff', '#FFFFFF')
+        .replaceAll('#ffffff', '#F8F9FA')
         .replaceAll('#f7ee52', '#3D5A7A')
         .replace('my secret files', 'My Archive')
-        .replace('color:#161616;white-space:nowrap;transform:{{ labelTransform }}', 'color:#FFFFFF;white-space:nowrap;transform:{{ labelTransform }}')
+        .replace('color:#161616;white-space:nowrap;transform:{{ labelTransform }}', 'color:#F8F9FA;white-space:nowrap;transform:{{ labelTransform }}')
         .replaceAll('font-family:Helvetica,Arial,sans-serif', 'font-family:"Martian Mono",monospace')
         .replaceAll(' href="Profile.dc.html"', '')
         .replace("{ num: '01', name: 'about', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
@@ -217,12 +217,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace("{ d: 1, num: 'A', name: '002', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'About', u: 0.03 }")
         .replace("{ num: '03', name: 'blog', u: 0.40 }", "{ full: 1, num: '', name: 'Profile', u: 0.40 }")
         .replace("{ num: '04', name: 'books', u: 0.80 }", "{ full: 1, num: '', name: 'Education', u: 0.80 }")
-        .replace("{ num: '05', name: 'code', u: 0.40 }", "{ full: 1, num: '', name: 'Skills', u: 0.40 }")
+        .replace("{ num: '05', name: 'code', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '06', name: 'collections', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
         .replace("{ d: 1, num: 'C', name: '003', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'Work', u: 0.08 }")
         .replace("{ num: '07', name: 'contact', u: 0.40 }", "{ full: 1, num: '', name: 'Experiences', u: 0.40 }")
         .replace("{ num: '08', name: 'design', u: 0.80 }", "{ full: 1, num: '', name: 'Projects', u: 0.80 }")
-        .replace("{ num: '09', name: 'drawings', u: 0.13 }", "{ num: '', name: '', u: 0.13 }")
+        .replace("{ num: '09', name: 'drawings', u: 0.13 }", "{ full: 1, num: '', name: 'Skills', u: 0.13 }")
         .replace("{ num: '10', name: 'music', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
         .replace("{ num: '11', name: 'notes', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
         .replace("{ num: '12', name: 'photos', u: 0.40 }", "{ full: 1, num: '', name: 'Music', u: 0.40 }")
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('labelY: drawerY + 108,', 'labelY: drawerY + 183,')
         .replace('font-size:19px;font-weight:500', 'font-size:18px;font-weight:500')
         .replaceAll('stroke="#161616"', 'stroke="#87A1BA"')
-        .replaceAll('#161616', '#3D3D3D');
+        .replaceAll('#161616', '#0F172A');
 
       template = template.replace(
         '</head>',
@@ -375,24 +375,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; z-index:112 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
         .drawer-motion-card--work .drawer-motion-row,
         .drawer-motion-card--interests .drawer-motion-row { visibility:hidden !important; }
-        .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#403c37; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
+        .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#0F172A; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
         .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #87A1BA; border-radius:10px; background:#F8F9FA; }
         .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#F8F9FA; }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
-        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#403c37; border-radius:999px; padding:10px 18px; font:500 15px/1 "Martian Mono",monospace; cursor:pointer; }
-        .drawer-motion-work-back { position:absolute; left:0; top:12px; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#F8F9FA; color:#403c37; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:400 17px/1 "Martian Mono",monospace; white-space:nowrap; cursor:pointer; }
-        .drawer-motion-section-tab { position:absolute; left:190px; top:12px; z-index:115; display:grid; width:230px; height:46px; place-items:center; background:#3D5A7A; color:#FFFFFF; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:700 17px/1 "Martian Mono",monospace; white-space:nowrap; pointer-events:none; }
+        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#0F172A; border-radius:999px; padding:10px 18px; font:500 15px/1 "Martian Mono",monospace; cursor:pointer; }
+        .drawer-motion-work-back { position:absolute; left:0; top:12px; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#F8F9FA; color:#0F172A; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:400 17px/1 "Martian Mono",monospace; white-space:nowrap; cursor:pointer; }
+        .drawer-motion-section-tab { position:absolute; left:190px; top:12px; z-index:115; display:grid; width:230px; height:46px; place-items:center; background:#3D5A7A; color:#F8F9FA; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:700 17px/1 "Martian Mono",monospace; white-space:nowrap; pointer-events:none; }
         .drawer-motion-work-back:hover { background:#F8F9FA; }
         .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
-        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#403c37; font:400 14px/1.15 "Martian Mono",monospace; }
+        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#0F172A; font:400 14px/1.15 "Martian Mono",monospace; }
         .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:0; background:#F8F9FA; color:#3D5A7A; font:inherit; font-size:14px; cursor:pointer; }
         .homepage-language-switch span { display:grid; place-items:center; }
         .homepage-language-switch span.is-active { background:#3D5A7A; color:#F8F9FA; }
         .drawer-motion-work-language { position:absolute; top:24px; right:22px; z-index:230; }
-        .homepage-corner-link { color:#403c37; text-decoration:none; }
+        .homepage-corner-link { color:#0F172A; text-decoration:none; }
         .homepage-corner-link::before {
           content:'';
           display:inline-block;
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           text-decoration:none;
         }
         .homepage-corner-link:hover { color:#3f6174; }
-        .homepage-copyright { position:fixed; left:0; right:0; bottom:16px; z-index:9000; margin:0; text-align:center; color:#403c37; font:400 13px/1.3 "Martian Mono",monospace; letter-spacing:.02em; pointer-events:none; }
+        .homepage-copyright { position:fixed; left:0; right:0; bottom:16px; z-index:9000; margin:0; text-align:center; color:#0F172A; font:400 13px/1.3 "Martian Mono",monospace; letter-spacing:.02em; pointer-events:none; }
         @media (min-width:701px) {
           [data-screen-label="Index drawer"] {
             position:fixed !important;
@@ -497,12 +497,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         /* border-box so the height JS centres on is the rendered height, not
            height + the 1.6px border on each edge. */
         .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; background:#DAE2E8; }
-        .guide-title { max-width:42em; color:#3D3D3D; font-family:"Martian Mono",monospace !important; font-size:20px; font-weight:400; line-height:1.3; letter-spacing:0; }
+        .guide-title { max-width:42em; color:#0F172A; font-family:"Martian Mono",monospace !important; font-size:20px; font-weight:400; line-height:1.3; letter-spacing:0; }
         .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(18px,6vw,110px); }
         .guide-option { appearance:none; cursor:pointer; border:1.5px solid #87A1BA; border-radius:999px; background:#3D5A7A; color:#F8F9FA; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:400 14px/1.1 "Martian Mono",monospace; transition:background .18s ease, transform .18s ease; }
         .guide-option:hover { background:#3D5A7A; transform:translateY(-2px); }
         .guide-option:focus-visible { outline:3px solid #87A1BA; outline-offset:3px; }
-        .guide-everything { position:relative; appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#3D3D3D; font:400 14px/1.1 "Martian Mono",monospace; }
+        .guide-everything { position:relative; appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#0F172A; font:400 14px/1.1 "Martian Mono",monospace; }
         .guide-everything-arrow { position:absolute; right:100%; margin-right:14px; display:block; width:32px; height:32px; transition:transform .18s ease; }
         .guide-everything-arrow img { display:block; width:100%; height:100%; }
         .guide-everything:hover .guide-everything-arrow { transform:translateX(6px); }
@@ -634,9 +634,9 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
       const workPageDocument = Promise.all([
-        fetch('./work-page/work.html?v=mobile-9').then(response => response.text()),
-        fetch('./work-page/work.css?v=mobile-9').then(response => response.text()),
-        fetch('./work-page/work.js?v=mobile-9').then(response => response.text())
+        fetch('./work-page/work.html?v=mobile-11').then(response => response.text()),
+        fetch('./work-page/work.css?v=mobile-13').then(response => response.text()),
+        fetch('./work-page/work.js?v=mobile-10').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
           .replace(/<link rel="stylesheet" href="work\.css(?:\?[^"]*)?">/, `<style>${css}</style>`)
@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .catch(() => null);
       const interestsPageDocument = Promise.all([
         fetch('./interests-page/interests.html?v=18').then(response => response.text()),
-        fetch('./interests-page/interests.css?v=18').then(response => response.text()),
+        fetch('./interests-page/interests.css?v=19').then(response => response.text()),
         fetch('./interests-page/interests.js?v=18').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
@@ -724,12 +724,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         const aboutTitle = ['Profile', 'Education', 'Skills'].includes(visibleTitle) ? visibleTitle : sourceTitle;
         const workSectionTargets = {
           EXPERIENCES: 'experiences',
-          PROJECTS: 'projects'
+          PROJECTS: 'projects',
+          SKILLS: 'skills'
         };
         const aboutSectionTargets = {
           PROFILE: 'story',
-          EDUCATION: 'education',
-          SKILLS: 'skills'
+          EDUCATION: 'education'
         };
         // Music / Photography are sub-tabs of Interests. On mobile, enter the
         // Photography page at its album grid instead of the playlist list.

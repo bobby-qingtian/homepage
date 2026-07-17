@@ -170,13 +170,14 @@ button { font: inherit; }
     clamp(0.75px, 100vw / var(--source-w), 1px),
     100vh / var(--source-h)
   );
+  --list-u: calc(2 * var(--u));
   display: grid;
-  grid-template-rows: 77px minmax(0, 1fr);
+  grid-template-rows: 77px auto;
 }
 
 .playlist-list {
   display: grid;
-  grid-template-rows: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(5, calc(80 * var(--list-u)));
   min-height: 0;
 }
 
@@ -231,7 +232,7 @@ button { font: inherit; }
   letter-spacing: normal;
 }
 
-.playlist-summary .playlist-number { grid-column: 1; grid-row: 1; font-size: calc(14 * var(--u)); }
+.playlist-summary .playlist-number { grid-column: 1; grid-row: 1; font-size: calc(14 * var(--list-u)); }
 .playlist-summary .record--small { grid-column: 2; grid-row: 1; }
 .playlist-summary strong { grid-column: 3; grid-row: 1; }
 .playlist-summary .genre { grid-column: 4; grid-row: 1; }
@@ -289,12 +290,14 @@ button { font: inherit; }
   filter: none;
 }
 
-/* The source SVG is black; invert it to white. */
+/* Use a dedicated asset so interactive arrows render in the exact accent. */
 .spotify-button img,
 .playlist-hover-spotify img {
   width: 100%;
   height: 100%;
-  filter: brightness(0) invert(1);
+  content: url("assets/arrow-up-right-accent.svg");
+  filter: none;
+  opacity: 1;
 }
 
 .spotify-button:hover,
@@ -327,8 +330,8 @@ button { font: inherit; }
 .playlist-item:last-child .playlist-summary { height: 100%; }
 
 .playlist-list:has(.is-open) { display: block; }
-.playlist-list:has(.is-open) .playlist-summary { height: calc(80 * var(--u)); }
-.playlist-list:has(.is-open) .playlist-item:last-child .playlist-summary { height: calc(91 * var(--u)); }
+.playlist-list:has(.is-open) .playlist-summary { height: calc(80 * var(--list-u)); }
+.playlist-list:has(.is-open) .playlist-item:last-child .playlist-summary { height: calc(91 * var(--list-u)); }
 
 .playlist-summary:hover,
 .playlist-summary:focus-visible {
@@ -349,7 +352,7 @@ button { font: inherit; }
 .record--small {
   position: relative;
   /* Never taller than the row; width follows so the artwork stays in ratio. */
-  height: min(calc(58 * var(--u)), 100%);
+  height: min(calc(58 * var(--list-u)), 100%);
   width: auto;
   aspect-ratio: 78 / 58;
   margin-left: 0;
@@ -386,7 +389,7 @@ button { font: inherit; }
   height: 82.759%;
   width: auto;
   aspect-ratio: 1;
-  border-radius: calc(7 * var(--u));
+  border-radius: calc(7 * var(--list-u));
   background: var(--cover-image) center / cover no-repeat;
   box-shadow: 0 7px 18px rgba(0, 0, 0, .36);
   transform: translateY(-50%);
@@ -401,7 +404,7 @@ button { font: inherit; }
 
 .playlist-summary strong {
   color: var(--ink);
-  font-size: calc(16 * var(--u));
+  font-size: calc(16 * var(--list-u));
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: normal;
@@ -409,7 +412,7 @@ button { font: inherit; }
 }
 
 .genre {
-  font-size: calc(14 * var(--u));
+  font-size: calc(14 * var(--list-u));
   font-weight: 300;
   line-height: 1.5;
   letter-spacing: -0.42px;
@@ -421,7 +424,7 @@ button { font: inherit; }
   position: relative;
   left: calc(-220 * var(--u));
   justify-self: start;
-  font-size: calc(14 * var(--u));
+  font-size: calc(14 * var(--list-u));
   font-weight: 300;
   line-height: 1.5;
   letter-spacing: -0.42px;
@@ -431,9 +434,9 @@ button { font: inherit; }
   grid-column: 6;
   grid-row: 1;
   justify-self: end;
-  width: calc(18 * var(--u));
-  height: calc(18 * var(--u));
-  margin-right: 0;
+  width: calc(18 * var(--list-u));
+  height: calc(18 * var(--list-u));
+  margin-right: calc(30 * var(--u));
   transition: opacity 180ms ease, transform 240ms ease;
 }
 
@@ -447,9 +450,9 @@ button { font: inherit; }
   align-self: center;
   /* Sits exactly where .row-arrow does, so hovering cross-fades the arrow
      to white in place rather than shifting it. */
-  width: calc(18 * var(--u));
-  height: calc(18 * var(--u));
-  margin-right: 0;
+  width: calc(18 * var(--list-u));
+  height: calc(18 * var(--list-u));
+  margin-right: calc(30 * var(--u));
   opacity: 0;
   pointer-events: none;
   transform: translateX(14px) scale(.96);
@@ -797,6 +800,19 @@ body.modal-open { overflow: hidden; }
   letter-spacing: normal;
 }
 
+@media (min-width: 761px) {
+  body { overflow-y: auto; }
+
+  .interests-page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-rows: auto max(480px, calc((100vh - 72px) / 2)) auto;
+    overflow: visible;
+  }
+
+  .listening { overflow: visible; }
+}
+
 @media (max-width: 1050px) {
   .playlist-grid {
     grid-template-columns: 60px 92px minmax(280px, 1fr) minmax(180px, .75fr) 60px 46px;
@@ -813,7 +829,7 @@ body.modal-open { overflow: hidden; }
   body { overflow: auto; }
   .interests-page { display: block; height: auto; min-height: 100vh; overflow: visible; }
   /* The mobile row layout below is authored at 1:1, not scaled. */
-  .listening { --u: 1px; display: block; overflow: visible; }
+  .listening { --u: 1px; --list-u: var(--u); display: block; overflow: visible; }
   .photography { display: block; overflow: visible; }
   .playlist-list, .playlist-list:has(.is-open) { display: block; }
   body { font-size: 14px; }

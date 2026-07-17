@@ -650,7 +650,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .catch(() => null);
       const interestsPageDocument = Promise.all([
         fetch('./interests-page/interests.html?v=18').then(response => response.text()),
-        fetch('./interests-page/interests.css?v=19').then(response => response.text()),
+        fetch('./interests-page/interests.css?v=24').then(response => response.text()),
         fetch('./interests-page/interests.js?v=18').then(response => response.text())
       ]).then(([html, css, js]) =>
         html

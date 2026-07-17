@@ -3,3 +3,6 @@ Thumbs.db
 *.mov
 *.mp4
 *.log
+
+# Temporary Word document render/QA artifacts
+.docx-qa-*/

@@ -5,7 +5,7 @@
   <title>Huang Homepage</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@300;400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/subsetted-fonts@1.0.4/SarasaUiSC-Regular/SarasaUiSC-Regular.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <style>
@@ -119,29 +119,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     setStatus('Rendering...');
     for (const uuid of uuids) template = template.split(uuid).join(blobUrls[uuid]);
 
-    // Strip integrity + crossorigin — blob URLs from a file:// document inherit
-    // a null origin, so crossorigin forces a CORS fetch that SRI then rejects.
-    // The manifest bytes are ours; SRI protects against CDN compromise, not this.
     template = template.replace(/\s+integrity="[^"]*"/gi, '').replace(/\s+crossorigin="[^"]*"/gi, '');
 
     const resourceScript = '<script>window.__resources = ' +
       JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
       ';</' + 'script>';
-    // Inject after <head> so the DOCTYPE stays first; prepending the script
-    // would push the parser into quirks mode. DOMParser always emits a <head>
-    // (synthesizing one if the source HTML omitted it) but may carry
-    // attributes through, so match the full opening tag. slice() rather than
-    // replace() keeps us clear of $-pattern substitution in resourceScript.
     const headOpen = template.match(/<head[^>]*>/i);
     if (headOpen) {
       const i = headOpen.index + headOpen[0].length;
       template = template.slice(0, i) + resourceScript + template.slice(i);
     }
 
-    // Parse the template and swap the root element. Scripts inserted via
-    // DOMParser/replaceWith are inert per spec — re-create each with
-    // createElement so they execute, awaiting onload for src scripts to
-    // preserve ordering (React before ReactDOM before Babel before text/babel).
     const doc = new DOMParser().parseFromString(template, 'text/html');
     document.documentElement.replaceWith(doc.documentElement);
     const dead = Array.from(document.scripts);
@@ -149,10 +137,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       const s = document.createElement('script');
       for (const a of old.attributes) s.setAttribute(a.name, a.value);
       s.textContent = old.textContent;
-      // text/babel scripts with a src: fetch and inline. transformScriptTags
-      // does XHR against the src, but blob:null/ from a file:// origin is
-      // silently dropped. Inlining makes it a plain inline babel script,
-      // which transformScriptTags handles unconditionally.
       if ((s.type === 'text/babel' || s.type === 'text/jsx') && s.src) {
         const r = await fetch(s.src);
         s.textContent = await r.text();
@@ -162,8 +146,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       old.replaceWith(s);
       if (p) await p;
     }
-    // Babel standalone auto-transforms type=text/babel on DOMContentLoaded,
-    // which fired before we swapped the document. Trigger manually if present.
     if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
       window.Babel.transformScriptTags();
     }
@@ -190,8 +172,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 "<!DOCTYPE html>\n<html><head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<script src=\"bf4ff4d0-0ab2-47e0-a2b0-8f844983418f\"><\u002Fscript>\n<\u002Fhead>\n<body>\n<x-dc>\n<helmet>\n<style>\n  body { margin: 0; background: #e5e4e1; }\n  @keyframes riseIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }\n<\u002Fstyle>\n<\u002Fhelmet>\n<div style=\"min-height:100vh;background:#e5e4e1;display:flex;justify-content:center;font-family:Helvetica,Arial,sans-serif;overflow-x:hidden\">\n  <div data-screen-label=\"Index drawer\" style=\"position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }}\">\n    <svg width=\"1080\" height=\"1600\" viewBox=\"0 0 1080 1600\" style=\"display:block;position:absolute;left:0;top:0;z-index:0;overflow:visible;pointer-events:none\">\n      <path d=\"{{ wallPath }}\" fill=\"none\" stroke=\"#161616\" stroke-width=\"1.6\" stroke-linecap=\"round\"><\u002Fpath>\n    <\u002Fsvg>\n    <sc-for list=\"{{ rows }}\" as=\"row\" hint-placeholder-count=\"8\">\n      <a href=\"Profile.dc.html\" title=\"{{ row.name }}\" style=\"position:absolute;left:0;top:{{ row.y }}px;z-index:{{ row.z }};display:block;width:1080px;height:96px;text-decoration:none;transition:transform .16s ease;animation:riseIn .45s backwards;animation-delay:{{ row.delay }}s\" style-hover=\"transform:translateY(-10px)\">\n        <svg width=\"1080\" height=\"130\" viewBox=\"0 0 1080 130\" style=\"display:block;overflow:visible\">\n          <path d=\"{{ row.path }}\" fill=\"#e5e4e1\" stroke=\"#161616\" stroke-width=\"1.6\" stroke-linejoin=\"round\"><\u002Fpath>\n          <path d=\"{{ row.tabPath }}\" fill=\"{{ row.tabFill }}\" stroke=\"none\"><\u002Fpath>\n        <\u002Fsvg>\n        <div style=\"position:absolute;left:{{ row.numX }}px;top:12px;font-size:20px;font-weight:500;line-height:1;color:{{ row.textColor }};transform:{{ numTransform }}\">{{ row.num }}<\u002Fdiv>\n        <div style=\"position:absolute;left:{{ row.nameX }}px;top:12px;font-size:20px;line-height:1;color:{{ row.textColor }};transform:{{ nameTransform }}\">{{ row.name }}<\u002Fdiv>\n      <\u002Fa>\n    <\u002Fsc-for>\n    <svg width=\"1080\" height=\"220\" viewBox=\"0 0 1080 220\" style=\"display:block;position:absolute;left:0;top:{{ drawerY }}px;z-index:90;overflow:visible\">\n      <path d=\"M 24 10 Q 20 10 20 14 L 20 26 Q 20 30 24 30 L 1056 30 Q 1060 30 1060 26 L 1060 14 Q 1060 10 1056 10 Z\" fill=\"#e5e4e1\" stroke=\"#161616\" stroke-width=\"1.6\" stroke-linejoin=\"round\"><\u002Fpath>\n      <path d=\"M 20 30 L 62 200 M 1060 30 L 1018 200\" fill=\"none\" stroke=\"#161616\" stroke-width=\"1.6\" stroke-linecap=\"round\"><\u002Fpath>\n      <path d=\"M 470 92 Q 471 88 475 88 L 603 88 Q 607 88 608 92 L 620 126 Q 621 130 617 130 L 461 130 Q 457 130 458 126 Z\" fill=\"{{ labelColor }}\" stroke=\"#161616\" stroke-width=\"1.5\" stroke-linejoin=\"round\"><\u002Fpath>\n    <\u002Fsvg>\n    <div style=\"position:absolute;left:540px;top:{{ labelY }}px;z-index:95;font-size:19px;font-weight:500;line-height:1;color:#161616;white-space:nowrap;transform:{{ labelTransform }}\">my secret files<\u002Fdiv>\n  <\u002Fdiv>\n<\u002Fdiv>\n<\u002Fx-dc>\n<script type=\"text/x-dc\" data-dc-script=\"\" data-props=\"{&quot;flipped&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Drawer&quot;},&quot;rowSpacing&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:26,&quot;min&quot;:18,&quot;max&quot;:32,&quot;step&quot;:1,&quot;unit&quot;:&quot;px&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Drawer&quot;},&quot;labelColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#f7ee52&quot;,&quot;options&quot;:[&quot;#f7ee52&quot;,&quot;#ffd6e7&quot;,&quot;#cfe4ff&quot;,&quot;#d9f2c9&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Drawer&quot;},&quot;entrance&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Animation&quot;}}\">\nclass Component extends DCLogic {\n  renderVals() {\n    const spacing = this.props.rowSpacing ?? 23;\n    const labelColor = this.props.labelColor ?? '#f7ee52';\n    const entrance = this.props.entrance ?? true;\n    const flipped = this.props.flipped ?? false;\n\n    // d = divider (black letter tab). u = horizontal tab position 0..1.\n    // u chosen so vertically adjacent tabs never overlap horizontally (|dtx| >= tab width)\n    const data = [\n      { num: '01', name: 'about', u: 0.40 },\n      { num: '02', name: 'archive', u: 0.80 },\n      { d: 1, num: 'A', name: '002', u: 0.03 },\n      { num: '03', name: 'blog', u: 0.40 },\n      { num: '04', name: 'books', u: 0.80 },\n      { num: '05', name: 'code', u: 0.40 },\n      { num: '06', name: 'collections', u: 0.80 },\n      { d: 1, num: 'C', name: '003', u: 0.03 },\n      { num: '07', name: 'contact', u: 0.40 },\n      { num: '08', name: 'design', u: 0.80 },\n      { num: '09', name: 'drawings', u: 0.13 },\n      { num: '10', name: 'music', u: 0.80 },\n      { num: '11', name: 'notes', u: 0.40 },\n      { d: 1, num: 'P', name: '003', u: 0.95 },\n      { num: '12', name: 'photos', u: 0.40 },\n      { num: '13', name: 'playlists', u: 0.80 },\n      { num: '14', name: 'projects', u: 0.40 },\n      { num: '15', name: 'reading', u: 0.80 },\n      { num: '16', name: 'sketches', u: 0.40 },\n      { d: 1, num: 'S', name: '002', u: 0.03 },\n      { num: '17', name: 'studio', u: 0.40 },\n      { num: '18', name: 'travel', u: 0.80 },\n      { num: '19', name: 'work', u: 0.40 },\n      { d: 1, num: 'W', name: '003', u: 0.95 },\n      { num: '20', name: 'writing', u: 0.40 },\n      { num: '21', name: 'wishlist', u: 0.80 },\n      { plain: 1, num: '', name: '', u: 0 },\n    ];\n\n    const n = data.length;\n    const top = 70, yt = 6, yb = 46, r = 10, cr = 13, slant = 22, tw = 210;\n    const H = yb + spacing; // side edges run to the next row's shoulder -> one continuous line\n    const lerp = (a, b, t) => a + (b - a) * t;\n    const L0 = 180, L1 = 126, R0 = 902, R1 = 956;\n    const dL = (L0 - L1) / (n - 1); // per-row outward shift\n    const kSlope = dL / spacing;\n\n    const rows = data.map((d, i) => {\n      const t = i / (n - 1);\n      const L = lerp(L0, L1, t);\n      const R = lerp(R0, R1, t);\n      const tx = L + d.u * (R - L - tw);\n      const x1 = tx, x2 = tx + tw, xt1 = tx + slant, xt2 = tx + tw - slant;\n      const k = cr * 0.55, v = cr * 0.9;\n      const tabEdge =\n        `L ${x1 - cr} ${yb} Q ${x1} ${yb} ${x1 + k} ${yb - v} ` +\n        `L ${xt1 - k} ${yt + v} Q ${xt1} ${yt} ${xt1 + cr} ${yt} ` +\n        `L ${xt2 - cr} ${yt} Q ${xt2} ${yt} ${xt2 + k} ${yt + v} ` +\n        `L ${x2 - k} ${yb - v} Q ${x2} ${yb} ${x2 + cr} ${yb}`;\n      const xL = (yy) => L - kSlope * (yy - yb);\n      const xR = (yy) => R + kSlope * (yy - yb);\n      const plainH = yb + spacing * 1.7;\n      const plainPath =\n        `M ${xL(plainH)} ${plainH} L ${xL(yb + r)} ${yb + r} Q ${L} ${yb} ${L + r} ${yb} ` +\n        `L ${R - r} ${yb} Q ${R} ${yb} ${xR(yb + r)} ${yb + r} L ${xR(plainH)} ${plainH}`;\n      const path =\n        `M ${xL(H)} ${H} L ${xL(yb + r)} ${yb + r} Q ${L} ${yb} ${L + r} ${yb} ` +\n        tabEdge +\n        ` L ${R - r} ${yb} Q ${R} ${yb} ${xR(yb + r)} ${yb + r} L ${xR(H)} ${H}`;\n      const dividerPath =\n        `M ${x1 - cr} ${yb} Q ${x1} ${yb} ${x1 + k} ${yb - v} ` +\n        `L ${xt1 - k} ${yt + v} Q ${xt1} ${yt} ${xt1 + cr} ${yt} ` +\n        `L ${xt2 - cr} ${yt} Q ${xt2} ${yt} ${xt2 + k} ${yt + v} ` +\n        `L ${x2 - k} ${yb - v} Q ${x2} ${yb} ${x2 + cr} ${yb} Z`;\n      return {\n        y: top + i * spacing,\n        z: i + 1,\n        delay: entrance ? +(i * 0.016).toFixed(3) : 0,\n        path: d.plain ? plainPath : path,\n        tabPath: d.d ? dividerPath : 'M 0 0',\n        tabFill: d.d ? '#161616' : 'none',\n        textColor: d.d ? '#ffffff' : '#161616',\n        numX: xt1 + 14,\n        nameX: xt2 - 14,\n        num: d.num,\n        name: d.name,\n      };\n    });\n\n    const drawerY = top + n * spacing + 30;\n    const wallTop = top + yb - 2;\n    const wallBot = drawerY + 12;\n    const kS = ((L0 - L1) / (n - 1)) / spacing;\n    const wxL = 180 - kS * (wallBot - wallTop);\n    const wxR = 902 + kS * (wallBot - wallTop);\n    return {\n      rows,\n      labelColor,\n      wallPath: `M 181 ${wallTop} L ${wxL} ${wallBot} M 901 ${wallTop} L ${wxR} ${wallBot}`,\n      drawerY,\n      totalH: drawerY + 240,\n      stackTransform: flipped ? 'scaleY(-1)' : 'none',\n      numTransform: flipped ? 'scaleY(-1)' : 'none',\n      nameTransform: flipped ? 'translateX(-100%) scaleY(-1)' : 'translateX(-100%)',\n      labelTransform: flipped ? 'translate(-50%, -50%) scaleY(-1)' : 'translate(-50%, -50%)',\n      labelY: drawerY + 108,\n    };\n  }\n}\n<\u002Fscript>\n\n\n\n<\u002Fbody><\u002Fhtml>"
   </script>
   <script>
-    // Visual calibration against 首页.jpg. This only adjusts the embedded
-    // presentation template; the component data and interaction logic stay intact.
     (function calibrateReferenceStyle() {
       const source = document.querySelector('script[type="__bundler/template"]');
       if (!source) return;
@@ -212,35 +192,33 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('color:#161616;white-space:nowrap;transform:{{ labelTransform }}', 'color:#F8F9FA;white-space:nowrap;transform:{{ labelTransform }}')
         .replaceAll('font-family:Helvetica,Arial,sans-serif', 'font-family:"Martian Mono",monospace')
         .replaceAll(' href="Profile.dc.html"', '')
-        .replace("{ num: '01', name: 'about', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '02', name: 'archive', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ d: 1, num: 'A', name: '002', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'About', u: 0.03 }")
-        .replace("{ num: '03', name: 'blog', u: 0.40 }", "{ full: 1, num: '', name: 'Profile', u: 0.40 }")
-        .replace("{ num: '04', name: 'books', u: 0.80 }", "{ full: 1, num: '', name: 'Education', u: 0.80 }")
-        .replace("{ num: '05', name: 'code', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '06', name: 'collections', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ d: 1, num: 'C', name: '003', u: 0.03 }", "{ d: 1, full: 1, num: '', name: 'Work', u: 0.08 }")
-        .replace("{ num: '07', name: 'contact', u: 0.40 }", "{ full: 1, num: '', name: 'Experiences', u: 0.40 }")
-        .replace("{ num: '08', name: 'design', u: 0.80 }", "{ full: 1, num: '', name: 'Projects', u: 0.80 }")
-        .replace("{ num: '09', name: 'drawings', u: 0.13 }", "{ full: 1, num: '', name: 'Skills', u: 0.13 }")
-        .replace("{ num: '10', name: 'music', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ num: '11', name: 'notes', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '12', name: 'photos', u: 0.40 }", "{ full: 1, num: '', name: 'Music', u: 0.40 }")
-        .replace("{ num: '13', name: 'playlists', u: 0.80 }", "{ full: 1, num: '', name: 'Photography', u: 0.80 }")
-        .replace("{ num: '14', name: 'projects', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '15', name: 'reading', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ num: '16', name: 'sketches', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '17', name: 'studio', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '18', name: 'travel', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ num: '19', name: 'work', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '20', name: 'writing', u: 0.40 }", "{ num: '', name: '', u: 0.40 }")
-        .replace("{ num: '21', name: 'wishlist', u: 0.80 }", "{ num: '', name: '', u: 0.80 }")
-        .replace("{ d: 1, num: 'P', name: '003', u: 0.95 }", "{ d: 1, full: 1, num: '', name: 'Interests', u: 0.95 }")
-        .replace("{ d: 1, num: 'S', name: '002', u: 0.03 }", "{ num: '', name: '', u: 0.03 }")
-        .replace("{ d: 1, num: 'W', name: '003', u: 0.95 }", "{ num: '', name: '', u: 0.95 }")
-        // Guide entry tab: front-most row of the drawer, where the welcome
-        // overlay tucks itself away and can be pulled out again.
-        .replace("{ plain: 1, num: '', name: '', u: 0 },\n    ];", "{ plain: 1, num: '', name: '', u: 0 },\n      { d: 1, full: 1, num: '', name: 'Welcome', u: 0.50 },\n    ];")
+        .replace(
+          /const data = \[[\s\S]*?\n    \];/,
+          "const data = [\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { d: 1, full: 1, num: '', name: 'About', u: 0.03 },\n" +
+          "      { full: 1, num: '', name: 'Profile', u: 0.40 },\n" +
+          "      { full: 1, num: '', name: 'Education', u: 0.80 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { d: 1, full: 1, num: '', name: 'Work', u: 0.08 },\n" +
+          "      { full: 1, num: '', name: 'Experiences', u: 0.40 },\n" +
+          "      { full: 1, num: '', name: 'Projects', u: 0.80 },\n" +
+          "      { full: 1, num: '', name: 'Skills', u: 0.13 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { d: 1, full: 1, num: '', name: 'Interests', u: 0.95 },\n" +
+          "      { full: 1, num: '', name: 'Music', u: 0.40 },\n" +
+          "      { full: 1, num: '', name: 'Photography', u: 0.80 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+          "      { plain: 1, num: '', name: '', u: 0 },\n" +
+
+          "      { d: 1, full: 1, num: '', name: 'Welcome', u: 0.50 },\n" +
+          "    ];"
+        )
         .replace('transform:{{ nameTransform }}', 'transform:{{ row.nameTransform }}')
         .replace('left:{{ row.nameX }}px;top:12px;', 'left:{{ row.nameX }}px;top:{{ row.nameTop }}px;')
         .replace(
@@ -254,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('title="{{ row.name }}" style=', 'title="{{ row.name }}" data-paper-path="{{ row.paperPath }}" style=')
         .replace(
           'position:relative;width:1080px;height:{{ totalH }}px;flex:none;transform:{{ stackTransform }}',
-          'position:relative;width:1080px;height:1269px;flex:none;transform:{{ stackTransform }};transform-origin:50% 50%;scale:1;zoom:1'
+          'position:relative;width:1080px;height:1017px;flex:none;transform:{{ stackTransform }};transform-origin:50% 50%;scale:1;zoom:1'
         )
         .replace('&quot;default&quot;:26', '&quot;default&quot;:28')
         .replace('const spacing = this.props.rowSpacing ?? 23;', 'const spacing = this.props.rowSpacing ?? 28;')
@@ -266,8 +244,6 @@ document.addEventListener('DOMContentLoaded', async function() {
           'const L0 = 180, L1 = 126, R0 = 902, R1 = 956;',
           'const L0 = 178, L1 = 70, R0 = 902, R1 = 1010;'
         )
-        // Side edges steeper than the stack silhouette: each lower card's
-        // rounded shoulder protrudes past the card above -> stacked 3D steps.
         .replace(
           'const xL = (yy) => L - kSlope * (yy - yb);',
           'const kSide = kSlope * 0.3;\n      const xL = (yy) => L - kSide * (yy - yb);'
@@ -307,20 +283,11 @@ document.addEventListener('DOMContentLoaded', async function() {
           'wallPath: `M 181 ${wallTop} L ${wxL} ${wallBot} M 901 ${wallTop} L ${wxR} ${wallBot}`',
           'wallFillPath: `M ${L0} ${wallTop} L ${R0} ${wallTop} L ${wxR} ${wallBot} L ${wxL} ${wallBot} Z`,\n      wallPath: `M ${L0} ${wallTop} L ${wxL} ${wallBot} M ${R0} ${wallTop} L ${wxR} ${wallBot}`'
         )
-        // Two empty cards at the back of the drawer, like the reference.
-        .replace(
-          "const data = [",
-          "const data = [\n      { plain: 1, num: '', name: '', u: 0 },\n      { plain: 1, num: '', name: '', u: 0 },"
-        )
-        // Air gap between the last card and the drawer rim: only the
-        // converging walls show there, like the reference.
         .replace('const drawerY = top + n * spacing + 30;', 'const drawerY = top + n * spacing + 62;')
-        // Drawer rim: thin front lip with subtle beveled ends.
         .replace(
           'M 24 10 Q 20 10 20 14 L 20 26 Q 20 30 24 30 L 1056 30 Q 1060 30 1060 26 L 1060 14 Q 1060 10 1056 10 Z',
           'M -60 10 L 1140 10 L 1146 30 L -66 30 Z'
         )
-        // Front panel sides taper inward beneath the lip.
         .replace(
           'M 20 30 L 62 200 M 1060 30 L 1018 200',
           'M -66 30 L 12 240 M 1146 30 L 1068 240'
@@ -336,13 +303,68 @@ document.addEventListener('DOMContentLoaded', async function() {
         .replace('labelY: drawerY + 108,', 'labelY: drawerY + 183,')
         .replace('font-size:19px;font-weight:500', 'font-size:18px;font-weight:500')
         .replaceAll('stroke="#161616"', 'stroke="#87A1BA"')
-        .replaceAll('#161616', '#0F172A');
+        .replaceAll('#161616', '#0F172A')
+        .replace(
+          '<path d="{{ wallFillPath }}" fill="#DAE2E8" stroke="none"></path>',
+          '<defs>' +
+          '<linearGradient id="drawerWell" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#A6B8C9"></stop>' +
+          '<stop offset="0.55" stop-color="#B9C8D6"></stop>' +
+          '<stop offset="1" stop-color="#C8D4DF"></stop>' +
+          '</linearGradient>' +
+          '<linearGradient id="drawerFace" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#E9EEF2"></stop>' +
+          '<stop offset="0.45" stop-color="#DCE4EA"></stop>' +
+          '<stop offset="1" stop-color="#C4D1DC"></stop>' +
+          '</linearGradient>' +
+          '<linearGradient id="drawerLip" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#F1F4F7"></stop>' +
+          '<stop offset="1" stop-color="#DFE7ED"></stop>' +
+          '</linearGradient>' +
+          '</defs>\n' +
+          '      <path d="{{ wallFillPath }}" fill="url(#drawerWell)" stroke="none"></path>'
+        )
+        .replace(
+          '<path d="{{ row.path }}" fill="#DAE2E8" stroke="#87A1BA"',
+          '<path d="{{ row.path }}" fill="{{ row.faceFill }}" stroke="#87A1BA"'
+        )
+        .replace(
+          'const lerp = (a, b, t) => a + (b - a) * t;',
+          'const lerp = (a, b, t) => a + (b - a) * t;\n' +
+          '    const mixHex = (from, to, t) => {\n' +
+          '      const channel = (hex, i) => parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16);\n' +
+          '      const hex = (value) => Math.round(value).toString(16).padStart(2, \'0\');\n' +
+          '      return \'#\' + [0, 1, 2].map(i => hex(lerp(channel(from, i), channel(to, i), t))).join(\'\');\n' +
+          '    };'
+        )
+        .replace(
+          'numX: xt1 + 14,',
+          "faceFill: mixHex('#C7D4DF', '#E8EDF1', t),\n        numX: xt1 + 14,"
+        )
+        .replace(
+          '<path d="M -60 10 L 1140 10 L 1146 30 L -66 30 Z" fill="#DAE2E8"',
+          '<path d="M -60 10 L 1140 10 L 1146 30 L -66 30 Z" fill="url(#drawerLip)"'
+        )
+        .replace(
+          '<path d="M -66 30 L 1146 30 L 1068 240 L 12 240 Z" fill="#DAE2E8"',
+          '<path d="M -66 30 L 1146 30 L 1068 240 L 12 240 Z" fill="url(#drawerFace)"'
+        )
+        .replace(
+          '@keyframes riseIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }',
+          '@keyframes riseIn { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }'
+        )
+        .replace(
+          'transition:transform .16s ease;animation:riseIn .45s backwards',
+          'transition:transform .42s cubic-bezier(.22,1,.36,1),filter .42s cubic-bezier(.22,1,.36,1);animation:riseIn .68s cubic-bezier(.16,1,.3,1) backwards'
+        )
+        .replace('transform:translateY(-10px)', 'transform:translateY(-14px)')
+        .replace('+(i * 0.016).toFixed(3)', '+(i * 0.026).toFixed(3)');
 
       template = template.replace(
         '</head>',
         '<link rel="preconnect" href="https://fonts.googleapis.com">' +
         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-        '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Martian+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
+        '<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Martian+Mono:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
         '<link href="https://cdn.jsdelivr.net/npm/subsetted-fonts@1.0.4/SarasaUiSC-Regular/SarasaUiSC-Regular.css" rel="stylesheet">' +
         '<style>html,body,body *{font-family:"Martian Mono",monospace!important}h1,h2,h3,h4,h5,h6,[class*="title"]{font-family:"Geist",sans-serif!important}html[lang="zh-CN"] body *{font-family:"SarasaUiSC-Regular","Sarasa Gothic SC",sans-serif!important}html[lang="zh-CN"] body :is(h1,h2,h3,h4,h5,h6,[class*="title"]),html[lang="zh-CN"] body :is(h1,h2,h3,h4,h5,h6,[class*="title"]) *{font-family:"Noto Sans SC",sans-serif!important}</style></head>'
       );
@@ -360,38 +382,60 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       const style = document.createElement('style');
       style.textContent = `
+        /* Type scale — Martian Mono. Defined here, not in the static <head>: the
+           page rebuilds its own document, so a :root in the original head is
+           discarded before these rules ever run.
+           body     14 / 300 / 1.5  / -0.42px   running text
+           ui       14 / 400 / 1    / normal    interactive elements
+           caption  11 / 300 / 1.45 / normal    +0.12em tracking when uppercase */
+        :root {
+          --font-body-en: "Martian Mono", monospace;
+          --type-body: 300 14px/1.5 var(--font-body-en);
+          --type-ui: 400 14px/1 var(--font-body-en);
+          --type-caption: 300 11px/1.45 var(--font-body-en);
+          --track-body: -0.42px;
+          --track-caps: 0.12em;
+        }
         html, body { width:100%; height:100%; overflow:hidden; overscroll-behavior:none; overflow-anchor:none; }
         body { position:fixed; inset:0; }
         .drawer-motion-overlay { position:fixed; inset:0; z-index:99990; background:rgba(244,238,229,.58); opacity:0; }
         .drawer-motion-overlay--work { background:#F8F9FA; }
         .drawer-motion-overlay--interests { background:#0F172A; }
-        .drawer-motion-card { position:fixed; z-index:99991; overflow:hidden; transform-origin:50% 50%; transform-style:preserve-3d; background:#DAE2E8; border:1.6px solid #87A1BA; border-radius:10px; box-shadow:0 18px 48px rgba(64,60,55,.10); will-change:transform,clip-path; }
+        .drawer-motion-card { position:fixed; z-index:99991; overflow:visible; transform-origin:50% 50%; transform-style:preserve-3d; background:#DAE2E8; border:1.6px solid #87A1BA; border-radius:10px; box-shadow:0 30px 64px rgba(15,23,42,.24); will-change:transform,clip-path,box-shadow; }
         .drawer-motion-card--work { background:#F8F9FA; }
+        /* Hairline under the tab bar, so the HOME/section tabs read as tabs
+           sitting on the page rather than floating above it. */
         .drawer-motion-card--work::after { position:absolute; left:0; right:0; top:58px; z-index:108; height:1px; content:''; background:#87A1BA; pointer-events:none; }
         .drawer-motion-card--interests::after { display:none; }
         .drawer-motion-card--interests { background:#F8F9FA; border-color:#0F172A; box-shadow:0 18px 48px rgba(0,0,0,.35); }
         .drawer-motion-card--interests .drawer-motion-content--work { left:0; right:0; bottom:0; border:0; border-radius:0; background:#0F172A; }
         .drawer-motion-card--interests .drawer-motion-work-frame { background:#0F172A; }
         .drawer-motion-row { position:absolute !important; left:0 !important; top:0 !important; z-index:112 !important; width:1080px !important; height:130px !important; animation:none !important; transform-origin:0 0; pointer-events:none; }
-        .drawer-motion-card--work .drawer-motion-row,
-        .drawer-motion-card--interests .drawer-motion-row { visibility:hidden !important; }
+        .drawer-motion-occluders { position:fixed; inset:0; z-index:99992; pointer-events:none; }
+        .drawer-motion-occluder-row { position:absolute !important; width:1080px !important; height:96px !important; margin:0 !important; animation:none !important; transform-origin:0 0 !important; filter:drop-shadow(0 -2.5px 3px rgba(15,23,42,.17)); pointer-events:none !important; }
         .drawer-motion-content { position:absolute; left:16%; right:16%; top:118px; bottom:7%; z-index:100; padding:clamp(24px,4vw,56px); color:#0F172A; opacity:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:auto; }
         .drawer-motion-content--work { left:4%; right:4%; bottom:4%; padding:0; overflow:hidden; border:1.5px solid #87A1BA; border-radius:10px; background:#F8F9FA; }
-        .drawer-motion-work-frame { display:block; width:100%; height:100%; border:0; background:#F8F9FA; }
+        .drawer-motion-work-frame { position:absolute; left:50%; top:0; display:block; border:0; background:#F8F9FA; transform:translateX(-50%); }
         .drawer-motion-kicker { font-size:14px; letter-spacing:.12em; text-transform:uppercase; }
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px); font-weight:500; line-height:.92; letter-spacing:-.055em; }
-        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#0F172A; border-radius:999px; padding:10px 18px; font:500 15px/1 "Martian Mono",monospace; cursor:pointer; }
+        .drawer-motion-close { align-self:flex-end; appearance:none; border:1.5px solid #403c37; background:#bd873f; color:#0F172A; border-radius:999px; padding:10px 18px; font:var(--type-ui); letter-spacing:normal; cursor:pointer; }
+        .drawer-motion-card:focus, .drawer-motion-card:focus-visible { outline:none; }
+        .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-work-back { position:absolute; left:0; top:12px; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; background:#F8F9FA; color:#0F172A; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:400 17px/1 "Martian Mono",monospace; white-space:nowrap; cursor:pointer; }
         .drawer-motion-section-tab { position:absolute; left:190px; top:12px; z-index:115; display:grid; width:230px; height:46px; place-items:center; background:#3D5A7A; color:#F8F9FA; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:700 17px/1 "Martian Mono",monospace; white-space:nowrap; pointer-events:none; }
         .drawer-motion-work-back:hover { background:#F8F9FA; }
         .drawer-motion-work-back:focus-visible { outline:none; }
-        .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
-        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#0F172A; font:400 14px/1.15 "Martian Mono",monospace; }
-        .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:0; background:#F8F9FA; color:#3D5A7A; font:inherit; font-size:14px; cursor:pointer; }
+        .drawer-motion-work-language { position:absolute; top:24px; right:22px; z-index:230; }
+        /* Corner mark. z-index sits below the drawer overlay/card (99990+) on
+           purpose: an opened file covers the whole viewport and the logo passes
+           underneath it rather than floating on top. */
+        .homepage-logo { position:fixed; left:28px; top:24px; z-index:9000; display:block; width:auto; height:44px; pointer-events:none; }
+        body.guide-open .homepage-logo { z-index:99995; }
+        .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#0F172A; font:var(--type-ui); letter-spacing:normal; }
+        .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:0; background:#F8F9FA; color:#3D5A7A; font:var(--type-ui); letter-spacing:normal; cursor:pointer; }
         .homepage-language-switch span { display:grid; place-items:center; }
         .homepage-language-switch span.is-active { background:#3D5A7A; color:#F8F9FA; }
-        .drawer-motion-work-language { position:absolute; top:24px; right:22px; z-index:230; }
         .homepage-corner-link { color:#0F172A; text-decoration:none; }
         .homepage-corner-link::before {
           content:'';
@@ -404,7 +448,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           text-decoration:none;
         }
         .homepage-corner-link:hover { color:#3f6174; }
-        .homepage-copyright { position:fixed; left:0; right:0; bottom:16px; z-index:9000; margin:0; text-align:center; color:#0F172A; font:400 13px/1.3 "Martian Mono",monospace; letter-spacing:.02em; pointer-events:none; }
+        .homepage-copyright { position:fixed; left:0; right:0; bottom:16px; z-index:9000; margin:0; text-align:center; color:#0F172A; font:var(--type-caption); letter-spacing:normal; pointer-events:none; }
+        [data-screen-label="Index drawer"] a { filter:drop-shadow(0 -2.5px 3px rgba(15,23,42,.17)); }
+        [data-screen-label="Index drawer"] a:hover { filter:drop-shadow(0 8px 14px rgba(15,23,42,.22)); }
         @media (min-width:701px) {
           [data-screen-label="Index drawer"] {
             position:fixed !important;
@@ -434,12 +480,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             transform-origin:100% 0;
           }
           .homepage-language-switch { width:66px; height:29px; font-size:14px; }
+          .homepage-logo { left:12px; top:12px; height:30px; }
           /* Matches the corner nav's rendered size (18px at scale(.62)). */
           .homepage-copyright { font-size:11.16px; }
           .drawer-motion-card--work { width:100vw; max-width:100vw; }
           .drawer-motion-card--work .drawer-motion-row { display:none !important; }
           .drawer-motion-card--work::after { top:36px; }
-          .drawer-motion-content--work { top:36px !important; }
           /* The default 8px top puts the tab's bottom at 36.52px, overlapping the
              panel by .52px; the feet taper to nothing there, so that sliver
              renders as sub-pixel grime. Land the bottom exactly on the panel
@@ -451,21 +497,13 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
           .drawer-motion-work-back {
             top:8px;
-            width:190px;
-            height:46px;
-            clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z');
             border-right:0;
-            font-size:17px;
             transform:scale(.62);
             transform-origin:0 0;
           }
           .drawer-motion-section-tab {
             left:118px;
             top:8px;
-            width:230px;
-            height:46px;
-            clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z');
-            font-size:17px;
             transform:scale(.62);
             transform-origin:0 0;
           }
@@ -480,8 +518,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         @media (max-width:360px) {
           .homepage-corner-nav { transform:scale(.56); }
           .homepage-copyright { font-size:10.08px; }
+          .homepage-logo { height:26px; }
           .drawer-motion-card--work::after { top:32px; }
-          .drawer-motion-content--work { top:32px !important; }
           .drawer-motion-work-back { top:7px; transform:scale(.56); }
           .drawer-motion-section-tab { left:106px; top:7px; transform:scale(.56); }
           /* Same flush-to-panel alignment as above: 6.24 + 46*.56 = 32. */
@@ -497,12 +535,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         /* border-box so the height JS centres on is the rendered height, not
            height + the 1.6px border on each edge. */
         .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; background:#DAE2E8; }
+        /* 20px cluster — distinct roles, same size:
+             drawer-label  20 / 500 / 1    drawer row labels (in the DC template string above)
+             guide-title   20 / 400 / 1.3  guide card heading */
         .guide-title { max-width:42em; color:#0F172A; font-family:"Martian Mono",monospace !important; font-size:20px; font-weight:400; line-height:1.3; letter-spacing:0; }
         .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(18px,6vw,110px); }
-        .guide-option { appearance:none; cursor:pointer; border:1.5px solid #87A1BA; border-radius:999px; background:#3D5A7A; color:#F8F9FA; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:400 14px/1.1 "Martian Mono",monospace; transition:background .18s ease, transform .18s ease; }
+        .guide-option { appearance:none; cursor:pointer; border:1.5px solid #87A1BA; border-radius:999px; background:#3D5A7A; color:#F8F9FA; padding:clamp(10px,1.4vw,16px) clamp(26px,3.6vw,48px); font:var(--type-ui); letter-spacing:normal; transition:background .18s ease, transform .18s ease; }
         .guide-option:hover { background:#3D5A7A; transform:translateY(-2px); }
         .guide-option:focus-visible { outline:3px solid #87A1BA; outline-offset:3px; }
-        .guide-everything { position:relative; appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#0F172A; font:400 14px/1.1 "Martian Mono",monospace; }
+        .guide-everything { position:relative; appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#0F172A; font:var(--type-ui); letter-spacing:normal; }
         .guide-everything-arrow { position:absolute; right:100%; margin-right:14px; display:block; width:32px; height:32px; transition:transform .18s ease; }
         .guide-everything-arrow img { display:block; width:100%; height:100%; }
         .guide-everything:hover .guide-everything-arrow { transform:translateX(6px); }
@@ -550,10 +591,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (archiveLabel) archiveLabel.textContent = chinese ? '档案' : 'My Archive';
         const homeTab = document.querySelector('.drawer-motion-work-back');
         if (homeTab) homeTab.textContent = chinese ? '档案' : 'HOME';
-        const sectionTab = document.querySelector('.drawer-motion-section-tab');
-        if (sectionTab) {
-          const original = sectionTab.dataset.title || '';
-          sectionTab.textContent = chinese && labels[original] ? labels[original] : original;
+        const openSectionTab = document.querySelector('.drawer-motion-section-tab');
+        if (openSectionTab) {
+          const original = openSectionTab.dataset.title || '';
+          openSectionTab.textContent = chinese && labels[original] ? labels[original] : original;
         }
         const activeRow = document.querySelector('.drawer-motion-row');
         if (activeRow) {
@@ -578,9 +619,22 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
 
       window.addEventListener('message', (event) => {
-        if (!event.data || event.data.type !== 'set-site-language') return;
+        if (!event.data) return;
+        if (event.data.type === 'close-drawer-card') {
+          closeDrawerCard();
+          return;
+        }
+        if (event.data.type !== 'set-site-language') return;
         applySiteLanguage(event.data.language);
       });
+
+      if (!document.querySelector('.homepage-logo')) {
+        const logo = document.createElement('img');
+        logo.className = 'homepage-logo';
+        logo.src = './assets/logo-light-bg.png';
+        logo.alt = 'Qingtian Huang';
+        document.body.appendChild(logo);
+      }
 
       if (!document.querySelector('.homepage-corner-nav')) {
         const cornerNav = document.createElement('nav');
@@ -609,6 +663,48 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
 
       const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const cardShadowLifted = '0 30px 64px rgba(15,23,42,.24)';
+      const cardShadowNone = '0 30px 64px rgba(15,23,42,0)';
+      const stackSettleFront = -9;
+      const stackSettleBehind = 5;
+      function stackNeighbours(source) {
+        const rows = Array.from(document.querySelectorAll('[data-screen-label="Index drawer"] a'));
+        const index = rows.indexOf(source);
+        if (index < 0) return { front:[], behind:[] };
+        return { front:rows.slice(index + 1), behind:rows.slice(0, index).reverse() };
+      }
+      function settleStack(timeline, settle, open, position) {
+        const vars = {
+          duration:open ? .85 : .74,
+          ease:open ? 'power2.out' : 'power2.inOut',
+          stagger:open ? .028 : { each:.024, from:'end' }
+        };
+        if (settle.front.length) timeline.to(settle.front, { ...vars, y:open ? stackSettleFront : 0 }, position);
+        if (settle.behind.length) timeline.to(settle.behind, { ...vars, y:open ? stackSettleBehind : 0 }, position);
+      }
+      const settleRowList = (settle) => settle.front.concat(settle.behind);
+      function createFrontOccluders(frontRows) {
+        if (!frontRows.length) return { container:null, rows:[] };
+        const container = document.createElement('div');
+        container.className = 'drawer-motion-occluders';
+        const clones = frontRows.map(sourceRow => {
+          const sourceRect = sourceRow.getBoundingClientRect();
+          const clone = sourceRow.cloneNode(true);
+          clone.className = 'drawer-motion-occluder-row';
+          clone.removeAttribute('href');
+          clone.removeAttribute('style-hover');
+          clone.removeAttribute('tabindex');
+          Object.assign(clone.style, {
+            left:`${sourceRect.left}px`,
+            top:`${sourceRect.top}px`,
+            transform:`scale(${sourceRect.width / 1080}, ${sourceRect.height / 96})`,
+            zIndex:getComputedStyle(sourceRow).zIndex || '1'
+          });
+          container.appendChild(clone);
+          return clone;
+        });
+        return { container, rows:clones };
+      }
       const drawerReferenceViewport = { width:1080, height:1024 };
       const drawerBaseScale = { x:1.12 * .78, y:.78 };
 
@@ -616,11 +712,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (innerWidth <= 700) return;
         const drawer = document.querySelector('[data-screen-label="Index drawer"]');
         if (!drawer) return;
-
-        // The original calibrated desktop state is the 1080 x 1024 baseline:
-        // 1.12 horizontal stretch, .78 zoom and a 32px upward offset. Apply one
-        // additional uniform multiplier so its position and proportions remain
-        // unchanged at the reference size and scale together elsewhere.
         const responsiveScale = Math.min(
           innerWidth / drawerReferenceViewport.width,
           innerHeight / drawerReferenceViewport.height
@@ -633,9 +724,64 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
+      const getWorkTabBarHeight = () => (innerWidth <= 360 ? 32 : innerWidth <= 700 ? 36 : 58);
+      const sizeWorkFrame = (frame) => {
+        if (!frame) return;
+        frame.style.width = `${getWorkViewportWidth()}px`;
+        frame.style.height = `${Math.max(0, innerHeight - getWorkTabBarHeight())}px`;
+      };
+      function pathEdgesAt(path, y) {
+        const matrix = path.getScreenCTM();
+        const total = path.getTotalLength();
+        if (!matrix || !total) return null;
+        let previous = null;
+        let left = Infinity;
+        let right = -Infinity;
+        for (let i = 0; i <= 720; i++) {
+          const raw = path.getPointAtLength(total * i / 720);
+          const point = new DOMPoint(raw.x, raw.y).matrixTransform(matrix);
+          if (previous && (previous.y - y) * (point.y - y) < 0) {
+            const x = previous.x + (point.x - previous.x) * ((y - previous.y) / (point.y - previous.y));
+            if (x < left) left = x;
+            if (x > right) right = x;
+          }
+          previous = point;
+        }
+        return right > left ? { left, right, width:right - left } : null;
+      }
+      function sheetTabEdges(path, sourceRect) {
+        const scale = sourceRect.height / 96;
+        let left = Infinity;
+        let right = -Infinity;
+        for (const unit of [10, 18, 26, 34, 43]) {
+          const edges = pathEdgesAt(path, sourceRect.top + unit * scale);
+          if (!edges) continue;
+          if (edges.left < left) left = edges.left;
+          if (edges.right > right) right = edges.right;
+        }
+        return right > left ? { left, right, width:right - left } : null;
+      }
+      function sheetShoulderEdges(path, sourceRect) {
+        const bounds = path.getBoundingClientRect();
+        const shoulderY = sourceRect.top + 46 * (sourceRect.height / 96);
+        const span = bounds.bottom - shoulderY;
+        if (!(span > 8)) return null;
+        const near = pathEdgesAt(path, shoulderY + span * .3);
+        const far = pathEdgesAt(path, shoulderY + span * .6);
+        if (!near || !far) return null;
+        const run = span * .3;
+        const slopeLeft = (far.left - near.left) / run;
+        const slopeRight = (far.right - near.right) / run;
+        const back = shoulderY - (shoulderY + span * .3);
+        const left = near.left + slopeLeft * back;
+        const right = near.right + slopeRight * back;
+        const width = right - left;
+        if (!(width > bounds.width * .5) || width > bounds.width + 1) return null;
+        return { left, width };
+      }
       const workPageDocument = Promise.all([
         fetch('./work-page/work.html?v=mobile-11').then(response => response.text()),
-        fetch('./work-page/work.css?v=mobile-13').then(response => response.text()),
+        fetch('./work-page/work.css?v=type-1').then(response => response.text()),
         fetch('./work-page/work.js?v=mobile-10').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
@@ -650,7 +796,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         .catch(() => null);
       const interestsPageDocument = Promise.all([
         fetch('./interests-page/interests.html?v=18').then(response => response.text()),
-        fetch('./interests-page/interests.css?v=26').then(response => response.text()),
+        fetch('./interests-page/interests.css?v=type-1').then(response => response.text()),
         fetch('./interests-page/interests.js?v=19').then(response => response.text())
       ]).then(([html, css, js]) =>
         html
@@ -666,22 +812,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         active.closing = true;
         if (reducedMotion) active.finish();
         else if (active.returnToSource) {
-          // Stop the opening timeline so its queued tweens cannot fight the
-          // return animation when the card is closed mid-open.
           if (active.timeline) active.timeline.kill();
           if (active.isWork) {
             const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
             if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
             gsap.set(active.source, { clearProps:'opacity,visibility' });
             gsap.to(active.overlay, { autoAlpha:0, duration:.22, ease:'power1.out' });
-            gsap.set(active.card, { backgroundColor:'transparent', borderColor:'#87A1BA' });
+            gsap.set(active.card, { borderColor:'#87A1BA' });
           }
           active.returnToSource();
         }
         else {
-          // Play the complete extraction in reverse: first shrink the full WORK
-          // page back into its paper card, then slide and clip that card into
-          // the exact source tab before revealing the original stack again.
           if (active.isWork) {
             const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
             if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
@@ -692,6 +833,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       function syncActiveWorkViewport() {
         if (!active || !active.isWork || active.closing) return;
+        sizeWorkFrame(active.content.querySelector('.drawer-motion-work-frame'));
         gsap.set(active.card, {
           x:getWorkViewportLeft() - active.originRect.left,
           y:-active.originRect.top,
@@ -700,16 +842,15 @@ document.addEventListener('DOMContentLoaded', async function() {
           height:innerHeight,
           borderRadius:0,
           borderWidth:0,
-          rotationZ:0,
-          clipPath:'inset(0 0 0px 0)'
+          clipPath:`inset(-${active.tabReveal || 0}px 0 0px 0)`
         });
         gsap.set(active.content, {
           left:0,
           right:0,
-          top:58,
+          top:getWorkTabBarHeight(),
           bottom:0,
           borderRadius:0,
-          borderWidth:0,
+          borderWidth:1.5,
           autoAlpha:1
         });
       }
@@ -731,8 +872,6 @@ document.addEventListener('DOMContentLoaded', async function() {
           PROFILE: 'story',
           EDUCATION: 'education'
         };
-        // Music / Photography are sub-tabs of Interests. On mobile, enter the
-        // Photography page at its album grid instead of the playlist list.
         const interestsTitles = ['INTERESTS', 'MUSIC', 'PHOTOGRAPHY'];
         const interestsSectionTargets = {
           PHOTOGRAPHY: 'photography'
@@ -763,7 +902,11 @@ document.addEventListener('DOMContentLoaded', async function() {
           width:document.body.style.width
         };
 
-        const rect = source.getBoundingClientRect();
+        const settle = stackNeighbours(source);
+        const settleRows = settleRowList(settle);
+        const occluders = reducedMotion ? { container:null, rows:[] } : createFrontOccluders(settle.front);
+        const drawerStack = document.querySelector('[data-screen-label="Index drawer"]');
+        const sourceRect = source.getBoundingClientRect();
         const overlay = document.createElement('div');
         overlay.className = 'drawer-motion-overlay';
         if (isFullPage) overlay.classList.add('drawer-motion-overlay--work');
@@ -771,18 +914,40 @@ document.addEventListener('DOMContentLoaded', async function() {
         overlay.setAttribute('aria-hidden', 'true');
 
         const path = source.querySelector('svg path');
-        const pathRect = path ? path.getBoundingClientRect() : rect;
-        const visibleHeight = Math.min(rect.height, 92);
-        const paperHeight = Math.max(innerHeight * .72, pathRect.bottom - rect.top, visibleHeight + 360);
+        const pathRect = path ? path.getBoundingClientRect() : sourceRect;
+        const shoulder = path ? sheetShoulderEdges(path, sourceRect) : null;
+        const paperLeft = shoulder ? shoulder.left : pathRect.left;
+        const paperWidth = shoulder ? shoulder.width : pathRect.width;
+        const shoulderY = sourceRect.top + 46 * (sourceRect.height / 96);
+        const tabProtrusion = shoulderY - sourceRect.top;
+        const rect = {
+          left:paperLeft,
+          top:shoulderY,
+          width:paperWidth,
+          height:Math.max(0, sourceRect.bottom - shoulderY),
+          right:paperLeft + paperWidth,
+          bottom:sourceRect.bottom
+        };
+        const paperFill = path ? getComputedStyle(path).fill : '#DAE2E8';
+        const visibleHeight = Math.max(12, Math.min(sourceRect.bottom - shoulderY, 92));
+        const paperHeight = Math.max(innerHeight * .72, pathRect.bottom - shoulderY, visibleHeight + 360);
+        const tabReveal = tabProtrusion + 6;
+        const shadowRoom = 90;
+        const clipTo = (bottom) =>
+          `inset(-${tabReveal}px -${shadowRoom}px ${bottom}px -${shadowRoom}px)`;
+        const clipOpen = `inset(-${tabReveal}px -${shadowRoom}px -${shadowRoom}px -${shadowRoom}px)`;
 
         const card = document.createElement('article');
         card.className = 'drawer-motion-card';
         card.setAttribute('role', 'dialog');
         card.setAttribute('aria-modal', 'true');
         card.setAttribute('aria-label', source.title || 'Selected file');
+        if (isFullPage) card.tabIndex = -1;
         Object.assign(card.style, {
           left:`${rect.left}px`, top:`${rect.top}px`, width:`${rect.width}px`, height:`${paperHeight}px`,
-          clipPath:`inset(0 0 ${paperHeight - visibleHeight}px 0)`
+          clipPath:clipTo(paperHeight - visibleHeight),
+          boxShadow:cardShadowNone,
+          backgroundColor:paperFill
         });
 
         const row = source.cloneNode(true);
@@ -791,29 +956,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         row.removeAttribute('style-hover');
         const smoothPaperPath = source.getAttribute('data-paper-path');
         const clonedPaperPath = row.querySelector('svg path');
-        const clonedTabPath = row.querySelectorAll('svg path')[1];
-        const sourcePaperRectAtOpen = source.querySelector('svg path').getBoundingClientRect();
-        const rawTabRectAtOpen = source.querySelectorAll('svg path')[1].getBoundingClientRect();
-        const sourceTabRectAtOpen = rawTabRectAtOpen.width > 1 ? rawTabRectAtOpen : sourcePaperRectAtOpen;
+        const sourcePaperRectAtOpen = {
+          left:paperLeft,
+          top:pathRect.top,
+          width:paperWidth,
+          right:paperLeft + paperWidth,
+          bottom:pathRect.bottom
+        };
         if (smoothPaperPath && clonedPaperPath) clonedPaperPath.setAttribute('d', smoothPaperPath);
-        // The source tab is drawn from y=6 to y=46. In the fullscreen Work view,
-        // extend its coloured face from y=0 through the rule to prevent a seam.
-        if (isFullPage && clonedTabPath) {
-          // Cover two extra SVG units at the bottom so browser scaling cannot
-          // reveal a hairline gap between the tab face and the horizontal rule.
-          clonedTabPath.setAttribute('transform', 'matrix(1 0 0 1.24 0 -8.64)');
-        }
-        const startScale = rect.width / 1080;
+        const startScale = sourceRect.width / 1080;
+        row.style.setProperty('left', `${sourceRect.left - rect.left}px`, 'important');
+        row.style.setProperty('top', `${-tabProtrusion}px`, 'important');
         row.style.transform = `scale(${startScale})`;
+        const tabEdgesAtOpen = path ? sheetTabEdges(path, sourceRect) : null;
+        const tabLocalLeft = tabEdgesAtOpen ? (tabEdgesAtOpen.left - sourceRect.left) / startScale : 0;
+        const tabLocalRight = tabEdgesAtOpen ? (tabEdgesAtOpen.right - sourceRect.left) / startScale : 1080;
+        row.style.clipPath = `inset(0 ${Math.max(0, 1080 - tabLocalRight - 2)}px 84px ${Math.max(0, tabLocalLeft - 2)}px)`;
         if (siteLanguage === 'zh') {
           const rowTextNodes = Array.from(row.children).filter(child => child.tagName === 'DIV');
           const rowNameNode = rowTextNodes[rowTextNodes.length - 1];
           if (rowNameNode && labels[sourceTitle]) rowNameNode.textContent = labels[sourceTitle];
-        }
-        if (targetContentSection) {
-          Array.from(row.children)
-            .filter(child => child.tagName === 'DIV')
-            .forEach(node => { node.style.display = 'none'; });
         }
 
         const content = document.createElement('div');
@@ -823,14 +985,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.type = 'button';
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
-        let workLanguage = null;
         let sectionTab = null;
+        let workLanguage = null;
         let fullPageReady = Promise.resolve();
         if (isFullPage) {
           card.classList.add('drawer-motion-card--work');
           if (isInterests) card.classList.add('drawer-motion-card--interests');
           content.classList.add('drawer-motion-content--work');
-          content.style.top = '58px';
+          content.style.top = '0px';
           close.classList.add('drawer-motion-work-back');
           close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
           const tabTitle = isAbout ? 'About' : isInterests ? 'Interests' : 'Work';
@@ -850,6 +1012,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           const workFrame = document.createElement('iframe');
           workFrame.className = 'drawer-motion-work-frame';
           workFrame.title = isAbout ? 'About' : isInterests ? 'Interests' : sourceTitle;
+          sizeWorkFrame(workFrame);
           fullPageReady = new Promise(resolve => {
             let isReady = false;
             const resolveReady = () => {
@@ -905,9 +1068,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                   frameWindow.scrollTo({ top:Math.max(0, targetTop - aboutSectionOffset), behavior:'auto' });
                 };
                 anchorAbout();
-                // The page reflows ~1.5s in (CDN scripts land and shave ~245px off
-                // the copy above), dragging the heading up under the tab bar.
-                // Re-anchor until the height settles, yielding to the reader.
                 if (frameWindow && typeof frameWindow.ResizeObserver === 'function') {
                   const observer = new frameWindow.ResizeObserver(anchorAbout);
                   observer.observe(frameDocument.documentElement);
@@ -932,12 +1092,13 @@ document.addEventListener('DOMContentLoaded', async function() {
           else workFrame.src = isAbout ? './about-page/about.html' : isInterests ? './interests-page/interests.html' : './work-page/work.html';
           content.append(workFrame);
         }
-        if (isFullPage) card.append(row, content, close, ...[sectionTab, workLanguage].filter(Boolean));
+        if (isFullPage) card.append(row, content, close, sectionTab, workLanguage);
         else {
           content.append(close);
           card.append(row, content);
         }
         document.body.append(overlay, card);
+        if (occluders.container) document.body.appendChild(occluders.container);
         document.body.classList.add('drawer-motion-lock');
         Object.assign(document.body.style, {
           position:'fixed',
@@ -949,19 +1110,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (isFullPage) gsap.set([card, content], { autoAlpha:0 });
         else gsap.set(source, { autoAlpha:0 });
 
+        const pageChrome = isFullPage ? [content, close, sectionTab, workLanguage] : [];
+
         if (isFullPage) {
           await fullPageReady;
           if (active) return;
           gsap.set(source, { autoAlpha:0 });
-          gsap.set([card, content], { autoAlpha:1 });
-          if (clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
+          gsap.set(card, { autoAlpha:1 });
+          gsap.set(pageChrome, { autoAlpha:0 });
         }
 
         const finish = () => {
           if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
           overlay.remove();
           card.remove();
+          if (occluders.container) occluders.container.remove();
           gsap.set(source, { clearProps:'opacity,visibility' });
+          if (drawerStack) gsap.set(drawerStack, { clearProps:'opacity,visibility' });
+          if (settleRows.length) gsap.set(settleRows, { clearProps:'transform' });
           document.body.classList.remove('drawer-motion-lock');
           Object.assign(document.body.style, bodyStyleAtOpen);
           active = null;
@@ -989,120 +1155,180 @@ document.addEventListener('DOMContentLoaded', async function() {
             height:innerHeight,
             borderRadius:0,
             borderWidth:0,
-            clipPath:'inset(0 0 0px 0)'
+            clipPath:clipOpen
           } : {
             x:(innerWidth - rect.width * fit) / 2 - rect.left,
             y:(innerHeight - paperHeight * fit) / 2 - rect.top,
             scale:fit,
-            clipPath:'inset(0 0 0px 0)'
+            clipPath:clipOpen
           });
-          if (isFullPage) gsap.set(content, { left:0, right:0, top:58, bottom:0, borderRadius:0, borderWidth:0 });
-          if (isFullPage && clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
-          gsap.set([overlay, content], { autoAlpha:1 });
-          active = { source, overlay, card, content, finish, closing:false, isWork:isFullPage, originRect:rect };
-          close.focus({ preventScroll:true });
+          if (isFullPage) gsap.set(content, { left:0, right:0, top:getWorkTabBarHeight(), bottom:0, borderRadius:0, borderWidth:1.5 });
+          if (isFullPage) {
+            card.classList.add('is-page');
+            gsap.set(row, { autoAlpha:0 });
+            gsap.set(card, { backgroundColor:'rgba(0,0,0,0)', borderWidth:0 });
+          }
+          gsap.set(card, { boxShadow:cardShadowLifted });
+          gsap.set([overlay, content, ...pageChrome], { autoAlpha:1 });
+          active = { source, overlay, card, content, finish, closing:false, isWork:isFullPage, originRect:rect, tabReveal };
+          (isFullPage ? card : close).focus({ preventScroll:true });
           return;
         }
 
         const pullDistance = isFullPage ? Math.max(0, rect.top) : Math.max(80, paperHeight - visibleHeight + 18);
         const fit = Math.min(1, innerWidth * .82 / rect.width, innerHeight * .78 / paperHeight);
-        const targetX = isFullPage ? getWorkViewportLeft() - rect.left : (innerWidth - rect.width * fit) / 2 - rect.left;
-        const targetY = isFullPage ? -rect.top : (innerHeight - paperHeight * fit) / 2 - rect.top;
-        const tilt = rect.left + rect.width / 2 < innerWidth / 2 ? -1.1 : 1.1;
+        const targetX = isFullPage
+          ? getWorkViewportLeft() - rect.left
+          : (innerWidth - rect.width * fit) / 2 - rect.left - rect.width * (1 - fit) / 2;
+        const targetY = isFullPage
+          ? -rect.top
+          : (innerHeight - paperHeight * fit) / 2 - rect.top - paperHeight * (1 - fit) / 2;
         const timeline = gsap.timeline({
           defaults:{ overwrite:'auto' },
-          onComplete:() => close.focus({ preventScroll:true }),
+          onComplete:() => (isFullPage ? card : close).focus({ preventScroll:true }),
           onReverseComplete:finish
         });
+
+        const pullStart = .08;
+        const breakawayDuration = .24;
+        const pullDuration = 1.02;
+        const breakawayLift = Math.min(18, Math.max(10, visibleHeight * .16));
+        const breakawayClip = clipTo(Math.max(0, paperHeight - visibleHeight - breakawayLift));
+        const extractionClearAt = pullStart + breakawayDuration - .03;
+        const pullEnd = pullStart + breakawayDuration - .04 + pullDuration;
+        const clearAt = pullEnd + .12;
         timeline
-          .to(overlay, { autoAlpha:1, duration:.55, ease:'power1.out' }, .25)
-          .to(card, { rotationZ:tilt, duration:.2, ease:'power1.out' }, 0)
+
+          .to(overlay, { autoAlpha:1, duration:.6, ease:'power1.out' }, .48)
+          .to(card, {
+            y:-breakawayLift,
+            clipPath:breakawayClip,
+            duration:breakawayDuration,
+            ease:'power2.out'
+          }, pullStart)
           .to(card, {
             y:-pullDistance,
-            clipPath:'inset(0 0 0px 0)',
-            duration:1.05,
-            ease:'power2.inOut'
-          }, .08)
+            clipPath:clipOpen,
+            duration:pullDuration,
+            ease:'power3.inOut'
+          }, pullStart + breakawayDuration - .04)
           .to(card, {
             x:targetX,
             y:targetY,
-            scale:isFullPage ? 1 : fit,
+            scaleX:isFullPage ? 1 : fit,
+            scaleY:isFullPage ? 1 : fit,
             width:isFullPage ? getWorkViewportWidth() : rect.width,
             height:isFullPage ? innerHeight : paperHeight,
             borderRadius:isFullPage ? 0 : 10,
-            borderWidth:isFullPage ? 0 : 1.6,
-            rotationZ:0,
-            duration:.72,
+            duration:.78,
             ease:'power3.inOut'
-          }, '>-0.06')
+          }, clearAt)
           .to(content, isFullPage ? {
             left:0,
             right:0,
-            top:58,
+            top:getWorkTabBarHeight(),
             bottom:0,
             borderRadius:0,
-            borderWidth:0,
-            duration:.72,
+            borderWidth:1.5,
+            duration:.78,
             ease:'power3.inOut'
-          } : {}, '<')
-          .to(clonedPaperPath, isFullPage ? { opacity:0, duration:.2, ease:'power1.out' } : {}, '<.5')
-          .to(content, { autoAlpha:1, duration:isFullPage ? 0 : .3, ease:'power1.out' }, isFullPage ? 0 : '>-0.2');
+          } : {}, clearAt);
+        if (isFullPage) {
+          timeline
+            .to(row, {
+              autoAlpha:0,
+              duration:.34,
+              ease:'power1.out',
+              onStart:() => card.classList.add('is-page')
+            }, clearAt)
+            .to(card, { borderWidth:0, duration:.18, ease:'power1.out' }, clearAt)
+            .to(card, { boxShadow:cardShadowLifted, duration:.62, ease:'power2.out' }, clearAt + .12)
+            .to(pageChrome, { autoAlpha:1, duration:.34, ease:'power1.out' }, clearAt + .06)
+            .to(card, { backgroundColor:'rgba(0,0,0,0)', duration:.3, ease:'power1.out' }, clearAt + .5)
+            .set(card, { clipPath:'none' }, clearAt + .78);
+        } else {
+          timeline.to(content, { autoAlpha:1, duration:.3, ease:'power1.out' }, '>-0.2');
+        }
+        settleStack(timeline, settle, true, .16);
+        if (occluders.rows.length) settleStack(timeline, { front:occluders.rows, behind:[] }, true, .16);
+        if (drawerStack) timeline.to(drawerStack, { autoAlpha:0, duration:.14, ease:'power1.out' }, extractionClearAt);
+        if (occluders.container) timeline.to(occluders.container, { autoAlpha:0, duration:.14, ease:'power1.out' }, extractionClearAt);
         const returnToSource = () => {
-          const topTabs = card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
-          const isMobileDrawer = matchMedia('(max-width:700px)').matches;
-          // Aim the sheet at its own paper slot so it re-inserts centered and
-          // exactly as wide as the drawer stack below.
           const insertionRect = sourcePaperRectAtOpen;
-          const paperScale = Math.min(isMobileDrawer ? 1 : .94, insertionRect.width / rect.width);
+          const paperScale = insertionRect.width / rect.width;
           const scaledPaperHeight = paperHeight * paperScale;
-          const insertionY = sourceTabRectAtOpen.top + visibleHeight;
+          const insertionY = shoulderY + visibleHeight;
           const centeredLeft = insertionRect.left + (insertionRect.width - rect.width * paperScale) / 2;
           const floatTop = insertionY - scaledPaperHeight;
-          const finalTop = sourceTabRectAtOpen.top;
+          const finalTop = shoulderY;
           const scaleInsetX = rect.width * (1 - paperScale) / 2;
           const scaleInsetY = paperHeight * (1 - paperScale) / 2;
           const floatX = centeredLeft - rect.left - scaleInsetX;
           const floatY = floatTop - rect.top - scaleInsetY;
           const finalY = finalTop - rect.top - scaleInsetY;
-          const closedClip = `inset(0 0 ${paperHeight - visibleHeight / paperScale}px 0)`;
+          const closedClip = clipTo(paperHeight - visibleHeight / paperScale);
+          const insertionTravel = Math.max(0, finalY - floatY);
+          const engageDepth = Math.min(22, Math.max(12, insertionTravel * .045));
+          const engagedY = floatY + engageDepth;
+          const engagedClip = clipTo(engageDepth / paperScale);
 
           const returnTimeline = gsap.timeline({ defaults:{ overwrite:'auto' }, onComplete:finish });
           returnTimeline
-            // Turn the full-screen view into a proportionally smaller sheet.
             .to(card, {
               x:floatX,
               y:floatY,
               width:rect.width,
               height:paperHeight,
               scale:paperScale,
-              rotationZ:0,
               borderRadius:10,
-              borderWidth:1.6,
               borderColor:'#87A1BA',
-              backgroundColor:'transparent',
-              clipPath:'inset(0 0 0px 0)',
+              backgroundColor:paperFill,
+              clipPath:clipOpen,
               duration:.78,
               ease:'power3.inOut'
             })
             .to(content, {
-              left:'4%', right:'4%', top:Math.max(48, 54 * startScale), bottom:'4%',
+              left:'4%', right:'4%', top:0, bottom:'4%',
               borderRadius:10, borderWidth:1.5,
               duration:.78, ease:'power3.inOut'
             }, '<');
-          if (topTabs.length) returnTimeline.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' }, '<.48');
+          if (isFullPage) {
+            returnTimeline
+              .to(row, {
+                autoAlpha:1,
+                duration:.34,
+                ease:'power1.out',
+                onStart:() => card.classList.remove('is-page')
+              }, '<')
+              .to(content, { autoAlpha:0, duration:.3, ease:'power1.out' }, '<.4')
+              .to(card, { borderWidth:1.6, duration:.18, ease:'power1.out' }, '<.2')
+              .to(card, { boxShadow:cardShadowNone, duration:.5, ease:'power2.out' }, '<');
+          } else {
+            returnTimeline.to(clonedPaperPath, { opacity:1, duration:.2, ease:'power1.out' }, '<.48');
+          }
           returnTimeline
-            .to(clonedPaperPath, isFullPage ? { opacity:0, duration:.2, ease:'power1.out' } : { opacity:1, duration:.2, ease:'power1.out' }, topTabs.length ? '<' : '<.48')
-            // Feed the sheet downward from its bottom edge into its source slot.
+            .addLabel('insert')
             .to(card, {
+              y:engagedY,
+              clipPath:engagedClip,
+              duration:.26,
+              ease:'power2.out'
+            })
+            .to(card, {
+              x:floatX,
               y:finalY,
               clipPath:closedClip,
-              duration:1.05,
-              ease:'power2.inOut'
+              duration:.96,
+              ease:'power3.inOut'
             })
-            .to(overlay, { autoAlpha:0, duration:.55, ease:'power1.out' }, '<.42');
+            .to(overlay, { autoAlpha:0, duration:.55, ease:'power1.out' }, '<.34');
+          settleStack(returnTimeline, settle, false, 'insert-=0.12');
+          if (occluders.rows.length) settleStack(returnTimeline, { front:occluders.rows, behind:[] }, false, 'insert-=0.12');
+          if (drawerStack) returnTimeline.to(drawerStack, { autoAlpha:1, duration:.34, ease:'power1.out' }, 'insert-=0.5');
+          if (occluders.container) returnTimeline.to(occluders.container, { autoAlpha:1, duration:.34, ease:'power1.out' }, 'insert-=0.46');
         };
 
-        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork:isFullPage, originRect:rect };
+        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork:isFullPage, originRect:rect, tabReveal, paperFill };
       }
 
       // ---- Guide overlay: entry layer shown before the drawer -----------
@@ -1110,8 +1336,6 @@ document.addEventListener('DOMContentLoaded', async function() {
       const getGuideRow = () => document.querySelector('[data-screen-label="Index drawer"] a[title="Welcome"]');
       const getDrawerStack = () => document.querySelector('[data-screen-label="Index drawer"]');
 
-      // Keep clear of the fixed corner nav (language switch / LinkedIn / Email)
-      // on desktop; on narrow screens fall back to a near-full-width sheet.
       function guideCardMetrics() {
         const compact = innerWidth < 700;
         const cardW = compact ? innerWidth * .92 : Math.min(1240, innerWidth - 300);
@@ -1123,25 +1347,39 @@ document.addEventListener('DOMContentLoaded', async function() {
         return { cardW, cardTop, cardH, cardLeft, startScale: cardW / 1080 };
       }
 
-      // Same insertion math as returnToSource: aim the sheet at the guide
-      // row's paper slot so it feeds downward into the drawer front tab.
       function guideGeometry(source, cardLeft, cardTop, cardW, cardH) {
         const sourceRect = source.getBoundingClientRect();
-        const paperRect = source.querySelector('svg path').getBoundingClientRect();
-        const rawTabRect = source.querySelectorAll('svg path')[1].getBoundingClientRect();
-        const tabRect = rawTabRect.width > 1 ? rawTabRect : paperRect;
-        const visibleHeight = Math.min(sourceRect.height, 92);
-        const isMobileDrawer = matchMedia('(max-width:700px)').matches;
-        const paperScale = Math.min(isMobileDrawer ? 1 : .94, paperRect.width / cardW);
+        const paperPath = source.querySelector('svg path');
+        const paperBounds = paperPath.getBoundingClientRect();
+        const paperShoulder = sheetShoulderEdges(paperPath, sourceRect);
+        const paperRect = paperShoulder ? {
+          left:paperShoulder.left,
+          top:paperBounds.top,
+          width:paperShoulder.width,
+          right:paperShoulder.left + paperShoulder.width,
+          bottom:paperBounds.bottom
+        } : paperBounds;
+        const shoulderY = sourceRect.top + 46 * (sourceRect.height / 96);
+        const visibleHeight = Math.max(12, Math.min(sourceRect.bottom - shoulderY, 92));
+        const paperScale = paperRect.width / cardW;
         const scaleInsetX = cardW * (1 - paperScale) / 2;
         const scaleInsetY = cardH * (1 - paperScale) / 2;
         const centeredLeft = paperRect.left + (paperRect.width - cardW * paperScale) / 2;
+        const closedClipBottom = Math.max(0, cardH - visibleHeight / paperScale);
+        const breakawayLift = 14;
+        const engageDepth = 16;
+        const tabReveal = 46 * (cardW / 1080) + 6;
         return {
           paperScale,
+          tabReveal,
           floatX: centeredLeft - cardLeft - scaleInsetX,
-          floatY: (tabRect.top + visibleHeight - cardH * paperScale) - cardTop - scaleInsetY,
-          finalY: tabRect.top - cardTop - scaleInsetY,
-          closedClip: `inset(0 0 ${Math.max(0, cardH - visibleHeight / paperScale)}px 0)`
+          floatY: (shoulderY + visibleHeight - cardH * paperScale) - cardTop - scaleInsetY,
+          finalY: shoulderY - cardTop - scaleInsetY,
+          breakawayY: shoulderY - cardTop - scaleInsetY - breakawayLift,
+          breakawayClip: `inset(-${tabReveal}px 0 ${Math.max(0, closedClipBottom - breakawayLift / paperScale)}px 0)`,
+          engagedY: (shoulderY + visibleHeight - cardH * paperScale) - cardTop - scaleInsetY + engageDepth,
+          engagedClip: `inset(-${tabReveal}px 0 ${engageDepth / paperScale}px 0)`,
+          closedClip: `inset(-${tabReveal}px 0 ${closedClipBottom}px 0)`
         };
       }
 
@@ -1173,6 +1411,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         const smoothPaperPath = source.getAttribute('data-paper-path');
         const clonedPaperPath = row.querySelector('svg path');
         if (smoothPaperPath && clonedPaperPath) clonedPaperPath.setAttribute('d', smoothPaperPath);
+        const paperFill = clonedPaperPath ? getComputedStyle(source.querySelector('svg path')).fill : '#DAE2E8';
+        card.style.backgroundColor = paperFill;
         row.style.setProperty('top', `${-46 * startScale}px`, 'important');
         row.style.transform = `scale(${startScale})`;
 
@@ -1201,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         gsap.set(source, { autoAlpha:0 });
         if (clonedPaperPath) gsap.set(clonedPaperPath, { opacity:0 });
 
-        guideActive = { source, overlay, card, content, cardLeft, cardTop, cardW, cardH, timeline:null, closing:false };
+        guideActive = { source, overlay, card, content, cardLeft, cardTop, cardW, cardH, timeline:null, closing:false, paperFill };
 
         content.addEventListener('click', event => {
           const button = event.target.closest('[data-guide-target]');
@@ -1211,6 +1451,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         overlay.addEventListener('click', () => closeGuide(null));
 
         const drawerStack = getDrawerStack();
+        const settle = stackNeighbours(source);
+        guideActive.settle = settle;
         if (reducedMotion) {
           if (drawerStack) gsap.set(drawerStack, { autoAlpha:0 });
           gsap.set([overlay, content], { autoAlpha:1 });
@@ -1219,22 +1461,37 @@ document.addEventListener('DOMContentLoaded', async function() {
         const timeline = gsap.timeline({ defaults:{ overwrite:'auto' } });
         guideActive.timeline = timeline;
         if (fromTab) {
-          // Pull the guide sheet out of its drawer tab, mirroring openDrawerCard.
           const geometry = guideGeometry(source, cardLeft, cardTop, cardW, cardH);
-          gsap.set(card, { x:geometry.floatX, y:geometry.finalY, scale:geometry.paperScale, clipPath:geometry.closedClip });
+          gsap.set(card, { x:geometry.floatX, y:geometry.finalY, scale:geometry.paperScale, clipPath:geometry.closedClip, boxShadow:cardShadowNone });
           timeline
             .to(overlay, { autoAlpha:1, duration:.55, ease:'power1.out' }, .15)
-            .to(card, { y:geometry.floatY, clipPath:'inset(-60px 0 0px 0)', duration:.95, ease:'power2.inOut' }, 0)
-            .to(card, { x:0, y:0, scale:1, duration:.7, ease:'power3.inOut' }, '>-0.05')
-            .to(content, { autoAlpha:1, duration:.3, ease:'power1.out' }, '>-0.15');
-          // The drawer fades away once the sheet is fully pulled out.
+            .to(card, {
+              y:geometry.breakawayY,
+              clipPath:geometry.breakawayClip,
+              duration:.22,
+              ease:'power2.out'
+            }, 0)
+            .to(card, {
+              y:geometry.floatY,
+              clipPath:`inset(-${geometry.tabReveal}px 0 0px 0)`,
+              duration:.9,
+              ease:'power3.inOut'
+            }, .18)
+            .to(card, { x:0, y:0, scale:1, duration:.76, ease:'power3.inOut' }, '>-0.18')
+            .to(card, { boxShadow:cardShadowLifted, duration:.62, ease:'power2.out' }, '<.2')
+            .set(card, { clipPath:'none' })
+            .to(content, { autoAlpha:1, duration:.34, ease:'power1.out' }, '>-0.22');
+          settleStack(timeline, settle, true, .16);
           if (drawerStack) timeline.to(drawerStack, { autoAlpha:0, duration:.45, ease:'power1.out' }, .75);
         } else {
           if (drawerStack) gsap.set(drawerStack, { autoAlpha:0 });
-          gsap.set(card, { y:26, autoAlpha:0 });
+          if (settle.front.length) gsap.set(settle.front, { y:stackSettleFront });
+          if (settle.behind.length) gsap.set(settle.behind, { y:stackSettleBehind });
+          gsap.set(card, { y:26, autoAlpha:0, boxShadow:cardShadowNone });
           timeline
             .to(overlay, { autoAlpha:1, duration:.5, ease:'power1.out' }, 0)
             .to(card, { y:0, autoAlpha:1, duration:.6, ease:'power2.out' }, .05)
+            .to(card, { boxShadow:cardShadowLifted, duration:.62, ease:'power2.out' }, .2)
             .to(content, { autoAlpha:1, duration:.35, ease:'power1.out' }, '>-0.25');
         }
       }
@@ -1264,6 +1521,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           guide.overlay.remove();
           guide.card.remove();
           gsap.set(guide.source, { clearProps:'opacity,visibility' });
+          const guideRows = guide.settle ? settleRowList(guide.settle) : [];
+          if (guideRows.length) gsap.set(guideRows, { clearProps:'transform' });
           if (drawerStack) gsap.set(drawerStack, { clearProps:'opacity,visibility' });
           document.body.classList.remove('drawer-motion-lock', 'guide-open');
           guideActive = null;
@@ -1276,15 +1535,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         const clonedPaperPath = guide.card.querySelector('svg path');
         const timeline = gsap.timeline({ defaults:{ overwrite:'auto' }, onComplete: proceed });
         timeline
-          // The drawer reappears beneath the sheet as it heads back in...
-          .to(drawerStack || {}, drawerStack ? { autoAlpha:1, duration:.5, ease:'power1.out' } : {}, .2)
-          // ...while the sheet shrinks to drawer width above its slot...
+          .to(drawerStack || {}, drawerStack ? { autoAlpha:1, duration:.42, ease:'power1.out' } : {}, 0)
           .to(guide.content, { autoAlpha:0, duration:.3, ease:'power1.out' }, 0)
-          .to(guide.card, { x:geometry.floatX, y:geometry.floatY, scale:geometry.paperScale, duration:.72, ease:'power3.inOut' }, 0)
-          .to(clonedPaperPath, { opacity:1, duration:.25, ease:'power1.out' }, '<.4')
-          // ...then feed it downward into the front tab of the drawer.
-          .to(guide.card, { y:geometry.finalY, clipPath:geometry.closedClip, duration:1, ease:'power2.inOut' })
+          .to(guide.card, { boxShadow:cardShadowNone, duration:.5, ease:'power2.out' }, 0)
+          .to(guide.card, {
+            x:geometry.floatX,
+            y:geometry.floatY,
+            scale:geometry.paperScale,
+            duration:.6,
+            ease:'power3.inOut'
+          }, 0)
+          .addLabel('insert')
+          .to(guide.card, {
+            y:geometry.engagedY,
+            clipPath:geometry.engagedClip,
+            duration:.26,
+            ease:'power2.out'
+          })
+          .to(guide.card, { y:geometry.finalY, clipPath:geometry.closedClip, duration:.74, ease:'power3.inOut' })
           .to(guide.overlay, { autoAlpha:0, duration:.5, ease:'power1.out' }, '<.4');
+        if (guide.settle) settleStack(timeline, guide.settle, false, 'insert-=0.18');
       }
 
       document.addEventListener('click', event => {

@@ -1,15 +1,11 @@
-/* Type tokens (per design spec, image 2/3) — font families unchanged.
-   h3 26/300/1.12/-0.26px · h4 16/400/1.5 · sui 14/400/1
-   sb 14/300/1.5/-0.42px · c11 11/300/1.45 · c10 10/400/1.15/0.1px · c9 9/300/1.5
-   weights limited to 300/400 across the scale. */
 :root {
   color-scheme: light;
   --page-bg: #403c37;
-  --canvas: #F8F9FA;
+  --canvas: #f8f9fa;
   --bg: var(--canvas);
-  --band: #F8F9FA;
+  --band: #f8f9fa;
   --line: #b9ad9c;
-  --ink: #0F172A;
+  --ink: #0f172a;
   --muted: #81786d;
   --blue-gray: #3f6174;
   --font-display-en: "Geist", sans-serif;
@@ -17,6 +13,16 @@
   --font-body-en: "Martian Mono", monospace;
   --font-body-zh: "SarasaUiSC-Regular", "Sarasa Gothic SC", sans-serif;
   --font-struct: "Martian Mono", monospace;
+
+  /* Type scale — Martian Mono
+     body     14 / 300 / 1.5  / -0.42px   running text
+     ui       14 / 400 / 1    / normal    interactive elements
+     caption  11 / 300 / 1.45 / normal    +0.12em tracking when uppercase */
+  --type-body: 300 14px/1.5 var(--font-body-en);
+  --type-ui: 400 14px/1 var(--font-struct);
+  --type-caption: 300 11px/1.45 var(--font-struct);
+  --track-body: -0.42px;
+  --track-caps: 0.12em;
 }
 
 * {
@@ -31,15 +37,6 @@ body {
   margin: 0;
 }
 
-html {
-  scrollbar-width: none;
-}
-
-html::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
 body {
   overflow-x: auto;
   background: var(--canvas);
@@ -51,8 +48,12 @@ html[lang="zh-CN"] body {
   font-family: var(--font-body-zh);
 }
 
-/* Fonts: every heading/title uses Geist; all other text uses Martian Mono. */
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 [class*="title"] {
   font-family: var(--font-display-en);
 }
@@ -83,60 +84,6 @@ a {
   background: var(--canvas);
   border: 1px solid var(--line);
   border-top: 0;
-}
-
-.page-scrollbar {
-  position: fixed;
-  z-index: 30;
-  top: 28px;
-  right: 4px;
-  bottom: 28px;
-  width: 12px;
-  user-select: none;
-  touch-action: none;
-  cursor: pointer;
-}
-
-.page-scrollbar-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.page-scrollbar-ticks {
-  position: absolute;
-  inset: 6px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  pointer-events: none;
-}
-
-.page-scrollbar-ticks i {
-  display: block;
-  width: 7px;
-  height: 1px;
-  background: #99948b;
-  opacity: 0.82;
-}
-
-.page-scrollbar-thumb {
-  position: absolute;
-  top: 0;
-  left: 1px;
-  width: 10px;
-  height: 24px;
-  border: 1px solid #8f8a82;
-  background: var(--canvas);
-  box-shadow: 0 0 0 1px rgba(248, 249, 250, 0.72);
-  pointer-events: auto;
-  cursor: grab;
-  will-change: transform;
-}
-
-.page-scrollbar-thumb:active {
-  cursor: grabbing;
 }
 
 .topbar {
@@ -170,10 +117,9 @@ a {
   padding: 3px;
   border: 0;
   background: #f5f5f5;
-  color: #0F172A;
-  font: inherit;
-  font-size: 14px;
-  line-height: 1;
+  color: #0f172a;
+  font: var(--type-ui);
+  letter-spacing: normal;
   cursor: pointer;
 }
 
@@ -193,7 +139,7 @@ a {
 .experience-card,
 .project-card {
   border: 1px solid var(--line);
-  background: #F8F9FA;
+  background: #f8f9fa;
 }
 
 .nav-box {
@@ -204,10 +150,8 @@ a {
   min-height: 28px;
   padding: 0 21px;
   gap: 5px;
-  font-family: var(--font-body-en);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
+  font: var(--type-ui);
+  letter-spacing: normal;
   white-space: nowrap;
 }
 
@@ -221,15 +165,15 @@ html[lang="zh-CN"] .nav-box {
   height: 32px;
   min-height: 28px;
   place-items: center;
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--type-ui);
+  letter-spacing: normal;
 }
 
 .nav-box a:hover,
 .logo-box:hover,
 .language-switch:hover,
 .download-bar:hover {
-  background: #F8F9FA;
+  background: #f8f9fa;
 }
 
 .experience-section {
@@ -242,24 +186,19 @@ html[lang="zh-CN"] .nav-box {
 .experience-intro {
   max-width: 1180px;
   margin: 0 auto;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .experience-intro p {
-  font-family: var(--font-body-en);
+  font: var(--type-body);
+  letter-spacing: var(--track-body);
   max-width: 1080px;
   margin: 0 0 20px;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .experience-intro p {
   font-family: var(--font-body-zh);
   max-width: 1060px;
-  font-size: 14px;
-  line-height: 1.5;
 }
 
 .experience-intro .inline-display-name {
@@ -279,7 +218,7 @@ html[lang="zh-CN"] body .experience-intro .inline-display-name {
 
 .experience-intro h1 {
   margin: 0;
-  color: #0F172A;
+  color: #0f172a;
   font-family: var(--font-display-en);
   font-size: 26px;
   font-weight: 300;
@@ -299,9 +238,8 @@ html[lang="zh-CN"] .experience-intro h1 {
   margin: 0;
   padding-left: 12px;
   align-items: center;
-  font-family: var(--font-struct);
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--type-ui);
+  letter-spacing: normal;
 }
 
 .timeline-wheel {
@@ -364,7 +302,9 @@ html[lang="zh-CN"] .experience-intro h1 {
   transform: none;
   transform-origin: center;
   opacity: 0.38;
-  transition: color 180ms ease, opacity 180ms ease;
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
   will-change: transform;
 }
 
@@ -428,9 +368,8 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
   left: 18px;
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
+  font: var(--type-caption);
+  letter-spacing: normal;
   font-style: italic;
 }
 
@@ -457,7 +396,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #0F172A;
+  color: #0f172a;
   cursor: pointer;
   font: inherit;
   text-align: center;
@@ -499,8 +438,8 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
 
 .experience-next-label {
   margin-top: 2px;
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--type-ui);
+  letter-spacing: normal;
 }
 
 .experience-card {
@@ -510,7 +449,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
   min-height: 260px;
   padding: 38px 44px 36px;
   border: 0;
-  background: #F8F9FA;
+  background: #f8f9fa;
   opacity: 0;
   pointer-events: none;
   transform: translateY(18px);
@@ -527,7 +466,7 @@ html[lang="zh-CN"] .timeline-tab:not(.is-active) .timeline-number {
 
 .experience-card h2 {
   margin: 6px 0 0;
-  color: #0F172A;
+  color: #0f172a;
   font-family: var(--font-display-en);
   font-size: 26px;
   font-weight: 300;
@@ -542,11 +481,8 @@ html[lang="zh-CN"] .experience-card h2 {
 .experience-card p {
   margin: 0;
   color: var(--muted);
-  font-family: var(--font-body-en);
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: -0.42px;
+  font: var(--type-body);
+  letter-spacing: var(--track-body);
 }
 
 html[lang="zh-CN"] .experience-card p {
@@ -555,10 +491,7 @@ html[lang="zh-CN"] .experience-card p {
 
 .experience-card .experience-count {
   color: var(--blue-gray);
-  font-family: var(--font-struct);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
+  font: var(--type-ui);
   letter-spacing: normal;
 }
 
@@ -593,13 +526,10 @@ html[lang="zh-CN"] .experience-card .experience-count {
 }
 
 .experience-description {
-  font-family: var(--font-body-en) !important;
+  font: var(--type-body) !important;
+  letter-spacing: var(--track-body);
   max-width: 940px;
   color: var(--ink) !important;
-  font-size: 14px !important;
-  font-weight: 300;
-  line-height: 1.5 !important;
-  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .experience-description {
@@ -611,16 +541,15 @@ html[lang="zh-CN"] .experience-description {
   padding-top: 16px;
   border-top: 0;
   color: var(--blue-gray) !important;
-  font-family: var(--font-struct) !important;
-  font-size: 11px !important;
-  font-weight: 300;
-  letter-spacing: normal;
+  font: var(--type-caption) !important;
+  /* !important so the caps tracking survives `.experience-card p`, which is
+     more specific (0,1,1) than this rule and would otherwise apply body tracking. */
+  letter-spacing: var(--track-caps) !important;
   text-transform: uppercase;
-  line-height: 1.45;
 }
 
 .experience-stats strong {
-  color: #0F172A;
+  color: #0f172a;
   font-family: var(--font-struct) !important;
   font-weight: 400;
 }
@@ -642,11 +571,9 @@ html[lang="zh-CN"] .experience-stats strong {
   align-items: center;
   justify-content: center;
   gap: 18px;
-  color: #0F172A;
-  font-family: var(--font-struct);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
+  color: #0f172a;
+  font: var(--type-ui);
+  letter-spacing: normal;
 }
 
 .download-bar::before {
@@ -693,8 +620,8 @@ html[lang="zh-CN"] .experience-stats strong {
 }
 
 .download-label {
-  font-size: 14px;
-  font-weight: 400;
+  font: var(--type-ui);
+  letter-spacing: normal;
 }
 
 .projects-section {
@@ -712,7 +639,7 @@ html[lang="zh-CN"] .experience-stats strong {
   margin: 0 auto 30px;
   padding-top: 26px;
   border-top: 0;
-  color: #0F172A;
+  color: #0f172a;
 }
 
 .projects-intro h2 {
@@ -729,20 +656,15 @@ html[lang="zh-CN"] .projects-intro h2 {
 }
 
 .projects-intro p {
+  font: var(--type-body);
+  letter-spacing: var(--track-body);
   margin: 0 0 20px;
   max-width: 1080px;
-  font-family: var(--font-body-en);
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: -0.42px;
 }
 
 html[lang="zh-CN"] .projects-intro p {
   font-family: var(--font-body-zh);
   max-width: 1060px;
-  font-size: 14px;
-  line-height: 1.5;
 }
 
 .projects-intro p:last-child {
@@ -777,11 +699,11 @@ html[lang="zh-CN"] .projects-intro p {
 }
 
 .project-summary:hover {
-  background: #F8F9FA;
+  background: #f8f9fa;
 }
 
 .project-card.is-open .project-summary {
-  background: #F8F9FA;
+  background: #f8f9fa;
   border: 0;
 }
 
@@ -803,10 +725,7 @@ html[lang="zh-CN"] .projects-intro p {
 
 .project-meta {
   color: var(--blue-gray);
-  font-family: var(--font-struct);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
+  font: var(--type-caption);
   letter-spacing: normal;
 }
 
@@ -825,21 +744,16 @@ html[lang="zh-CN"] .project-title {
   padding-bottom: 0;
   border-bottom: 0;
   color: var(--muted);
-  font-family: var(--font-struct);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
+  font: var(--type-caption);
+  letter-spacing: normal;
   white-space: nowrap;
 }
 
 .project-details {
   padding: 0 83px 44px;
   color: var(--ink);
-  font-family: var(--font-body-en);
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: -0.42px;
+  font: var(--type-body);
+  letter-spacing: var(--track-body);
 }
 
 html[lang="zh-CN"] .project-details {
@@ -918,7 +832,9 @@ html[lang="zh-CN"] .project-details {
   height: 100%;
   object-fit: contain;
   filter: saturate(0.45) contrast(0.92) brightness(1.04) sepia(0.12);
-  transition: filter 300ms ease, transform 180ms ease;
+  transition:
+    filter 300ms ease,
+    transform 180ms ease;
 }
 
 .project-media-frame img:hover {
@@ -943,17 +859,15 @@ html[lang="zh-CN"] .project-details {
   padding-top: 14px;
   border-top: 0;
   color: var(--muted);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
+  font: var(--type-caption);
+  letter-spacing: normal;
 }
 
 .project-team {
   margin-top: 16px !important;
-  color: #0F172A;
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
+  color: #0f172a;
+  font: var(--type-caption);
+  letter-spacing: normal;
 }
 
 html[lang="zh-CN"] .project-method,
@@ -970,7 +884,7 @@ html[lang="zh-CN"] .project-team {
 
 .skills-title {
   margin: 0 0 34px;
-  color: #0F172A;
+  color: #0f172a;
   font-family: var(--font-display-en);
   font-size: 26px;
   font-weight: 300;
@@ -986,7 +900,7 @@ html[lang="zh-CN"] .skills-title {
   display: grid;
   grid-template-columns: 108px minmax(0, 1fr);
   gap: 0 40px;
-  padding: 0 30px;
+  padding: 0;
 }
 
 .credentials-row + .credentials-row {
@@ -996,11 +910,8 @@ html[lang="zh-CN"] .skills-title {
 .credentials-label {
   margin: 4px 0 0;
   color: var(--blue-gray);
-  font-family: var(--font-struct);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
-  letter-spacing: .12em;
+  font: var(--type-caption);
+  letter-spacing: var(--track-caps);
 }
 
 .credentials-content {
@@ -1023,11 +934,10 @@ html[lang="zh-CN"] .skills-title {
 }
 
 .credential-name {
-  color: #0F172A;
-  font-family: var(--font-body-en);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.5;
+  color: #0f172a;
+  font: var(--type-ui);
+  line-height: 1.45;
+  letter-spacing: normal;
 }
 
 .credential-provider {
@@ -1038,17 +948,14 @@ html[lang="zh-CN"] .skills-title {
   font-size: 10px;
   font-weight: 300;
   line-height: 1.45;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 .tools-list {
   margin: 0;
   color: var(--muted);
-  font-family: var(--font-struct);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.5;
-  letter-spacing: .04em;
+  font: var(--type-caption);
+  letter-spacing: normal;
 }
 
 .skills-link {
@@ -1061,7 +968,7 @@ html[lang="zh-CN"] .skills-title {
   font-size: 10px;
   font-weight: 300;
   line-height: 1.45;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 .skills-link:hover {
@@ -1076,7 +983,7 @@ html[lang="zh-CN"] .skills-title {
   justify-content: space-between;
   gap: 40px;
   padding: 0 54px;
-  border-top: 1px solid #87A1BA;
+  border-top: 1px solid #87a1ba;
   background: var(--band);
   min-height: 72px;
 }
@@ -1091,11 +998,9 @@ html[lang="zh-CN"] .skills-title {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #0F172A;
-  font-family: var(--font-struct);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1;
+  color: #0f172a;
+  font: var(--type-ui);
+  letter-spacing: normal;
   text-decoration: none;
 }
 
@@ -1117,30 +1022,15 @@ html[lang="zh-CN"] .skills-title {
 
 .copyright {
   margin: 0;
-  color: #0F172A;
-  font-family: var(--font-struct);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.45;
-  text-align: right;
+  color: #0f172a;
+  font: var(--type-caption);
   letter-spacing: normal;
+  text-align: right;
 }
 
 @media (max-width: 900px) {
-  html {
-    scrollbar-width: none;
-  }
-
-  html::-webkit-scrollbar {
-    display: none;
-  }
-
   body {
     overflow-x: hidden;
-  }
-
-  .page-scrollbar {
-    display: none;
   }
 
   .work-page {
@@ -1166,15 +1056,11 @@ html[lang="zh-CN"] .skills-title {
   .experience-intro p,
   .projects-intro p {
     max-width: none;
-    font-size: 14px;
-    line-height: 1.5;
   }
 
   html[lang="zh-CN"] .experience-intro p,
   html[lang="zh-CN"] .projects-intro p {
     max-width: none;
-    font-size: 14px;
-    line-height: 1.5;
   }
 
   .experience-intro hr {
@@ -1270,13 +1156,10 @@ html[lang="zh-CN"] .skills-title {
 
   .experience-description {
     max-width: none;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
   }
 
   .experience-stats {
     margin-top: 20px !important;
-    font-size: 11px !important;
   }
 
   .experience-next {
@@ -1305,7 +1188,6 @@ html[lang="zh-CN"] .skills-title {
 
   .experience-next-label {
     margin-top: 0;
-    font-size: 14px;
   }
 
   .download-bar {
@@ -1318,10 +1200,6 @@ html[lang="zh-CN"] .skills-title {
     width: 34px;
     height: 38px;
     font-size: 26px;
-  }
-
-  .download-label {
-    font-size: 14px;
   }
 
   .projects-section {
@@ -1363,8 +1241,6 @@ html[lang="zh-CN"] .skills-title {
 
   .project-details {
     padding: 0 18px 28px;
-    font-size: 14px;
-    line-height: 1.5;
   }
 
   .project-media-grid,
@@ -1405,6 +1281,17 @@ html[lang="zh-CN"] .skills-title {
     gap: 12px;
   }
 
+  .certification-list li {
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+  }
+
+  .credential-provider {
+    padding-left: 0;
+    border-left: 0;
+  }
+
   .skills-link {
     margin-top: 22px;
   }
@@ -1436,11 +1323,6 @@ html[lang="zh-CN"] .skills-title {
   .projects-section {
     padding-right: 16px;
     padding-left: 16px;
-  }
-
-  .experience-intro p,
-  .projects-intro p {
-    font-size: 14px;
   }
 
   .timeline-wheel {

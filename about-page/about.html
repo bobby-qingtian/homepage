@@ -6,13 +6,9 @@
     <title>About</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&amp;family=Martian+Mono:wght@300;400;500;700&amp;family=Noto+Sans+SC:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/subsetted-fonts@1.0.4/SarasaUiSC-Regular/SarasaUiSC-Regular.css" rel="stylesheet">
     <style>
-      /* Type tokens (per design spec, image 2/3) — font families unchanged.
-         h3 26/300/1.12/-0.26px · h4 16/400/1.5 · sui 14/400/1
-         sb 14/300/1.5/-0.42px · c11 11/300/1.45 · c10 10/400/1.15/0.1px · c9 9/300/1.5
-         weights limited to 300/400. */
       :root {
         color-scheme: light;
         --page-bg: #403c37;
@@ -28,13 +24,17 @@
         --font-body-en: "Martian Mono", monospace;
         --font-body-zh: "SarasaUiSC-Regular", "Sarasa Gothic SC", sans-serif;
         --font-struct: "Martian Mono", monospace;
-        /*
-          Story block only (top-left quadrant). It shares a fixed 50/50 panel
-          split with the map and the panel is overflow:hidden, so the largest
-          usable size is set by viewport height, not width — hence vh.
-          One value drives all three paragraphs, so they always match.
-        */
         --type-story-size: clamp(10.5px, 1.3vh, 12.5px);
+
+        /* Type scale — Martian Mono
+           body     14 / 300 / 1.5  / -0.42px   running text
+           ui       14 / 400 / 1    / normal    interactive elements
+           caption  11 / 300 / 1.45 / normal    +0.12em tracking when uppercase */
+        --type-body: 300 14px/1.5 var(--font-body-en);
+        --type-ui: 400 14px/1 var(--font-struct);
+        --type-caption: 300 11px/1.45 var(--font-struct);
+        --track-body: -0.42px;
+        --track-caps: 0.12em;
       }
 
       * { box-sizing: border-box; font-family: inherit; }
@@ -50,7 +50,6 @@
       html[lang="zh-CN"] body {
         font-family: var(--font-body-zh);
       }
-      /* Fonts: every heading/title uses Geist; all other text uses Martian Mono. */
       h1, h2, h3, h4, h5, h6,
       [class*="title"] {
         font-family: var(--font-display-en);
@@ -202,11 +201,8 @@
       .eyebrow {
         margin: 0 0 18px;
         color: var(--blue-gray);
-        font-family: var(--font-struct);
-        font-size: 11px;
-        font-weight: 300;
-        line-height: 1.45;
-        letter-spacing: normal;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         text-transform: uppercase;
       }
 
@@ -282,13 +278,9 @@
         max-width: 1080px;
         margin: 0 0 14px;
         color: #0F172A;
-        font-family: var(--font-body-en);
-        font-size: 14px;
-        font-weight: 300;
-        line-height: 1.5;
-        letter-spacing: -0.42px;
+        font: var(--type-body);
+        letter-spacing: var(--track-body);
       }
-      /* Story block sizes itself to fill its half of the panel; all paragraphs match. */
       .story-body p {
         font-size: var(--type-story-size);
       }
@@ -338,9 +330,8 @@
       .node-ring { fill: none; stroke: var(--blue-gray); stroke-width: 1.4; opacity: 0.7; }
       .node-label {
         fill: #0F172A;
-        font-family: var(--font-struct);
-        font-size: 11px;
-        letter-spacing: normal;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         text-transform: uppercase;
       }
       .map-legend {
@@ -349,11 +340,8 @@
         gap: 22px;
         margin-top: 14px;
         color: var(--muted);
-        font-family: var(--font-struct);
-        font-size: 11px;
-        font-weight: 300;
-        line-height: 1.45;
-        letter-spacing: normal;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         text-transform: uppercase;
       }
       .map-legend b { color: var(--blue-gray); font-weight: 400; }
@@ -373,19 +361,14 @@
       .edu-inst {
         grid-area: institution;
         color: #0F172A;
-        font-family: var(--font-struct);
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.4;
+        font: var(--type-ui);
+        letter-spacing: normal;
         white-space: nowrap;
       }
       .edu-loc,
       .edu-meta {
-        font-family: var(--font-struct);
-        font-size: 14px;
-        font-weight: 300;
-        line-height: 1.5;
-        letter-spacing: -0.42px;
+        font: var(--type-body);
+        letter-spacing: var(--track-body);
       }
       .edu-loc {
         grid-area: location;
@@ -401,8 +384,8 @@
         display: grid;
         gap: 3px;
         color: #0F172A;
-        font-size: 11px;
-        font-weight: 300;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         margin-top: 0;
         padding-left: 0;
         border-left: 0;
@@ -431,10 +414,8 @@
       .language-name {
         margin: 0;
         color: #0F172A;
-        font-family: var(--font-struct);
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1.5;
+        font: var(--type-ui);
+        letter-spacing: normal;
       }
       .language-description,
       .language-level {
@@ -444,15 +425,14 @@
       .language-description {
         margin: 0;
         color: var(--ink);
-        font-size: 11px;
-        line-height: 1.5;
+        font: var(--type-caption);
+        letter-spacing: normal;
       }
       .language-level {
         justify-self: end;
         color: var(--blue-gray);
-        font-size: 11px;
-        line-height: 1.45;
-        letter-spacing: .12em;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         text-transform: uppercase;
         white-space: nowrap;
       }
@@ -464,11 +444,8 @@
         gap: 10px;
         margin-bottom: 10px;
         color: var(--blue-gray);
-        font-family: var(--font-struct);
-        font-size: 11px;
-        font-weight: 300;
-        line-height: 1.45;
-        letter-spacing: normal;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         text-transform: uppercase;
       }
       .group-label::before {
@@ -489,8 +466,8 @@
         background: #F8F9FA;
         color: var(--ink);
         font-family: var(--font-struct);
-        font-size: 14px;
-        line-height: 1.2;
+        font: var(--type-ui);
+        letter-spacing: normal;
       }
       .sub-block { margin-top: 48px; }
       .sub-head {
@@ -498,11 +475,8 @@
         padding-bottom: 10px;
         border-bottom: 0;
         color: var(--muted);
-        font-family: var(--font-struct);
-        font-size: 11px;
-        font-weight: 300;
-        line-height: 1.45;
-        letter-spacing: normal;
+        font: var(--type-caption);
+        letter-spacing: var(--track-caps);
         text-transform: uppercase;
       }
       .cert {
@@ -513,15 +487,9 @@
         padding: 11px 0;
         border-bottom: 0;
       }
-      .cert-name,
-      .cert-meta,
-      .lang-line {
-        font-family: var(--font-struct);
-        line-height: 1.5;
-      }
-      .cert-name { color: #0F172A; font-size: 14px; }
-      .cert-meta { color: var(--muted); font-size: 11px; font-weight: 300; white-space: nowrap; }
-      .lang-line { display: flex; flex-wrap: wrap; gap: 0 10px; color: #0F172A; font-size: 14px; font-weight: 300; }
+      .cert-name { color: #0F172A; font: var(--type-ui); letter-spacing: normal; }
+      .cert-meta { color: var(--muted); font: var(--type-caption); letter-spacing: normal; white-space: nowrap; }
+      .lang-line { display: flex; flex-wrap: wrap; gap: 0 10px; color: #0F172A; font: var(--type-body); letter-spacing: var(--track-body); }
       .lang-line b { color: var(--blue-gray); font-weight: 400; }
       .lang-item { display: inline; }
       .lang-item:not(:last-child)::after {
@@ -546,10 +514,8 @@
         align-items: center;
         gap: 8px;
         color: #0F172A;
-        font-family: var(--font-struct);
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 1;
+        font: var(--type-ui);
+        letter-spacing: normal;
       }
       .footer-arrow { display: block; width: 16px; height: 16px; }
       .footer-arrow img { display: block; width: 100%; height: 100%; }
@@ -557,12 +523,9 @@
       .copyright {
         margin: 0;
         color: #0F172A;
-        font-family: var(--font-struct);
-        font-size: 11px;
-        font-weight: 300;
-        line-height: 1.45;
-        text-align: right;
+        font: var(--type-caption);
         letter-spacing: normal;
+        text-align: right;
       }
 
       @media (min-width: 1101px) and (max-width: 1350px) {
@@ -570,13 +533,9 @@
           grid-template-columns: minmax(145px, 0.78fr) minmax(0, 1.22fr);
           column-gap: 28px;
         }
-        .edu-inst,
-        .edu-loc { font-size: 14px; }
-        .edu-meta { font-size: 11px; }
       }
 
       @media (max-width: 1100px) {
-        /* Stacked layout: no 50/50 height lock, so the story rejoins body size. */
         html { --type-story-size: 14px; }
         html, body { height: auto; min-height: 100%; }
         body { overflow: auto; }
@@ -640,8 +599,6 @@
         .profile-panel { padding: 32px 24px 48px; }
         .details-content { padding: 44px 24px 52px; }
         .details-content section { padding-bottom: 44px; margin-bottom: 44px; }
-        .story-body p,
-        .intro-line { font-size: 14px; line-height: 1.5; }
         .footer-links { gap: 22px; }
         .language-row {
           grid-template-columns: 1fr;
@@ -792,6 +749,7 @@
       </div>
     </main>
 
+    <script src="../assets/page-scrollbar.js?v=1" defer></script>
     <script>
     (function(){
       const translatableSelector = '[data-zh-html]';
@@ -924,8 +882,8 @@
         segEls.forEach((p,i)=>{const cs=casingEls[i];setTimeout(()=>{const e=`stroke-dashoffset ${dur}ms cubic-bezier(.65,.05,.36,1)`;p.style.transition=e;cs.style.transition=e;p.style.strokeDashoffset=0;cs.style.strokeDashoffset=0;},t);pop(nodeEls[i+1],t+dur-120);t+=dur+90;});
         return t;}
       // ---- 地图进入视口时循环播放 ----
-      const HOLD=1400;      // 路线完成后的停顿
-      const FADE=650;       // 重新开始前淡出
+      const HOLD=1400;
+      const FADE=650;
       let inView=false, running=false, timers=[];
       function clearTimers(){timers.forEach(clearTimeout);timers=[];}
       function fadeOut(cb){
@@ -939,7 +897,7 @@
         if(!inView){running=false;return;}
         running=true;
         const total=play();
-        if(total===0){running=false;return;} // 减少动态效果：只绘制一次后停止
+        if(total===0){running=false;return;}
         timers.push(setTimeout(()=>{
           fadeOut(()=>{ if(inView) cycle(); else running=false; });
         }, total+HOLD));

@@ -1,111 +1,58 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const page = document.querySelector('.work-page');
-  const pageScrollRail = document.querySelector('.page-scrollbar');
-  const pageScrollTrack = document.querySelector('.page-scrollbar-track');
-  const pageScrollThumb = document.querySelector('.page-scrollbar-thumb');
-  let pageScrollDrag = null;
+document.addEventListener("DOMContentLoaded", () => {
+  const page = document.querySelector(".work-page");
 
-  function syncPageScrollbar() {
-    if (!pageScrollRail) return;
-    const root = document.documentElement;
-    const maxScroll = Math.max(0, root.scrollHeight - window.innerHeight);
-    const travel = Math.max(0, pageScrollTrack.clientHeight - pageScrollThumb.offsetHeight);
-    const progress = maxScroll ? window.scrollY / maxScroll : 0;
-    pageScrollRail.hidden = maxScroll === 0;
-    pageScrollThumb.style.transform = `translateY(${Math.round(progress * travel)}px)`;
-  }
-
-  if (pageScrollRail) {
-    window.addEventListener('scroll', syncPageScrollbar, { passive: true });
-    pageScrollRail.addEventListener('pointerdown', (event) => {
-      const trackBox = pageScrollTrack.getBoundingClientRect();
-      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      const travel = Math.max(1, pageScrollTrack.clientHeight - pageScrollThumb.offsetHeight);
-
-      if (event.target === pageScrollThumb) {
-        pageScrollDrag = { y: event.clientY, scrollTop: window.scrollY, maxScroll, travel };
-        pageScrollThumb.setPointerCapture(event.pointerId);
-      } else {
-        const nextProgress = Math.min(1, Math.max(0, (event.clientY - trackBox.top - pageScrollThumb.offsetHeight / 2) / travel));
-        window.scrollTo({ top: nextProgress * maxScroll, behavior: 'smooth' });
-      }
-    });
-    pageScrollThumb.addEventListener('pointermove', (event) => {
-      if (!pageScrollDrag) return;
-      window.scrollTo({ top: pageScrollDrag.scrollTop + ((event.clientY - pageScrollDrag.y) / pageScrollDrag.travel) * pageScrollDrag.maxScroll });
-    });
-    pageScrollThumb.addEventListener('pointerup', () => { pageScrollDrag = null; });
-    pageScrollThumb.addEventListener('pointercancel', () => { pageScrollDrag = null; });
-    new ResizeObserver(syncPageScrollbar).observe(page);
-    window.addEventListener('load', syncPageScrollbar);
-  }
-
-  const wheel = document.querySelector('.timeline-wheel');
-  const rotor = document.querySelector('.timeline-rotor');
-  const yearLabel = document.querySelector('.timeline-year');
-  const experienceSection = document.querySelector('.experience-section');
-  const experienceList = document.querySelector('.experience-list');
-  const experienceNext = document.querySelector('.experience-next');
-  const tabs = Array.from(document.querySelectorAll('.timeline-tab'));
-  const panels = Array.from(document.querySelectorAll('.experience-card'));
+  const wheel = document.querySelector(".timeline-wheel");
+  const rotor = document.querySelector(".timeline-rotor");
+  const yearLabel = document.querySelector(".timeline-year");
+  const experienceSection = document.querySelector(".experience-section");
+  const experienceList = document.querySelector(".experience-list");
+  const experienceNext = document.querySelector(".experience-next");
+  const tabs = Array.from(document.querySelectorAll(".timeline-tab"));
+  const panels = Array.from(document.querySelectorAll(".experience-card"));
   const embeddedInFrame = window.self !== window.top;
-  let languageButton = document.querySelector('.language-switch');
-
-  function createLanguageButton() {
-    const button = document.createElement('button');
-    button.className = 'language-switch';
-    button.type = 'button';
-    button.setAttribute('aria-label', 'Switch language');
-    button.setAttribute('aria-pressed', 'false');
-    button.innerHTML = '<span class="is-active">EN</span><span>中</span>';
-    return button;
-  }
-
-  if (!languageButton && !embeddedInFrame) {
-    languageButton = createLanguageButton();
-    document.body.prepend(languageButton);
-  }
+  let languageButton = document.querySelector(".language-switch");
 
   const translatableSelector = [
-    '.experience-intro p',
-    '.experience-intro h1',
-    '.experience-count',
-    '.experience-heading-row h2',
-    '.experience-description',
-    '.experience-stats',
-    '.experience-next-label',
-    '.download-label',
-    '.projects-intro h2',
-    '.projects-intro p',
-    '.skills-title',
-    '.project-meta',
-    '.project-title',
-    '.project-details > p',
-    '.project-action',
-    '.credentials-label',
-    '.credential-name',
-    '.skills-link span:first-child',
-    '.footer-link span:not(.footer-arrow)',
-    '.copyright'
-  ].join(',');
+    ".experience-intro p",
+    ".experience-intro h1",
+    ".experience-count",
+    ".experience-heading-row h2",
+    ".experience-description",
+    ".experience-stats",
+    ".experience-next-label",
+    ".download-label",
+    ".projects-intro h2",
+    ".projects-intro p",
+    ".skills-title",
+    ".project-meta",
+    ".project-title",
+    ".project-details > p",
+    ".project-action",
+    ".credentials-label",
+    ".credential-name",
+    ".skills-link span:first-child",
+    ".footer-link span:not(.footer-arrow)",
+    ".copyright",
+  ].join(",");
   const actionLabels = {
-    en: { open: 'View case', close: 'Close case' },
-    zh: { open: '查看案例', close: '收起案例' }
+    en: { open: "View case", close: "Close case" },
+    zh: { open: "查看案例", close: "收起案例" },
   };
-  let currentLanguage = document.documentElement.lang === 'zh-CN' ? 'zh' : 'en';
+  let currentLanguage = document.documentElement.lang === "zh-CN" ? "zh" : "en";
 
   function prepareTranslations() {
     document.querySelectorAll(translatableSelector).forEach((element) => {
-      if (element.dataset.i18nPrepared === 'true') return;
+      if (element.dataset.i18nPrepared === "true") return;
       element.dataset.enHtml = element.innerHTML;
-      if (!element.dataset.zhHtml) element.dataset.zhHtml = element.dataset.enHtml;
-      element.dataset.i18nPrepared = 'true';
+      if (!element.dataset.zhHtml)
+        element.dataset.zhHtml = element.dataset.enHtml;
+      element.dataset.i18nPrepared = "true";
     });
   }
 
   function translateElement(element, language) {
-    const htmlKey = language === 'zh' ? 'zhHtml' : 'enHtml';
-    const textKey = language === 'zh' ? 'zh' : 'en';
+    const htmlKey = language === "zh" ? "zhHtml" : "enHtml";
+    const textKey = language === "zh" ? "zh" : "en";
     if (element.dataset[htmlKey]) {
       element.innerHTML = element.dataset[htmlKey];
     } else if (element.dataset[textKey]) {
@@ -114,22 +61,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function setLanguage(language) {
-    currentLanguage = language === 'zh' ? 'zh' : 'en';
-    document.documentElement.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en';
-    document.querySelectorAll(translatableSelector).forEach((element) => translateElement(element, currentLanguage));
+    currentLanguage = language === "zh" ? "zh" : "en";
+    document.documentElement.lang = currentLanguage === "zh" ? "zh-CN" : "en";
+    document
+      .querySelectorAll(translatableSelector)
+      .forEach((element) => translateElement(element, currentLanguage));
 
-    document.querySelectorAll('.project-card').forEach((card) => {
-      const button = card.querySelector('.project-summary');
-      const action = card.querySelector('.project-action');
+    document.querySelectorAll(".project-card").forEach((card) => {
+      const button = card.querySelector(".project-summary");
+      const action = card.querySelector(".project-action");
       if (!button || !action) return;
-      action.textContent = actionLabels[currentLanguage][button.getAttribute('aria-expanded') === 'true' ? 'close' : 'open'];
+      action.textContent =
+        actionLabels[currentLanguage][
+          button.getAttribute("aria-expanded") === "true" ? "close" : "open"
+        ];
     });
 
     if (languageButton) {
-      languageButton.setAttribute('aria-pressed', String(currentLanguage === 'zh'));
-      const languageSpans = languageButton.querySelectorAll('span');
-      languageSpans[0].classList.toggle('is-active', currentLanguage !== 'zh');
-      languageSpans[1].classList.toggle('is-active', currentLanguage === 'zh');
+      languageButton.setAttribute(
+        "aria-pressed",
+        String(currentLanguage === "zh"),
+      );
+      const languageSpans = languageButton.querySelectorAll("span");
+      languageSpans[0].classList.toggle("is-active", currentLanguage !== "zh");
+      languageSpans[1].classList.toggle("is-active", currentLanguage === "zh");
     }
 
     updateMonthTabs();
@@ -143,75 +98,120 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!target) return;
 
     const apply = () => {
-      if (targetName === 'experiences') {
-        const heading = target.querySelector('.experience-intro h1');
+      if (targetName === "experiences") {
+        const heading = target.querySelector(".experience-intro h1");
         const anchor = heading || target;
         const anchorTop = anchor.getBoundingClientRect().top + window.scrollY;
-        const headingOffset = window.matchMedia('(max-width: 700px)').matches ? 16 : 64;
-        window.scrollTo({ top: Math.max(0, anchorTop - headingOffset), behavior: 'auto' });
+        const headingOffset = window.matchMedia("(max-width: 700px)").matches
+          ? 16
+          : 64;
+        window.scrollTo({
+          top: Math.max(0, anchorTop - headingOffset),
+          behavior: "auto",
+        });
         return;
       }
 
-      target.scrollIntoView({ block: 'start' });
+      target.scrollIntoView({ block: "start" });
     };
 
     apply();
 
-    // The page reflows ~1.5s in (CDN scripts land and shave ~200px off the copy
-    // above the section), which would leave the heading scrolled off the top.
-    // Re-anchor until the height settles, but yield as soon as the reader
-    // takes over the scroll.
-    if (typeof ResizeObserver === 'function') {
+    if (typeof ResizeObserver === "function") {
       const observer = new ResizeObserver(apply);
-      const resizeTarget = targetName === 'experiences'
-        ? target.querySelector('.experience-intro') || target
-        : document.documentElement;
+      const resizeTarget =
+        targetName === "experiences"
+          ? target.querySelector(".experience-intro") || target
+          : document.documentElement;
       observer.observe(resizeTarget);
       const stop = () => observer.disconnect();
       setTimeout(stop, 4000);
-      ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(type => {
+      ["wheel", "touchstart", "keydown", "pointerdown"].forEach((type) => {
         window.addEventListener(type, stop, { once: true, passive: true });
       });
     }
 
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+    if (document.fonts && document.fonts.ready)
+      document.fonts.ready.then(apply);
   }
 
   if (languageButton) {
-    languageButton.addEventListener('click', () => {
-      const nextLanguage = languageButton.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh';
+    languageButton.addEventListener("click", () => {
+      const nextLanguage =
+        languageButton.getAttribute("aria-pressed") === "true" ? "en" : "zh";
       setLanguage(nextLanguage);
       if (embeddedInFrame) {
-        window.parent.postMessage({ type: 'set-site-language', language: nextLanguage }, '*');
+        window.parent.postMessage(
+          { type: "set-site-language", language: nextLanguage },
+          "*",
+        );
       }
     });
   }
 
-  window.addEventListener('message', (event) => {
+  window.addEventListener("message", (event) => {
     if (!event.data) return;
-    if (event.data.type === 'set-language') {
+    if (event.data.type === "set-language") {
       setLanguage(event.data.language);
       return;
     }
-    if (event.data.type === 'scroll-to') {
+    if (event.data.type === "scroll-to") {
       scrollToWorkSection(event.data.target);
     }
   });
 
-  if (!wheel || !rotor || !yearLabel || tabs.length !== 5 || panels.length !== 3 || !window.gsap) return;
+  if (
+    !wheel ||
+    !rotor ||
+    !yearLabel ||
+    tabs.length !== 5 ||
+    panels.length !== 3 ||
+    !window.gsap
+  )
+    return;
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const mobileTimeline = window.matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const mobileTimeline = window.matchMedia(
+    "(max-width: 900px), (pointer: coarse)",
+  ).matches;
   const monthAngles = [-36, -18, 0, 18, 36];
   const slotOffsets = [-2, -1, 0, 1, 2];
   const monthNames = {
-    en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-    zh: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+    en: [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC",
+    ],
+    zh: [
+      "一月",
+      "二月",
+      "三月",
+      "四月",
+      "五月",
+      "六月",
+      "七月",
+      "八月",
+      "九月",
+      "十月",
+      "十一月",
+      "十二月",
+    ],
   };
   const experienceRanges = [
     { panelIndex: 0, start: monthIndex(2022, 8), end: monthIndex(2023, 3) },
     { panelIndex: 1, start: monthIndex(2024, 7), end: monthIndex(2025, 7) },
-    { panelIndex: 2, start: monthIndex(2026, 1), end: monthIndex(2026, 3) }
+    { panelIndex: 2, start: monthIndex(2026, 1), end: monthIndex(2026, 3) },
   ];
 
   let activeIndex = 0;
@@ -235,19 +235,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function panelIndexForMonth(index) {
-    const direct = experienceRanges.find((range) => index >= range.start && index <= range.end);
+    const direct = experienceRanges.find(
+      (range) => index >= range.start && index <= range.end,
+    );
     return direct ? direct.panelIndex : null;
   }
 
   function placeTab(tab, angle) {
     const radius = rotor.offsetWidth / 2 - 0.5;
-    const radians = angle * Math.PI / 180;
+    const radians = (angle * Math.PI) / 180;
     gsap.set(tab, {
       x: Math.cos(radians) * radius,
       y: Math.sin(radians) * radius,
-      rotation: 0
+      rotation: 0,
     });
-    tab.style.setProperty('--month-rotation', `${angle * 0.72}deg`);
+    tab.style.setProperty("--month-rotation", `${angle * 0.72}deg`);
   }
 
   function alignActiveExperience() {
@@ -255,9 +257,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!activeCard || !experienceSection || !experienceList) return;
     const sectionRect = experienceSection.getBoundingClientRect();
     const rotorRect = rotor.getBoundingClientRect();
-    const pageScale = page ? page.getBoundingClientRect().width / page.offsetWidth : 1;
+    const pageScale = page
+      ? page.getBoundingClientRect().width / page.offsetWidth
+      : 1;
     const cardHeight = activeCard.getBoundingClientRect().height / pageScale;
-    const rotorCenterY = (rotorRect.top + rotorRect.height / 2 - sectionRect.top) / pageScale;
+    const rotorCenterY =
+      (rotorRect.top + rotorRect.height / 2 - sectionRect.top) / pageScale;
     experienceList.style.top = `${Math.round(rotorCenterY - cardHeight / 2)}px`;
     if (experienceNext && !mobileTimeline) {
       experienceNext.style.top = `${Math.round(rotorCenterY + 10)}px`;
@@ -275,34 +280,57 @@ document.addEventListener('DOMContentLoaded', () => {
       const selected = slot === 0;
       const panelIndex = panelIndexForMonth(tabMonth);
 
-      tab.classList.toggle('is-active', selected);
-      tab.setAttribute('aria-selected', String(selected));
+      tab.classList.toggle("is-active", selected);
+      tab.setAttribute("aria-selected", String(selected));
       tab.tabIndex = selected ? 0 : -1;
       tab.dataset.monthIndex = String(tabMonth);
       if (panelIndex === null) {
-        tab.removeAttribute('aria-controls');
+        tab.removeAttribute("aria-controls");
       } else {
-        tab.setAttribute('aria-controls', panels[panelIndex].id);
+        tab.setAttribute("aria-controls", panels[panelIndex].id);
       }
-      tab.setAttribute('aria-label', `${monthNames[currentLanguage][month - 1]} ${tabYear}`);
-      tab.querySelector('.timeline-number').textContent = monthLabel(tabMonth);
+      tab.setAttribute(
+        "aria-label",
+        `${monthNames[currentLanguage][month - 1]} ${tabYear}`,
+      );
+      tab.querySelector(".timeline-number").textContent = monthLabel(tabMonth);
       if (focusActive && selected) tab.focus({ preventScroll: true });
     });
   }
 
   function setActivePanel(index, animatePanel = true) {
     const nextIndex = panelIndexForMonth(index);
-    if (nextIndex !== null && nextIndex === activeIndex && panels[nextIndex].classList.contains('is-active')) return;
-    if (nextIndex === null && activeIndex === null && panels.every((panel) => !panel.classList.contains('is-active'))) return;
+    if (
+      nextIndex !== null &&
+      nextIndex === activeIndex &&
+      panels[nextIndex].classList.contains("is-active")
+    )
+      return;
+    if (
+      nextIndex === null &&
+      activeIndex === null &&
+      panels.every((panel) => !panel.classList.contains("is-active"))
+    )
+      return;
 
     activeIndex = nextIndex;
     panels.forEach((panel, panelIndex) => {
       const selected = activeIndex !== null && panelIndex === activeIndex;
-      panel.classList.toggle('is-active', selected);
-      panel.setAttribute('aria-hidden', String(!selected));
+      panel.classList.toggle("is-active", selected);
+      panel.setAttribute("aria-hidden", String(!selected));
 
       if (selected && animatePanel && !reducedMotion) {
-        gsap.fromTo(panel, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.42, ease: 'power2.out', overwrite: true });
+        gsap.fromTo(
+          panel,
+          { autoAlpha: 0, y: 18 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.42,
+            ease: "power2.out",
+            overwrite: true,
+          },
+        );
       } else if (selected) {
         gsap.set(panel, { autoAlpha: 1, y: 0 });
       } else {
@@ -323,8 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!experienceNext) return;
     const current = activeIndex ?? 0;
     const next = (current + 1) % experienceRanges.length;
-    const prefix = currentLanguage === 'zh' ? '下一段' : 'Next experience';
-    experienceNext.setAttribute('aria-label', `${prefix}: ${panels[next].getAttribute('aria-label')}`);
+    const prefix = currentLanguage === "zh" ? "下一段" : "Next experience";
+    experienceNext.setAttribute(
+      "aria-label",
+      `${prefix}: ${panels[next].getAttribute("aria-label")}`,
+    );
   }
 
   function jumpToExperience(index, { focus = false } = {}) {
@@ -349,13 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
       gsap.to(state, {
         angle: desired,
         duration: reducedMotion ? 0 : 0.78,
-        ease: 'power3.inOut',
+        ease: "power3.inOut",
         overwrite: true,
-        onUpdate() { placeTab(tab, state.angle); },
+        onUpdate() {
+          placeTab(tab, state.angle);
+        },
         onComplete() {
           visualAngles[tabIndex] = desired;
           placeTab(tab, desired);
-        }
+        },
       });
     });
 
@@ -372,7 +405,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const desired = monthAngles[tabIndex];
       const adjacentIndex = tabIndex + direction;
       const step = monthAngles[1] - monthAngles[0];
-      const startAngle = monthAngles[adjacentIndex] ?? desired + direction * step;
+      const startAngle =
+        monthAngles[adjacentIndex] ?? desired + direction * step;
       const state = { angle: startAngle };
 
       placeTab(tab, startAngle);
@@ -380,64 +414,84 @@ document.addEventListener('DOMContentLoaded', () => {
       gsap.to(state, {
         angle: desired,
         duration: reducedMotion ? 0 : 0.72,
-        ease: 'power3.inOut',
+        ease: "power3.inOut",
         overwrite: true,
-        onUpdate() { placeTab(tab, state.angle); },
+        onUpdate() {
+          placeTab(tab, state.angle);
+        },
         onComplete() {
           visualAngles[tabIndex] = desired;
           placeTab(tab, desired);
-        }
+        },
       });
     });
   }
 
   tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
+    tab.addEventListener("click", () => {
       const targetMonth = Number(tab.dataset.monthIndex);
       if (!Number.isFinite(targetMonth) || targetMonth === activeMonth) return;
       rotateMonth(Math.sign(targetMonth - activeMonth));
     });
-    tab.addEventListener('keydown', (event) => {
-      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+    tab.addEventListener("keydown", (event) => {
+      if (
+        !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
+      )
+        return;
       event.preventDefault();
-      const direction = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+      const direction =
+        event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : -1;
       rotateMonth(direction, { focus: true });
     });
   });
 
   if (experienceNext) {
-    experienceNext.addEventListener('click', () => {
+    experienceNext.addEventListener("click", () => {
       const current = activeIndex ?? 0;
       jumpToExperience((current + 1) % experienceRanges.length);
     });
   }
 
-  wheel.addEventListener('wheel', (event) => {
-    event.preventDefault();
-    if (wheelLocked) return;
-    wheelLocked = true;
-    rotateMonth(event.deltaY > 0 ? 1 : -1);
-    window.setTimeout(() => { wheelLocked = false; }, reducedMotion ? 80 : 520);
-  }, { passive: false });
+  wheel.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      if (wheelLocked) return;
+      wheelLocked = true;
+      rotateMonth(event.deltaY > 0 ? 1 : -1);
+      window.setTimeout(
+        () => {
+          wheelLocked = false;
+        },
+        reducedMotion ? 80 : 520,
+      );
+    },
+    { passive: false },
+  );
 
   if (window.Draggable && !mobileTimeline) {
     gsap.registerPlugin(Draggable);
-    const dragProxy = document.createElement('div');
+    const dragProxy = document.createElement("div");
     Draggable.create(dragProxy, {
-      type: 'rotation',
+      type: "rotation",
       trigger: wheel,
       dragResistance: 0.08,
-      cursor: 'grab',
-      activeCursor: 'grabbing',
-      onPress() { gsap.set(dragProxy, { rotation: 0 }); },
+      cursor: "grab",
+      activeCursor: "grabbing",
+      onPress() {
+        gsap.set(dragProxy, { rotation: 0 });
+      },
       onDrag() {
-        tabs.forEach((tab, tabIndex) => placeTab(tab, visualAngles[tabIndex] + this.rotation));
+        tabs.forEach((tab, tabIndex) =>
+          placeTab(tab, visualAngles[tabIndex] + this.rotation),
+        );
       },
       onRelease() {
         tabs.forEach((tab, tabIndex) => placeTab(tab, visualAngles[tabIndex]));
-        if (Math.abs(this.rotation) > 8) rotateMonth(this.rotation < 0 ? 1 : -1);
+        if (Math.abs(this.rotation) > 8)
+          rotateMonth(this.rotation < 0 ? 1 : -1);
         gsap.set(dragProxy, { rotation: 0 });
-      }
+      },
     });
   }
 
@@ -445,45 +499,52 @@ document.addEventListener('DOMContentLoaded', () => {
   setActiveMonth(activeMonth, { animatePanel: false });
   updateNextButton();
 
-  const projectCards = Array.from(document.querySelectorAll('.project-card'));
+  const projectCards = Array.from(document.querySelectorAll(".project-card"));
   function scrollProjectToTop(card) {
-    const offset = window.matchMedia('(max-width: 900px)').matches ? 54 : 18;
+    const offset = window.matchMedia("(max-width: 900px)").matches ? 54 : 18;
     const top = card.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top: Math.max(0, top), behavior: reducedMotion ? 'auto' : 'smooth' });
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
   }
 
   projectCards.forEach((card) => {
-    const button = card.querySelector('.project-summary');
-    const details = card.querySelector('.project-details');
-    const action = card.querySelector('.project-action');
+    const button = card.querySelector(".project-summary");
+    const details = card.querySelector(".project-details");
+    const action = card.querySelector(".project-action");
 
-    button.addEventListener('click', () => {
-      const opening = button.getAttribute('aria-expanded') !== 'true';
+    button.addEventListener("click", () => {
+      const opening = button.getAttribute("aria-expanded") !== "true";
 
       projectCards.forEach((otherCard) => {
-        const otherButton = otherCard.querySelector('.project-summary');
-        const otherDetails = otherCard.querySelector('.project-details');
-        const otherAction = otherCard.querySelector('.project-action');
-        otherCard.classList.remove('is-open');
-        otherButton.setAttribute('aria-expanded', 'false');
+        const otherButton = otherCard.querySelector(".project-summary");
+        const otherDetails = otherCard.querySelector(".project-details");
+        const otherAction = otherCard.querySelector(".project-action");
+        otherCard.classList.remove("is-open");
+        otherButton.setAttribute("aria-expanded", "false");
         otherAction.textContent = actionLabels[currentLanguage].open;
         otherDetails.hidden = true;
       });
 
       if (opening) {
-        card.classList.add('is-open');
-        button.setAttribute('aria-expanded', 'true');
+        card.classList.add("is-open");
+        button.setAttribute("aria-expanded", "true");
         action.textContent = actionLabels[currentLanguage].close;
         details.hidden = false;
         if (!reducedMotion) {
-          gsap.fromTo(details, { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.36, ease: 'power2.out' });
+          gsap.fromTo(
+            details,
+            { autoAlpha: 0, y: -10 },
+            { autoAlpha: 1, y: 0, duration: 0.36, ease: "power2.out" },
+          );
         }
         requestAnimationFrame(() => scrollProjectToTop(card));
       }
     });
   });
 
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     tabs.forEach((tab, tabIndex) => placeTab(tab, visualAngles[tabIndex]));
     alignActiveExperience();
   });

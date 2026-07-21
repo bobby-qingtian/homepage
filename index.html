@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         /* Corner mark. z-index sits below the drawer overlay/card (99990+) on
            purpose: an opened file covers the whole viewport and the logo passes
            underneath it rather than floating on top. */
-        .homepage-logo { position:fixed; left:28px; top:24px; z-index:9000; display:block; width:auto; height:44px; pointer-events:none; }
+        .homepage-logo { position:fixed; left:28px; top:24px; z-index:9000; display:block; width:auto; height:44px; pointer-events:none; filter: brightness(0) saturate(100%) invert(35%) sepia(14%) saturate(1200%) hue-rotate(178deg) brightness(88%) contrast(85%); }
         body.guide-open .homepage-logo { z-index:99995; }
         .homepage-corner-nav { position:fixed; top:24px; right:28px; z-index:9000; display:flex; flex-direction:column; align-items:flex-end; gap:12px; color:#0F172A; font:var(--type-ui); letter-spacing:normal; }
         .homepage-language-switch { display:grid; grid-template-columns:1fr 1fr; width:66px; height:29px; padding:3px; border:0; background:#F8F9FA; color:#3D5A7A; font:var(--type-ui); letter-spacing:normal; cursor:pointer; }

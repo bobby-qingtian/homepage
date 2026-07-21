@@ -1364,4 +1364,14 @@ html[lang="zh-CN"] .skills-title {
     padding-right: 14px;
     padding-left: 14px;
   }
+
+  .img-treated img,
+  img.img-treated {
+  filter: grayscale(85%) sepia(15%) hue-rotate(175deg) brightness(1.02) contrast(0.98);
+  transition: filter .3s ease;
+}
+  .img-treated:hover img,
+  img.img-treated:hover {
+  filter: none;
+}
 }

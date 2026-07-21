@@ -73,6 +73,9 @@ h6,
 .playlist-summary strong,
 .album-modal-title {
   font-family: "Geist", "Noto Sans SC", sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.3;
 }
 
 html[lang="zh-CN"] body * {

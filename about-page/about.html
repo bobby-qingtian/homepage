@@ -235,7 +235,15 @@
       html[lang="zh-CN"] .section-title {
         font-family: var(--font-display-zh);
       }
-
+    .img-treated img,
+      img.img-treated {
+        filter: grayscale(85%) sepia(15%) hue-rotate(175deg) brightness(1.02) contrast(0.98);
+        transition: filter .3s ease;
+      }
+      .img-treated:hover img,
+      img.img-treated:hover {
+        filter: none;
+      }
       .story-grid {
         display: grid;
         grid-template-columns: minmax(170px, 32%) minmax(0, 1fr);

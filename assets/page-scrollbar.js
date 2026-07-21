@@ -1,11 +1,3 @@
-/* Shared page scrollbar.
-   Originally lived in work.css / work.js / work.html; extracted here so every
-   standalone page (work, interests, about) shows the same rail, on desktop and
-   on mobile. Self-injects its markup and styles, so a page only has to load it.
-
-   The rail drives window scroll, so it reflects whatever the document scrolls —
-   sections with their own overflow (e.g. the interests photography grid) keep
-   their native behaviour. */
 (function () {
   const TICK_COUNT = 32;
 
@@ -116,7 +108,12 @@
       const travel = Math.max(1, track.clientHeight - thumb.offsetHeight);
 
       if (event.target === thumb) {
-        drag = { y: event.clientY, scrollTop: window.scrollY, maxScroll, travel };
+        drag = {
+          y: event.clientY,
+          scrollTop: window.scrollY,
+          maxScroll,
+          travel,
+        };
         thumb.setPointerCapture(event.pointerId);
         return;
       }

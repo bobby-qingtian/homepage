@@ -559,8 +559,6 @@ html[lang="zh-CN"] .experience-description {
   border-top: 0;
   color: var(--blue-gray) !important;
   font: var(--type-caption) !important;
-  /* !important so the caps tracking survives `.experience-card p`, which is
-     more specific (0,1,1) than this rule and would otherwise apply body tracking. */
   letter-spacing: var(--track-caps) !important;
   text-transform: uppercase;
 }

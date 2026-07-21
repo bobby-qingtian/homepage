@@ -692,12 +692,18 @@ html[lang="zh-CN"] .projects-intro p {
   display: grid;
   max-width: 1180px;
   margin: 0 auto;
-  gap: 16px;
+  gap: 0;
+  border-top: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
 }
 
 .project-card {
   overflow: hidden;
   border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
+}
+
+.project-card:last-child {
+  border-bottom: 0;
 }
 
 .project-card.is-open {

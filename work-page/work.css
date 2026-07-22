@@ -669,19 +669,6 @@ html[lang="zh-CN"] .experience-stats strong {
   color: #0f172a;
 }
 
-.projects-intro h2 {
-  margin: 0 0 22px;
-  font-family: var(--font-display-en);
-  font-size: 26px;
-  font-weight: 300;
-  line-height: 1.12;
-  letter-spacing: -0.26px;
-}
-
-html[lang="zh-CN"] .projects-intro h2 {
-  font-family: var(--font-display-zh);
-}
-
 .projects-intro p {
   font: var(--type-body);
   letter-spacing: var(--track-body);
@@ -915,20 +902,6 @@ html[lang="zh-CN"] .project-team {
   border-top: 1px solid var(--line);
 }
 
-.skills-title {
-  margin: 0 0 34px;
-  color: #0f172a;
-  font-family: var(--font-display-en);
-  font-size: 26px;
-  font-weight: 300;
-  line-height: 1.12;
-  letter-spacing: -0.26px;
-}
-
-html[lang="zh-CN"] .skills-title {
-  font-family: var(--font-display-zh);
-}
-
 .credentials-row {
   display: grid;
   grid-template-columns: 108px minmax(0, 1fr);
@@ -1098,11 +1071,6 @@ html[lang="zh-CN"] .skills-title {
 
   .experience-intro hr {
     margin: 24px 0 22px;
-  }
-
-  .experience-intro h1,
-  .projects-intro h2 {
-    font-size: 26px;
   }
 
   .timeline-wheel {
@@ -1290,10 +1258,6 @@ html[lang="zh-CN"] .skills-title {
   .project-credentials {
     margin-top: 36px;
     padding-top: 28px;
-  }
-
-  .skills-title {
-    margin-bottom: 24px;
   }
 
   .credentials-row {

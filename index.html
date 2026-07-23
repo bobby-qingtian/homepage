@@ -603,13 +603,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         body.guide-open .homepage-corner-nav { z-index:99995; }
         body.drawer-motion-lock { overflow:hidden !important; }
         @media (max-width: 700px) {
-          .guide-options { flex-wrap:nowrap; gap:clamp(6px, 2vw, 16px); }
-          .guide-option { font-size:18px; padding:6px 2px; }
+          .guide-options { flex-wrap:nowrap; gap:clamp(20px, 6vw, 44px); }
+          .guide-option { font-size:16px; padding:6px 0; }
+          .guide-option::before, .guide-option::after { margin:0; }
           .guide-everything { margin-top:44px; }
         }
         @media (max-width: 380px) {
-          .guide-options { gap:6px; }
-          .guide-option { font-size:16px; padding:6px 0; }
+          .guide-options { gap:16px; }
+          .guide-option { font-size:14px; padding:6px 0; }
         }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }
       `;

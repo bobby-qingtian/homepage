@@ -381,10 +381,11 @@
           "location meta";
         gap: 7px clamp(28px, 3vw, 48px);
         align-items: start;
-        padding: 16px 0;
-        border-top: 0;
+        padding: 18px 0;
+        border-bottom: 1px solid color-mix(in srgb, var(--line) 45%, transparent);
       }
-      .edu-item:first-of-type { border-top: 0; padding-top: 0; }
+      .edu-item:first-of-type { border-top: 1px solid color-mix(in srgb, var(--line) 45%, transparent); }
+      .edu-item:last-of-type { border-bottom: 0; }
       .edu-inst {
         grid-area: institution;
         color: #0F172A;

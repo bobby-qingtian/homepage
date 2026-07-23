@@ -1057,17 +1057,19 @@ body.modal-open {
     display: block;
   }
   .section-bar {
-    height: 64px;
-    padding-inline: 22px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: auto;
+    min-height: 64px;
+    padding: 14px 22px;
+    gap: 6px;
   }
   .section-bar p {
     font-size: 14px;
-  }
-  .photography-bar p {
-    flex: 1 1 auto;
-    min-width: 0;
-    margin-left: 16px;
-    text-align: right;
+    width: 100%;
+    margin: 0;
+    text-align: left;
   }
   .playlist-detail {
     grid-template-columns: 42px 76px minmax(0, 1fr);
@@ -1137,7 +1139,7 @@ body.modal-open {
     display: block;
   }
   .photography-bar {
-    height: 64px;
+    height: auto;
   }
   .album-index-view {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -795,14 +795,16 @@ html[lang="zh-CN"] .project-details {
 
 .project-media-tabs {
   position: absolute;
-  top: 10%;
+  top: 0;
   right: -54px;
   z-index: 0;
   display: flex;
   width: 62px;
   height: min(40%, 220px);
+  box-sizing: border-box;
   flex-direction: column;
   overflow: hidden;
+  border: 1.5px solid #87a1ba;
   border-radius: 0 13px 13px 0;
   background: #f8f9fa;
 }
@@ -817,7 +819,7 @@ html[lang="zh-CN"] .project-details {
   min-height: 0;
   flex: 1;
   place-items: center;
-  padding: 10px 7px 10px 14px;
+  padding: 0;
   overflow: hidden;
   border: 0;
   border-radius: 0;
@@ -830,12 +832,26 @@ html[lang="zh-CN"] .project-details {
 }
 
 .project-media-tab + .project-media-tab {
-  border-top: 1px solid rgba(49, 67, 83, 0.24);
+  border-top: 0;
+}
+
+.project-media-tab + .project-media-tab::before {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1.5px;
+  content: "";
+  background: #87a1ba;
 }
 
 .project-media-tab span {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  writing-mode: horizontal-tb;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center;
   font: var(--type-caption);
   letter-spacing: 0.06em;
   white-space: nowrap;
@@ -1314,7 +1330,7 @@ html[lang="zh-CN"] .project-team {
   }
 
   .project-media-tabs {
-    top: 8px;
+    top: 0;
     right: -38px;
     width: 46px;
     height: min(86%, 140px);
@@ -1326,7 +1342,7 @@ html[lang="zh-CN"] .project-team {
   }
 
   .project-media-tab {
-    padding: 8px 5px 8px 10px;
+    padding: 0;
     border-radius: 0;
   }
 

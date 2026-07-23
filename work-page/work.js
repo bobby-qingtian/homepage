@@ -544,6 +544,61 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.querySelectorAll("[data-media-switcher]").forEach((switcher) => {
+    const link = switcher.querySelector(".project-media-link");
+    const image = switcher.querySelector(".project-media-frame img");
+    const mediaTabs = Array.from(
+      switcher.querySelectorAll(".project-media-tab"),
+    );
+    if (!link || !image || mediaTabs.length < 1) return;
+
+    function selectMedia(nextTab, focusTab = false) {
+      if (nextTab.getAttribute("aria-selected") === "true") return;
+
+      mediaTabs.forEach((tab) => {
+        const selected = tab === nextTab;
+        tab.classList.toggle("is-active", selected);
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+
+      switcher.classList.add("is-changing");
+      const applyMedia = () => {
+        image.src = nextTab.dataset.src;
+        image.alt = nextTab.dataset.alt;
+        link.href = nextTab.dataset.href;
+        link.setAttribute("aria-label", nextTab.dataset.linkLabel);
+        image.addEventListener(
+          "load",
+          () => switcher.classList.remove("is-changing"),
+          { once: true },
+        );
+        if (image.complete) switcher.classList.remove("is-changing");
+      };
+
+      if (reducedMotion) applyMedia();
+      else window.setTimeout(applyMedia, 110);
+      if (focusTab) nextTab.focus({ preventScroll: true });
+    }
+
+    mediaTabs.forEach((tab, tabIndex) => {
+      tab.addEventListener("click", () => selectMedia(tab));
+      tab.addEventListener("keydown", (event) => {
+        if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key))
+          return;
+        event.preventDefault();
+        let nextIndex = tabIndex;
+        if (event.key === "ArrowUp")
+          nextIndex = (tabIndex - 1 + mediaTabs.length) % mediaTabs.length;
+        if (event.key === "ArrowDown")
+          nextIndex = (tabIndex + 1) % mediaTabs.length;
+        if (event.key === "Home") nextIndex = 0;
+        if (event.key === "End") nextIndex = mediaTabs.length - 1;
+        selectMedia(mediaTabs[nextIndex], true);
+      });
+    });
+  });
+
   window.addEventListener("resize", () => {
     tabs.forEach((tab, tabIndex) => placeTab(tab, visualAngles[tabIndex]));
     alignActiveExperience();

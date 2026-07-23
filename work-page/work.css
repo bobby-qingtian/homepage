@@ -696,11 +696,11 @@ html[lang="zh-CN"] .projects-intro p {
 
 .project-summary {
   display: grid;
-  grid-template-columns: 108px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   width: 100%;
   gap: 40px;
   align-items: center;
-  padding: 26px 30px;
+  padding: 26px 30px 26px 0;
   text-align: left;
 }
 
@@ -711,17 +711,6 @@ html[lang="zh-CN"] .projects-intro p {
 .project-card.is-open .project-summary {
   background: #f8f9fa;
   border: 0;
-}
-
-.project-index {
-  color: var(--line);
-  font-family: var(--font-body-en);
-  font-size: 26px;
-  font-weight: 300;
-}
-
-.project-card.is-open .project-index {
-  color: var(--blue-gray);
 }
 
 .project-summary-copy {
@@ -791,6 +780,91 @@ html[lang="zh-CN"] .project-details {
   justify-content: center;
 }
 
+.project-media-switcher {
+  position: relative;
+  width: calc(100% - 54px);
+  max-width: 946px;
+  margin: 18px 54px 22px 0;
+}
+
+.project-media-switcher .project-media-frame {
+  z-index: 1;
+  width: 100%;
+  box-shadow: 0 0 0 1px rgba(63, 97, 116, 0.18);
+}
+
+.project-media-tabs {
+  position: absolute;
+  top: 10%;
+  right: -54px;
+  z-index: 0;
+  display: flex;
+  width: 62px;
+  height: min(40%, 220px);
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 0 13px 13px 0;
+  background: #f8f9fa;
+}
+
+.project-media-switcher--single .project-media-tabs {
+  height: min(20%, 110px);
+}
+
+.project-media-tab {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  place-items: center;
+  padding: 10px 7px 10px 14px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #f8f9fa;
+  color: #3f6174;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.project-media-tab + .project-media-tab {
+  border-top: 1px solid rgba(49, 67, 83, 0.24);
+}
+
+.project-media-tab span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font: var(--type-caption);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.project-media-tab:hover {
+  filter: brightness(0.95);
+}
+
+.project-media-tab.is-active {
+  box-shadow: inset 4px 0 0 currentColor;
+}
+
+.project-media-tab:nth-child(even) {
+  color: #f8f9fa;
+  background: #3f6174;
+}
+
+.project-media-tab:focus-visible {
+  z-index: 2;
+  outline: 3px solid var(--blue-gray);
+  outline-offset: -3px;
+}
+
+.project-media-switcher.is-changing .project-media-frame img {
+  opacity: 0;
+  transform: scale(0.99);
+}
+
 .project-media-frame {
   position: relative;
   display: block;
@@ -840,7 +914,8 @@ html[lang="zh-CN"] .project-details {
   filter: saturate(0.45) contrast(0.92) brightness(1.04) sepia(0.12);
   transition:
     filter 300ms ease,
-    transform 180ms ease;
+    transform 180ms ease,
+    opacity 140ms ease;
 }
 
 .project-media-frame img:hover {
@@ -1203,13 +1278,9 @@ html[lang="zh-CN"] .project-team {
   }
 
   .project-summary {
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
-    padding: 20px 18px;
-  }
-
-  .project-index {
-    font-size: 26px;
+    padding: 20px 18px 20px 0;
   }
 
   .project-title {
@@ -1217,7 +1288,7 @@ html[lang="zh-CN"] .project-team {
   }
 
   .project-action {
-    grid-column: 2;
+    grid-column: 1;
     justify-self: start;
     margin-top: 2px;
   }
@@ -1235,6 +1306,32 @@ html[lang="zh-CN"] .project-team {
     grid-template-columns: 1fr;
     gap: 14px;
     margin: 16px 0 20px;
+  }
+
+  .project-media-switcher {
+    width: calc(100% - 38px);
+    margin: 16px 38px 20px 0;
+  }
+
+  .project-media-tabs {
+    top: 8px;
+    right: -38px;
+    width: 46px;
+    height: min(86%, 140px);
+    border-radius: 0 9px 9px 0;
+  }
+
+  .project-media-switcher--single .project-media-tabs {
+    height: min(48%, 74px);
+  }
+
+  .project-media-tab {
+    padding: 8px 5px 8px 10px;
+    border-radius: 0;
+  }
+
+  .project-media-tab span {
+    font-size: 9px;
   }
 
   .project-callout {
@@ -1323,7 +1420,7 @@ html[lang="zh-CN"] .project-team {
   }
 
   .project-summary {
-    padding: 18px 14px;
+    padding: 18px 14px 18px 0;
   }
 
   .project-details {

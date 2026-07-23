@@ -439,6 +439,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-work-back:hover { background:#F8F9FA; }
         .drawer-motion-work-back:focus-visible { outline:none; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
+        .drawer-motion-tabs { display:none; }
+        .drawer-motion-stack-button {
+          position:absolute;
+          top:0;
+          width:145px;
+          height:41px;
+          appearance:none;
+          border:0;
+          background:transparent;
+          color:#F8F9FA;
+          padding:0;
+          font:700 14px/1 "Martian Mono",monospace;
+          cursor:pointer;
+        }
+        .drawer-motion-stack-button svg { position:absolute; inset:0; display:block; width:100%; height:100%; overflow:visible; pointer-events:none; }
+        .drawer-motion-stack-button path { fill:#3D5A7A; stroke:#87A1BA; stroke-width:1.5; vector-effect:non-scaling-stroke; }
+        .drawer-motion-stack-button span { position:relative; z-index:1; display:grid; height:100%; place-items:center; pointer-events:none; }
+        .drawer-motion-stack-button[data-drawer-section="Home"] { left:8px; color:#0F172A; font-weight:500; }
+        .drawer-motion-stack-button[data-drawer-section="Home"] path { fill:#F8F9FA; }
+        .drawer-motion-stack-button[data-drawer-section="About"] { right:8px; }
+        .drawer-motion-stack-button[data-drawer-section="Interests"] { left:50%; transform:translateX(-50%); }
+        .drawer-motion-stack-button[data-drawer-section="Work"] { left:8px; }
+        .drawer-motion-stack-button:focus-visible { outline:3px solid #0F172A; outline-offset:-4px; }
+        .drawer-motion-stack-button:hover span { transform:translateY(-1px); }
         .drawer-motion-work-language { position:absolute; top:24px; right:22px; z-index:230; }
         .homepage-logo { position:fixed; left:28px; top:24px; z-index:9000; display:block; width:auto; height:44px; pointer-events:none; }
         body.guide-open .homepage-logo { z-index:99995; }
@@ -478,7 +502,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             max-width:none !important;
             transform-origin:50% 50% !important;
             transform:none !important;
-            scale:.335 !important;
+            /* Frame the mobile view around the user-selected 874px-wide crop. */
+            scale:.426 !important;
             zoom:1 !important;
           }
           .homepage-corner-nav {
@@ -494,7 +519,34 @@ document.addEventListener('DOMContentLoaded', async function() {
           .homepage-copyright { font-size:11.16px; }
           .drawer-motion-card--work { width:100vw; max-width:100vw; }
           .drawer-motion-card--work .drawer-motion-row { display:none !important; }
-          .drawer-motion-card--work::after { top:36px; }
+          .drawer-motion-card--work::after { top:164px; }
+          .drawer-motion-tabs {
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            z-index:220;
+            display:flex;
+            height:164px;
+            flex-direction:column;
+            overflow:visible;
+            background:#F8F9FA;
+          }
+          .drawer-motion-stack-home,
+          .drawer-motion-stack-row {
+            position:relative;
+            flex:0 0 41px;
+            min-height:41px;
+            border:1.5px solid #87A1BA;
+            border-bottom:0;
+            border-radius:9px 9px 0 0;
+            background:#DAE2E8;
+          }
+          .drawer-motion-stack-home { background:#F8F9FA; }
+          .drawer-motion-stack-sections { display:flex; flex:1; flex-direction:column; }
+          .drawer-motion-stack-sections .drawer-motion-stack-row:last-child { border-bottom:1.5px solid #87A1BA; }
+          .drawer-motion-work-back,
+          .drawer-motion-section-tab { display:none !important; }
           .drawer-motion-card--interests .drawer-motion-work-back,
           .drawer-motion-card--interests .drawer-motion-section-tab {
             top:7.48px;
@@ -513,8 +565,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             transform-origin:0 0;
           }
           .drawer-motion-work-language {
-            top:9px;
-            right:0;
+            top:10px;
+            right:4px;
             transform:scale(.62);
             transform-origin:100% 0;
           }
@@ -530,9 +582,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           .drawer-motion-card--interests .drawer-motion-section-tab { top:6.24px; }
           .drawer-motion-work-language { top:7.88px; transform:scale(.56); }
         }
-        @media (max-width:360px) { [data-screen-label="Index drawer"] { scale:.29 !important; } }
-        @media (min-width:431px) and (max-width:520px) { [data-screen-label="Index drawer"] { scale:.42 !important; } }
-        @media (min-width:521px) and (max-width:700px) { [data-screen-label="Index drawer"] { scale:.54 !important; } }
+        @media (max-width:360px) { [data-screen-label="Index drawer"] { scale:.412 !important; } }
+        @media (min-width:431px) and (max-width:520px) { [data-screen-label="Index drawer"] { scale:.545 !important; } }
+        @media (min-width:521px) and (max-width:700px) { [data-screen-label="Index drawer"] { scale:.698 !important; } }
         .guide-card-body { left:8%; right:8%; bottom:6%; padding:clamp(20px,3vw,48px) 0; align-items:center; justify-content:space-evenly; text-align:center; }
         .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; background:#DAE2E8; }
         .guide-title { max-width:42em; color:#0F172A; font-family:"Geist",sans-serif !important; font-size:20px !important; font-weight:700 !important; line-height:1.3 !important; letter-spacing:0; }
@@ -593,6 +645,14 @@ document.addEventListener('DOMContentLoaded', async function() {
           const original = openSectionTab.dataset.title || '';
           openSectionTab.textContent = chinese && labels[original] ? labels[original] : original;
         }
+        document.querySelectorAll('.drawer-motion-stack-button').forEach(button => {
+          const original = button.dataset.drawerSection || '';
+          const text = button.querySelector('span');
+          if (!text) return;
+          text.textContent = original === 'Home'
+            ? (chinese ? '档案' : 'Home')
+            : (chinese && labels[original] ? labels[original] : original);
+        });
         const activeRow = document.querySelector('.drawer-motion-row');
         if (activeRow) {
           const original = activeRow.getAttribute('title') || '';
@@ -706,9 +766,17 @@ document.addEventListener('DOMContentLoaded', async function() {
       const drawerBaseScale = { x:1.12 * .78, y:.78 };
 
       function syncDrawerViewport() {
-        if (innerWidth <= 700) return;
         const drawer = document.querySelector('[data-screen-label="Index drawer"]');
         if (!drawer) return;
+        if (innerWidth <= 700) {
+          // The marked crop spans 874 units of the 1080-unit drawer canvas.
+          // Scaling that crop to the viewport keeps the intended mobile framing
+          // consistent across phone widths while the overflow remains hidden.
+          drawer.style.setProperty('scale', String(innerWidth / 874), 'important');
+          drawer.style.transform = 'none';
+          return;
+        }
+        drawer.style.removeProperty('scale');
         const responsiveScale = Math.min(
           innerWidth / drawerReferenceViewport.width,
           innerHeight / drawerReferenceViewport.height
@@ -721,7 +789,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       const getWorkViewportWidth = () => Math.min(1512, innerWidth);
       const getWorkViewportLeft = () => Math.max(0, (innerWidth - getWorkViewportWidth()) / 2);
-      const getWorkTabBarHeight = () => (innerWidth <= 360 ? 32 : innerWidth <= 700 ? 36 : 58);
+      const getWorkTabBarHeight = () => (innerWidth <= 700 ? 164 : 58);
       const sizeWorkFrame = (frame) => {
         if (!frame) return;
         frame.style.width = `${getWorkViewportWidth()}px`;
@@ -804,6 +872,154 @@ document.addEventListener('DOMContentLoaded', async function() {
           .replace(/<script src="interests\.js(?:\?[^\"]*)?" defer><\/script>/, `<script>${js}<\/script>`)
       ).catch(() => null);
 
+      const fullPageFallbacks = {
+        About:'./about-page/about.html',
+        Interests:'./interests-page/interests.html',
+        Work:'./work-page/work.html'
+      };
+      const fullPageDocuments = {
+        About:aboutPageDocument,
+        Interests:interestsPageDocument,
+        Work:workPageDocument
+      };
+      const stackTabPath = 'M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z';
+
+      function createStackTabButton(title) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'drawer-motion-stack-button';
+        button.dataset.drawerSection = title;
+        button.setAttribute('aria-label', title === 'Home' ? 'Home, close current file' : title);
+        button.innerHTML = `
+          <svg viewBox="0 0 230 46" preserveAspectRatio="none" aria-hidden="true">
+            <path d="${stackTabPath}"></path>
+          </svg>
+          <span>${title}</span>
+        `;
+        return button;
+      }
+
+      function setStackNavState(nav, currentTitle, { animate = false } = {}) {
+        if (!nav) return;
+        nav.dataset.currentSection = currentTitle;
+        const sectionRows = nav.querySelector('.drawer-motion-stack-sections');
+        const currentButton = nav.querySelector(`[data-drawer-section="${currentTitle}"]`);
+        if (sectionRows && currentButton && currentButton.parentElement) {
+          sectionRows.appendChild(currentButton.parentElement);
+        }
+        nav.querySelectorAll('.drawer-motion-stack-button').forEach(button => {
+          const selected = button.dataset.drawerSection === currentTitle;
+          button.classList.toggle('is-current', selected);
+          button.setAttribute('aria-current', selected ? 'page' : 'false');
+          button.setAttribute('aria-pressed', String(selected));
+        });
+        if (animate && sectionRows) {
+          gsap.fromTo(
+            sectionRows.children,
+            { y:-4, autoAlpha:.72 },
+            {
+              y:0,
+              autoAlpha:1,
+              duration:reducedMotion ? 0 : .28,
+              stagger:reducedMotion ? 0 : .045,
+              ease:'power2.out',
+              overwrite:'auto'
+            }
+          );
+        }
+      }
+
+      function createStackNav(currentTitle) {
+        const nav = document.createElement('nav');
+        nav.className = 'drawer-motion-tabs';
+        nav.setAttribute('aria-label', 'Archive sections');
+        const homeRow = document.createElement('div');
+        homeRow.className = 'drawer-motion-stack-home';
+        homeRow.appendChild(createStackTabButton('Home'));
+        const sections = document.createElement('div');
+        sections.className = 'drawer-motion-stack-sections';
+        ['About', 'Interests', 'Work'].forEach(title => {
+          const row = document.createElement('div');
+          row.className = 'drawer-motion-stack-row';
+          row.appendChild(createStackTabButton(title));
+          sections.appendChild(row);
+        });
+        nav.append(homeRow, sections);
+        setStackNavState(nav, currentTitle);
+        return nav;
+      }
+
+      function waitForFrameSwap(frame, applySource) {
+        return new Promise(resolve => {
+          let complete = false;
+          const finish = () => {
+            if (complete) return;
+            complete = true;
+            resolve();
+          };
+          frame.addEventListener('load', finish, { once:true });
+          applySource();
+          window.setTimeout(finish, 1200);
+        });
+      }
+
+      async function switchActiveFullPage(nextTitle) {
+        const current = active;
+        if (!current || !current.isWork || current.closing || current.switching) return;
+        if (nextTitle === 'Home' || nextTitle === current.currentTitle) {
+          closeDrawerCard();
+          return;
+        }
+        if (!fullPageDocuments[nextTitle]) return;
+        current.switching = true;
+        const frame = current.frame;
+        const nextDocument = await fullPageDocuments[nextTitle];
+        if (active !== current || current.closing) return;
+        await new Promise(resolve => {
+          gsap.to(frame, {
+            y:10,
+            autoAlpha:0,
+            duration:reducedMotion ? 0 : .22,
+            ease:'power1.out',
+            overwrite:'auto',
+            onComplete:resolve
+          });
+        });
+        if (active !== current || current.closing) return;
+
+        current.card.classList.toggle('drawer-motion-card--interests', nextTitle === 'Interests');
+        current.overlay.classList.toggle('drawer-motion-overlay--interests', nextTitle === 'Interests');
+        current.card.setAttribute('aria-label', nextTitle);
+        current.frame.title = nextTitle;
+        current.currentTitle = nextTitle;
+        current.sectionTab.dataset.title = nextTitle;
+        current.sectionTab.textContent = siteLanguage === 'zh' && labels[nextTitle] ? labels[nextTitle] : nextTitle;
+        setStackNavState(current.stackNav, nextTitle, { animate:true });
+
+        await waitForFrameSwap(frame, () => {
+          if (nextDocument) frame.srcdoc = nextDocument;
+          else frame.src = fullPageFallbacks[nextTitle];
+        });
+        if (active !== current || current.closing) return;
+        if (frame.contentWindow) {
+          frame.contentWindow.postMessage({ type:'set-language', language:siteLanguage }, '*');
+          try { frame.contentWindow.scrollTo({ top:0, behavior:'auto' }); } catch (_) {}
+        }
+        sizeWorkFrame(frame);
+        gsap.fromTo(
+          frame,
+          { y:10, autoAlpha:0 },
+          {
+            y:0,
+            autoAlpha:1,
+            duration:reducedMotion ? 0 : .34,
+            ease:'power2.out',
+            overwrite:'auto',
+            onComplete:() => { if (active === current) current.switching = false; }
+          }
+        );
+      }
+
       function closeDrawerCard() {
         if (!active || active.closing) return;
         active.closing = true;
@@ -811,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         else if (active.returnToSource) {
           if (active.timeline) active.timeline.kill();
           if (active.isWork) {
-            const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
+            const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab, .drawer-motion-tabs, .drawer-motion-work-language');
             if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
             gsap.set(active.source, { clearProps:'opacity,visibility' });
             gsap.to(active.overlay, { autoAlpha:0, duration:.22, ease:'power1.out' });
@@ -821,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         else {
           if (active.isWork) {
-            const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab');
+            const topTabs = active.card.querySelectorAll('.drawer-motion-work-back, .drawer-motion-section-tab, .drawer-motion-tabs, .drawer-motion-work-language');
             if (topTabs.length) gsap.to(topTabs, { autoAlpha:0, duration:.18, ease:'power1.out' });
           }
           active.timeline.timeScale(active.isWork ? .86 : 1).reverse();
@@ -981,7 +1197,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         close.className = 'drawer-motion-close';
         close.textContent = 'Close';
         let sectionTab = null;
+        let stackNav = null;
         let workLanguage = null;
+        let workFrame = null;
+        let tabTitle = '';
         let fullPageReady = Promise.resolve();
         if (isFullPage) {
           card.classList.add('drawer-motion-card--work');
@@ -990,11 +1209,18 @@ document.addEventListener('DOMContentLoaded', async function() {
           content.style.top = '0px';
           close.classList.add('drawer-motion-work-back');
           close.textContent = siteLanguage === 'zh' ? '档案' : 'HOME';
-          const tabTitle = isAbout ? 'About' : isInterests ? 'Interests' : 'Work';
+          tabTitle = isAbout ? 'About' : isInterests ? 'Interests' : 'Work';
           sectionTab = document.createElement('div');
           sectionTab.className = 'drawer-motion-section-tab';
           sectionTab.dataset.title = tabTitle;
           sectionTab.textContent = siteLanguage === 'zh' && labels[tabTitle] ? labels[tabTitle] : tabTitle;
+          stackNav = createStackNav(tabTitle);
+          stackNav.addEventListener('click', event => {
+            const button = event.target.closest('.drawer-motion-stack-button');
+            if (!button) return;
+            event.preventDefault();
+            switchActiveFullPage(button.dataset.drawerSection || '');
+          });
           workLanguage = document.createElement('button');
           workLanguage.className = 'homepage-language-switch drawer-motion-work-language';
           workLanguage.type = 'button';
@@ -1004,7 +1230,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           workLanguage.addEventListener('click', () => {
             applySiteLanguage(workLanguage.getAttribute('aria-pressed') === 'true' ? 'en' : 'zh');
           });
-          const workFrame = document.createElement('iframe');
+          workFrame = document.createElement('iframe');
           workFrame.className = 'drawer-motion-work-frame';
           workFrame.title = isAbout ? 'About' : isInterests ? 'Interests' : sourceTitle;
           sizeWorkFrame(workFrame);
@@ -1086,7 +1312,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           else workFrame.src = isAbout ? './about-page/about.html' : isInterests ? './interests-page/interests.html' : './work-page/work.html';
           content.append(workFrame);
         }
-        if (isFullPage) card.append(row, content, close, sectionTab, workLanguage);
+        if (isFullPage) card.append(row, content, close, sectionTab, stackNav, workLanguage);
         else {
           content.append(close);
           card.append(row, content);
@@ -1104,7 +1330,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (isFullPage) gsap.set([card, content], { autoAlpha:0 });
         else gsap.set(source, { autoAlpha:0 });
 
-        const pageChrome = isFullPage ? [content, close, sectionTab, workLanguage] : [];
+        const pageChrome = isFullPage ? [content, close, sectionTab, stackNav, workLanguage] : [];
 
         if (isFullPage) {
           await fullPageReady;
@@ -1164,7 +1390,12 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
           gsap.set(card, { boxShadow:cardShadowLifted });
           gsap.set([overlay, content, ...pageChrome], { autoAlpha:1 });
-          active = { source, overlay, card, content, finish, closing:false, isWork:isFullPage, originRect:rect, tabReveal };
+          active = {
+            source, overlay, card, content, finish,
+            closing:false, switching:false, isWork:isFullPage,
+            originRect:rect, tabReveal, frame:workFrame,
+            sectionTab, stackNav, currentTitle:tabTitle
+          };
           (isFullPage ? card : close).focus({ preventScroll:true });
           return;
         }
@@ -1322,7 +1553,12 @@ document.addEventListener('DOMContentLoaded', async function() {
           if (occluders.container) returnTimeline.to(occluders.container, { autoAlpha:1, duration:.34, ease:'power1.out' }, 'insert-=0.46');
         };
 
-        active = { source, overlay, card, content, timeline, finish, returnToSource, closing:false, isWork:isFullPage, originRect:rect, tabReveal, paperFill };
+        active = {
+          source, overlay, card, content, timeline, finish, returnToSource,
+          closing:false, switching:false, isWork:isFullPage,
+          originRect:rect, tabReveal, paperFill, frame:workFrame,
+          sectionTab, stackNav, currentTitle:tabTitle
+        };
       }
 
       let guideActive = null;

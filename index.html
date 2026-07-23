@@ -589,9 +589,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         .guide-card { box-sizing:border-box; overflow:visible; border-radius:28px; background:#DAE2E8; }
         .guide-title { max-width:42em; color:#0F172A; font-family:"Geist",sans-serif !important; font-size:20px !important; font-weight:700 !important; line-height:1.3 !important; letter-spacing:0; }
         .guide-options { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(24px,3vw,56px); }
-        .guide-option { appearance:none; cursor:pointer; border:0; background:none; color:#0F172A; padding:8px 4px 14px; font-family:"Geist",sans-serif; font-size:20px; font-weight:400; line-height:1.3; letter-spacing:0; text-decoration:none; text-underline-offset:10px; text-decoration-thickness:2px; text-decoration-color:#3D5A7A; transition:text-decoration-color .18s ease; }
-        .guide-option:hover { text-decoration:underline; }
-        .guide-option:focus-visible { outline:none; text-decoration:underline; }
+        .guide-option { appearance:none; cursor:pointer; border:0; background:none; color:#0F172A; padding:8px 4px; font-family:"Geist",sans-serif; font-size:20px; font-weight:400; line-height:1.3; letter-spacing:0; transition:color .18s ease; }
+        .guide-option::before { content:"("; margin-right:2px; }
+        .guide-option::after { content:")"; margin-left:2px; }
+        @media (hover: hover) { .guide-option:hover { color:#3D5A7A; } }
+        .guide-option:focus-visible { outline:none; color:#3D5A7A; }
         .guide-everything { position:relative; appearance:none; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; gap:14px; color:#0F172A; font:var(--type-ui); letter-spacing:normal; }
         .guide-everything-arrow { position:absolute; right:100%; margin-right:14px; display:block; width:32px; height:32px; transition:transform .18s ease; }
         .guide-everything-arrow img { display:block; width:100%; height:100%; }
@@ -600,6 +602,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         body.guide-open .drawer-motion-overlay { background:#F8F9FA; }
         body.guide-open .homepage-corner-nav { z-index:99995; }
         body.drawer-motion-lock { overflow:hidden !important; }
+        @media (max-width: 700px) {
+          .guide-options { flex-wrap:nowrap; gap:clamp(6px, 2vw, 16px); }
+          .guide-option { font-size:18px; padding:6px 2px; }
+          .guide-everything { margin-top:44px; }
+        }
+        @media (max-width: 380px) {
+          .guide-options { gap:6px; }
+          .guide-option { font-size:16px; padding:6px 0; }
+        }
         @media (prefers-reduced-motion: reduce) { .drawer-motion-overlay, .drawer-motion-card, .drawer-motion-content { transition:none !important; } }
       `;
       document.head.appendChild(style);

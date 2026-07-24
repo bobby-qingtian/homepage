@@ -418,8 +418,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-title { margin-top:12px; font-size:clamp(42px,8vw,112px) !important; font-weight:500 !important; line-height:.92; letter-spacing:-.055em; }
         .drawer-motion-card { position:fixed; z-index:99991; overflow:visible; transform-origin:50% 50%; transform-style:preserve-3d; background:#DAE2E8; border-radius:10px; box-shadow:0 30px 64px rgba(15,23,42,.24); will-change:transform,clip-path,box-shadow; }
         .drawer-motion-card--work { background:#F8F9FA; }
-        .drawer-motion-card--work::after { position:absolute; left:0; right:0; top:58px; z-index:108; height:1px; content:''; background:#87A1BA; pointer-events:none; }
-        .drawer-motion-card--interests::after { display:none; }
         .drawer-motion-card--interests { background:#F8F9FA; border-color:#0F172A; box-shadow:0 18px 48px rgba(0,0,0,.35); }
         .drawer-motion-card--interests .drawer-motion-content--work { left:0; right:0; bottom:0; border:0; border-radius:0; background:#0F172A; }
         .drawer-motion-card--interests .drawer-motion-work-frame { background:#0F172A; }
@@ -435,11 +433,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-card:focus, .drawer-motion-card:focus-visible { outline:none; }
         .drawer-motion-close:focus-visible { outline:3px solid #161616; outline-offset:3px; }
         .drawer-motion-work-back { position:absolute; left:0; top:12px; z-index:110; display:grid; width:190px; height:46px; place-items:center; appearance:none; border:0; border-radius:0; padding:0; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 140 1 C 151 1 159 5 162 14 L 168 30 C 172 41 178 46 190 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:400 17px/1 "Martian Mono",monospace; white-space:nowrap; cursor:pointer; }
-        .drawer-motion-section-tab { position:absolute; left:190px; top:12px; z-index:115; display:grid; width:230px; height:46px; place-items:center; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z'); filter:drop-shadow(0 0 1.5px #87A1BA); font:700 17px/1 "Martian Mono",monospace; white-space:nowrap; pointer-events:none; }
+        .drawer-motion-section-tab { position:absolute; left:190px; top:12px; z-index:115; display:grid; width:230px; height:46px; place-items:center; clip-path:path('M 0 46 C 12 46 18 41 22 30 L 28 14 C 31 5 39 1 50 1 L 180 1 C 191 1 199 5 202 14 L 208 30 C 212 41 218 46 230 46 Z'); font:700 17px/1 "Martian Mono",monospace; white-space:nowrap; pointer-events:none; }
         .drawer-motion-close.drawer-motion-work-back:focus-visible { outline:none; }
-        .tab-active { background:#F8F9FA; color:#0F172A; }
-        .tab-inactive { background:#3D5A7A; color:#F8F9FA; }
-        .tab-inactive:hover { background:#4A6D90; }
+        .tab-active { background:#F8F9FA !important; color:#0F172A !important; }
+        .tab-inactive { background:#3D5A7A !important; color:#F8F9FA !important; }
+        .tab-inactive:hover { background:#4A6D90 !important; }
         .tab-active:focus-visible { outline:none; }
         .drawer-motion-tabs { display:none; }
         .drawer-motion-stack-button {

@@ -485,6 +485,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         .drawer-motion-stack-toggle span:first-child { width:14px; }
         .drawer-motion-stack-toggle span + span { margin-top:5px; }
         .drawer-motion-stack-toggle:focus-visible { outline:0; }
+        .drawer-motion-stack-toggle-close { display:none; width:30px; height:30px; fill:currentColor; }
+        .drawer-motion-card:not(.drawer-tabs-collapsed) .drawer-motion-stack-toggle span { display:none; }
+        .drawer-motion-card:not(.drawer-tabs-collapsed) .drawer-motion-stack-toggle .drawer-motion-stack-toggle-close { display:block; }
         .drawer-motion-work-language { position:absolute; top:24px; right:22px; z-index:230; }
         .homepage-logo { position:fixed; left:28px; top:24px; z-index:9000; display:block; width:auto; height:44px; pointer-events:none; }
         body.guide-open .homepage-logo { z-index:99995; }
@@ -1073,7 +1076,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         toggle.className = 'drawer-motion-stack-toggle';
         toggle.setAttribute('aria-label', 'Collapse section tabs');
         toggle.setAttribute('aria-expanded', 'true');
-        toggle.innerHTML = '<span></span><span></span><span></span>';
+        toggle.innerHTML = '<span></span><span></span><span></span><svg class="drawer-motion-stack-toggle-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>';
         nav.append(homeRow, sections, toggle);
         setStackNavState(nav, currentTitle);
         return nav;
